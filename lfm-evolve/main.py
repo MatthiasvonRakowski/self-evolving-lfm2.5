@@ -1,5 +1,6 @@
 from src.AFlowOptimiser import AFlowOptimiser
 from src.TextGradOptimiser import TextGradOptimiser
+from src.MiproOptimiser import MiproOptimiser
 from evoagentx.models import LiteLLMConfig
 import os
 import argparse
@@ -26,7 +27,7 @@ def main():
     argparser.add_argument("--graph_path", type=str, default="src/aflow_workflow", help="Path to the graph file.")
     argparser.add_argument(
         "--method", nargs="+",
-        choices=["aflow", "textgrad"],
+        choices=["aflow", "textgrad", "mipro"],
         default=["aflow"],
         help="Optimiser(s) to run. Can specify multiple.",
     )
@@ -39,15 +40,24 @@ def main():
             rounds=args.rounds,
             output_dir=args.output_dir + "aflow",
             executor_config=lfm_config(),
-            optimiser_config=lfm_config(),
+            optimiser_config=claude_config(),
             graph_path=args.graph_path,
         ),
+        
         "textgrad": lambda args: TextGradOptimiser(
             seed=args.seed,
             rounds=args.rounds,
             output_dir=args.output_dir + "textgrad",
             executor_config=lfm_config(),
             optimiser_config=lfm_config(),
+        ),
+        
+        "mipro": lambda args: MiproOptimiser(
+        seed=args.seed,
+        rounds=args.rounds,
+        output_dir=args.output_dir + "mipro",
+        executor_config=lfm_config(),
+        optimiser_config=lfm_config(),
         ),
     }
 
