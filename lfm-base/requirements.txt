@@ -2,3 +2,5 @@ lm_eval
 'lm-eval[all]'
 'lm-eval[api]'
 'lm-eval[ifeval]'
+
+evoagentx
