@@ -4,6 +4,7 @@ from src.MiproOptimiser import MiproOptimiser
 from evoagentx.models import LiteLLMConfig
 import os
 import argparse
+import dotenv
 
 def lfm_config():
     return LiteLLMConfig(
@@ -13,8 +14,9 @@ def lfm_config():
     )
 
 def claude_config():
+    dotenv.load_dotenv()
     return LiteLLMConfig(
-        model="anthropic/claude-3-5-sonnet-20240620",
+        model="anthropic/claude-sonnet-4-20250514",
         anthropic_key=os.environ["ANTHROPIC_API_KEY"],
     )
 
