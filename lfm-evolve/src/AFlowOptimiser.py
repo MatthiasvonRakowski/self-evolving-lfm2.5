@@ -23,9 +23,9 @@ class AFlowOptimiser(Optimiser):
         optimizer = AFlowOptimizer(
             graph_path=self.graph_path,
             optimized_path=str(self.output_dir),
-            optimizer_llm=executor_llm,
+            optimizer_llm=optimiser_llm,
             executor_llm=executor_llm,
-            validation_rounds=3,
+            validation_rounds=1,
             max_rounds=self.rounds,
             question_type="math",
             operators=["Custom", "ScEnsemble", "Programmer"],
