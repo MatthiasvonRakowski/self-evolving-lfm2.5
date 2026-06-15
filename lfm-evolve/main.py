@@ -1,22 +1,55 @@
 from src.AFlowOptimiser import AFlowOptimiser
 from src.TextGradOptimiser import TextGradOptimiser
 from src.MiproOptimiser import MiproOptimiser
-from evoagentx.models import LiteLLMConfig
+
 import os
 import argparse
 import dotenv
 
+import litellm
+from evoagentx.models import LiteLLMConfig, LiteLLM
+
+# Load env once, up front, so ANTHROPIC_API_KEY is available everywhere below.
+dotenv.load_dotenv()
+os.environ["ANTHROPIC_API_BASE"] = "https://api.anthropic.com"  # extra safety; harmless
+
+# ---------------------------------------------------------------------------
+# DURABLE FIX for the global litellm.api_base leak.
+#
+# EvoAgentX requires api_base for local models and, on init, sets the
+# module-global `litellm.api_base = config.api_base`. That global overrides
+# both per-instance api_base and the ANTHROPIC_API_BASE env var, so any local
+# (Ollama) model would otherwise hijack every later Anthropic call and route it
+# to localhost. We wrap init_model to null the global after EVERY model init,
+# so the executor and optimiser can coexist and AFlow rebuilding the executor
+# mid-run can't re-poison it. Local still reaches Ollama via litellm's default
+# ollama host; Anthropic reaches its real endpoint.
+# ---------------------------------------------------------------------------
+_orig_init_model = LiteLLM.init_model
+
+
+def _init_model_no_global_base(self):
+    _orig_init_model(self)
+    litellm.api_base = None
+
+
+LiteLLM.init_model = _init_model_no_global_base
+# ---------------------------------------------------------------------------
+
+
 def lfm_config():
+    """Local executor model (LFM2.5 via Ollama)."""
     return LiteLLMConfig(
         model="ollama_chat/sam860/lfm2.5:1.2b",
         is_local=True,
         api_base="http://localhost:11434",
     )
 
+
 def claude_config():
-    dotenv.load_dotenv()
+    """Cloud optimiser model (Claude Sonnet 4.6)."""
     return LiteLLMConfig(
-        model="anthropic/claude-sonnet-4-20250514",
+        model="anthropic/claude-sonnet-4-6",
         anthropic_key=os.environ["ANTHROPIC_API_KEY"],
     )
 
@@ -35,31 +68,28 @@ def main():
     )
     args = argparser.parse_args()
 
-
     METHODS = {
         "aflow": lambda args: AFlowOptimiser(
             seed=args.seed,
             rounds=args.rounds,
-            output_dir=args.output_dir + "aflow",
+            output_dir=os.path.join(args.output_dir, "aflow"),
             executor_config=lfm_config(),
             optimiser_config=claude_config(),
             graph_path=args.graph_path,
         ),
-        
         "textgrad": lambda args: TextGradOptimiser(
             seed=args.seed,
             rounds=args.rounds,
-            output_dir=args.output_dir + "textgrad",
+            output_dir=os.path.join(args.output_dir, "textgrad"),
             executor_config=lfm_config(),
-            optimiser_config=lfm_config(),
+            optimiser_config=claude_config(),
         ),
-        
         "mipro": lambda args: MiproOptimiser(
-        seed=args.seed,
-        rounds=args.rounds,
-        output_dir=args.output_dir + "mipro",
-        executor_config=lfm_config(),
-        optimiser_config=lfm_config(),
+            seed=args.seed,
+            rounds=args.rounds,
+            output_dir=os.path.join(args.output_dir, "mipro"),
+            executor_config=lfm_config(),
+            optimiser_config=claude_config(),
         ),
     }
 

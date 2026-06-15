@@ -28,7 +28,7 @@ class AFlowOptimiser(Optimiser):
             validation_rounds=1,
             max_rounds=self.rounds,
             question_type="math",
-            operators=["Custom", "ScEnsemble", "Programmer"],
+            operators=["Custom"],
         )
 
         optimizer.optimize(gsm8k)
