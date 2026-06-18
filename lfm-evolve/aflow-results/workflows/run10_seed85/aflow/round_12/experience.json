@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the input passed to the Custom call by appending an inline reminder about the answer format directly in the input string (not the prompt). This reinforces the #### formatting requirement at the input level without changing the overall prompt structure. The prompt itself was also lightly adjusted to add numbered steps for clarity without introducing a new framework name or structured methodology that previously failed.",
+    "before": 0.7689393939393939,
+    "after": 0.7689393939393939,
+    "succeed": false
+}

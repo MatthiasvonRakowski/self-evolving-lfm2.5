@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the input string passed to the Custom call to append a concise inline reminder specifically requesting that the answer line contains ONLY '#### ' followed by digits, reinforcing format compliance at the input level. The SOLVE_MATH_PROMPT was also simplified to remove the \"math tutor\" persona framing and made more direct/imperative, reducing verbosity while keeping the step-by-step and format instructions clear. This differs from the sample by changing both the appended input reminder wording and the prompt tone/structure.",
+    "before": 0.7689393939393939,
+    "after": 0.7840909090909091,
+    "succeed": true
+}

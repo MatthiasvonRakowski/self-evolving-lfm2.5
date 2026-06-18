@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Replaced the single Custom call with a parallel ensemble of 3 independent Custom calls solving the same problem, followed by a majority-voting Custom call that selects the most consistent answer. This self-consistency approach is fundamentally different from all previous single-pass prompt modifications.",
+    "before": 0.7689393939393939,
+    "after": 0.8484848484848485,
+    "succeed": true
+}

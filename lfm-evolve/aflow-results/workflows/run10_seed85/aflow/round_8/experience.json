@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a structured 6-step problem-solving framework (READ\u2192DEFINE\u2192EQUATIONS\u2192SOLVE\u2192VERIFY\u2192ANSWER) that explicitly requires variable definition, equation writing, and explicit arithmetic notation. This is fundamentally different from the previous prompt which was more conversational. The graph structure remains the same (single Custom call) since the experience notes prohibit adding second calls.",
+    "before": 0.7689393939393939,
+    "after": 0.6439393939393939,
+    "succeed": false
+}

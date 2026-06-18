@@ -1,0 +1,7 @@
+{
+    "father node": 22,
+    "modification": "Modify SOLVE_MATH_PROMPT to add a second prompt SOLVE_MATH_PROMPT_ALT that encourages a different solving strategy (verify by working backwards), and use alternating prompts in the 3 parallel calls to increase solution diversity.",
+    "before": 0.8484848484848485,
+    "after": 0.8295454545454546,
+    "succeed": false
+}
