@@ -2,6 +2,7 @@ from pathlib import Path
 from src.Optimiser import Optimiser
 from evoagentx.optimizers import TextGradOptimizer
 from evoagentx.models import LiteLLMConfig, LiteLLM
+from evoagentx.benchmark import GSM8K   # was: MATH
 from evoagentx.benchmark import MATH
 from evoagentx.workflow import SequentialWorkFlowGraph
 from evoagentx.agents import AgentManager
@@ -34,11 +35,10 @@ MATH_GRAPH = {
 
 
 def collate_func(example: dict) -> dict:
-    return {"problem": example["problem"]}
+    return {"problem": example["question"]}
 
 
-class GSM8KSplits(MATH):
-
+class GSM8KSplits(GSM8K):                # was: (MATH)
     def __init__(self, seed: int = 42):
         self.split_seed = seed
         super().__init__()
@@ -49,8 +49,8 @@ class GSM8KSplits(MATH):
         permutation = np.random.permutation(len(self._test_data))
         full_test = self._test_data
         self._train_data = [full_test[idx] for idx in permutation[:10]]
-        self._dev_data = [full_test[idx] for idx in permutation[10:60]]
-        self._test_data = [full_test[idx] for idx in permutation[60:160]]
+        self._dev_data   = [full_test[idx] for idx in permutation[10:60]]
+        self._test_data  = [full_test[idx] for idx in permutation[60:160]]
 
 
 class TextGradOptimiser(Optimiser):

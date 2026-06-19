@@ -38,13 +38,11 @@ LiteLLM.init_model = _init_model_no_global_base
 
 
 def lfm_config():
-    """Local executor model (LFM2.5 via Ollama)."""
     return LiteLLMConfig(
-        model="ollama_chat/sam860/lfm2.5:1.2b",
+        model="ollama_chat/lfm2.5-16k",
         is_local=True,
         api_base="http://localhost:11434",
     )
-
 
 def claude_config():
     """Cloud optimiser model (Claude Sonnet 4.6)."""
@@ -82,7 +80,7 @@ def main():
             rounds=args.rounds,
             output_dir=os.path.join(args.output_dir, "textgrad"),
             executor_config=lfm_config(),
-            optimiser_config=claude_config(),
+            optimiser_config=lfm_config(),
         ),
         "mipro": lambda args: MiproOptimiser(
             seed=args.seed,
