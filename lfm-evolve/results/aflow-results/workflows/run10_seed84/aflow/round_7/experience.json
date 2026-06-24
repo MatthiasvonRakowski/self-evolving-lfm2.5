@@ -1,0 +1,7 @@
+{
+    "father node": 1,
+    "modification": "Modify VERIFY_MATH_PROMPT to instruct the checker to independently re-compute each arithmetic operation from scratch (not just review), and explicitly write out the re-computation before confirming or correcting the answer.",
+    "before": 0.7840909090909091,
+    "after": 0.7803030303030303,
+    "succeed": false
+}

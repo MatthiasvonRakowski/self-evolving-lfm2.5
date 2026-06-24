@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modify SOLVE_MATH_PROMPT to add explicit chain-of-thought with a built-in self-verification step within the same prompt, asking the model to re-examine each computed value and confirm the final answer directly addresses the question, without adding a second operator call.",
+    "before": 0.7954545454545454,
+    "after": 0.7575757575757576,
+    "succeed": false
+}

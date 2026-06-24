@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use an equation-first reasoning style: the model is instructed to write each arithmetic operation explicitly as a standalone equation before using the result, and to re-read the problem statement once before solving. This is different from the prohibited \"structured steps\" approach (which required numbered steps and sanity checks) and from the expert persona approach.",
+    "before": 0.7613636363636364,
+    "after": 0.7613636363636364,
+    "succeed": false
+}

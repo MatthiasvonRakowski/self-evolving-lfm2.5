@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify SOLVE_MATH_ALT_PROMPT to use a \"draw a timeline/table and track each entity separately\" approach, giving a genuinely different problem-solving perspective that is more visual/structured and less likely to make the same errors as the step-by-step approach.",
+    "before": 0.8143939393939394,
+    "after": 0.8068181818181818,
+    "succeed": false
+}

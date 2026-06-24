@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify SOLVE_MATH_PROMPT to emphasize unit/label tracking at each arithmetic step and explicitly mapping each calculation step to the decomposition plan, changing the cognitive approach from \"double-check arithmetic\" to \"track what each number represents throughout the solution\"",
+    "before": 0.815,
+    "after": 0.7333333333333333,
+    "succeed": false
+}

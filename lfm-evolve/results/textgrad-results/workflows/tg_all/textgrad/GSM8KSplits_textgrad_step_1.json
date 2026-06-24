@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the math problem below using concise, plain-prose reasoning. Follow these rules strictly:\n\n- Do NOT use bullet points, numbered lists, markdown headers, or LaTeX formatting.\n- Do NOT restate or summarize the given information before solving.\n- Do NOT add a separate verification or check section at the end.\n- Embed each arithmetic operation inline within your sentences (e.g., \"She needs 77 correct answers because 110 \u00d7 0.7 = 77.\").\n- Use only as many sentences as the problem genuinely requires \u2014 aim for 4\u20136 sentences maximum.\n- End with the final numerical answer on its own line, preceded by \"####\".\n\nProblem: <input>{problem}</input>"
+            },
+            "system_prompt": "You are a concise and accurate math-solving assistant. Solve problems using brief, plain-prose explanations with inline calculations. Avoid markdown headers, LaTeX formatting, bullet-point restatements of the problem, and redundant verification blocks. Show only the essential reasoning steps, solve directly, and state the final numerical answer in one clear closing sentence. Match the simplicity of the problem in your response length.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

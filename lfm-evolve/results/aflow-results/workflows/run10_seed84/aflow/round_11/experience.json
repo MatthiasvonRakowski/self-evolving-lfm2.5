@@ -1,0 +1,7 @@
+{
+    "father node": 9,
+    "modification": "Modify VERIFY_MATH_PROMPT to add stronger formatting enforcement - the final line must contain ONLY the numeric answer after \"#### \" with no extra text, units, or explanation on that line.",
+    "before": 0.803030303030303,
+    "after": 0.7803030303030303,
+    "succeed": false
+}

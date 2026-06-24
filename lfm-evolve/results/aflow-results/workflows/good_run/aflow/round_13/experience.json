@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify SOLVE_MATH_PROMPT to explicitly instruct that the answer after \"#### \" must be only the bare number (no units, no words, no punctuation), and reframe the instruction to emphasize careful step-by-step arithmetic with explicit intermediate calculations shown.",
+    "before": 0.7689393939393939,
+    "after": 0.7575757575757576,
+    "succeed": false
+}

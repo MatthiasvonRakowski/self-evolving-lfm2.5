@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the math problem below step by step using plain prose with explicit inline arithmetic. Follow these rules strictly:\n\n- Do NOT use bullet points, numbered lists, markdown headers, or LaTeX formatting.\n- Do NOT restate or summarize the given information before solving.\n- Do NOT add a separate verification or check section at the end.\n- Every arithmetic step MUST appear as a fully explicit equation showing both operands and the result, embedded inline within a sentence (e.g., \"He uses 80 \u00d7 0.8 = 64 feet of the tree, then cuts 64 \u00f7 4 = 16 logs, yielding 16 \u00d7 5 = 80 planks, which sell for 80 \u00d7 1.2 = $96.\"). Never describe a calculation in words without also writing the numeric equation and its result.\n- Every sentence must contain at least one concrete number or equation. Vague filler sentences such as \"this can be determined through arithmetic\" or \"multiplying these figures confirms the result\" are strictly forbidden.\n- Each step's output must be used as the literal numeric input to the next step. Your final answer must be directly traceable through the chain of inline equations you showed.\n- Before writing \"####\", re-read the exact question being asked and confirm your answer addresses it \u2014 not an intermediate sub-result.\n- Use as few sentences as the problem requires, but never omit a calculation step. Correctness takes priority over brevity.\n- End with the final numerical answer on its own line, preceded by \"####\".\n\nProblem: <input>{problem}</input>"
+            },
+            "system_prompt": "You are a precise and accurate math-solving assistant. Correctness is your highest priority \u2014 never omit an arithmetic step to appear brief. Solve problems using plain prose with every arithmetic operation written out explicitly in the form \"X operator Y = Z\" embedded directly within your sentences. Never describe or summarize a calculation in words without also writing the numerical expression and its result. Each step must visibly use the numerical result of the prior step, forming a traceable chain of computation. Before stating the final answer, confirm it follows directly from the last computed value and that you have accounted for every quantity and entity mentioned in the problem. Avoid markdown headers, LaTeX, bullet points, restatements of the problem, and vague descriptive language in place of actual numbers. Use exactly as many sentences as the problem requires \u2014 brevity applies to language, never to arithmetic steps. End with the final numerical answer on its own line preceded by \"####\".",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

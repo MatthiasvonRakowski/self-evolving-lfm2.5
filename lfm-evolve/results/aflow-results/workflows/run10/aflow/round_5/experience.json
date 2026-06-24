@@ -1,0 +1,7 @@
+{
+    "father node": 1,
+    "modification": "Modified the SOLVE_MATH_PROMPT to restructure it into 5 explicit phases (Understand, Plan, Compute, Verify, Answer) with a new \"Plan\" phase that requires writing equations before computing, and added specific double-check instructions for multi-digit arithmetic. The final answer format is also clarified to exclude units on the answer line.",
+    "before": 0.7716666666666667,
+    "after": 0.72,
+    "succeed": false
+}

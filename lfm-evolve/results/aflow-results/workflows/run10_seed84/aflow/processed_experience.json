@@ -1,0 +1,106 @@
+{
+    "0": {
+        "score": 0.7613636363636364,
+        "success": {
+            "1": {
+                "modification": "Add a verification step: after getting the initial solution, pass it through a second Custom call that checks the work and provides a corrected final answer if needed.",
+                "score": 0.7840909090909091
+            },
+            "2": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include explicit structured instructions: numbered steps requirement, explicit arithmetic expression writing, a re-reading/sanity-check step built into the single call, and clearer final answer formatting. This changes the prompt from a simple \"show reasoning\" style to a more rigorous structured approach with self-verification embedded naturally within one call.",
+                "score": 0.7651515151515151
+            },
+            "6": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use a more mathematically precise framing that asks the model to carefully track quantities, units, and arithmetic through natural language guidance, rather than structured steps. This encourages careful computation without adding extra graph nodes or reformulation/verification steps.",
+                "score": 0.7727272727272727
+            },
+            "8": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use an \"expert mathematician\" persona that emphasizes: (1) identifying given quantities and what is being asked before solving, (2) natural precise arithmetic, (3) a built-in double-check of the final answer against the question, and (4) cleaner answer format instruction. This is a single prompt change with no new graph nodes added.",
+                "score": 0.7878787878787878
+            },
+            "15": {
+                "modification": "Changed from a single Custom call to an ensemble of two independent Custom calls (SOLVE_MATH_PROMPT_A and SOLVE_MATH_PROMPT_B) run in parallel via asyncio.gather, followed by a third Custom call (AGGREGATE_PROMPT) that compares both solutions and selects the most consistent/correct final answer. This is a self-consistency ensemble approach, fundamentally different from the prohibited verification/reformulation strategies.",
+                "score": 0.7878787878787878
+            }
+        },
+        "failure": {
+            "5": {
+                "modification": "Add a problem reformulation step: first Custom call extracts key information and restates the problem in clean mathematical terms, then second Custom call solves this clarified version. This is a decomposition strategy, not verification.",
+                "score": 0.7386363636363636
+            }
+        }
+    },
+    "2": {
+        "score": 0.7651515151515151,
+        "success": {},
+        "failure": {
+            "3": {
+                "modification": "Add a second Custom review step that takes the initial solution and verifies/corrects it before returning the final answer, implementing a review-revise pattern.",
+                "score": 0.7537878787878788
+            }
+        }
+    },
+    "1": {
+        "score": 0.7840909090909091,
+        "success": {
+            "4": {
+                "modification": "Add a second independent solution generation using a different problem-solving approach prompt, then add a synthesis step that compares and selects the best answer from both solutions before verification.",
+                "score": 0.8143939393939394
+            }
+        },
+        "failure": {
+            "7": {
+                "modification": "Modify VERIFY_MATH_PROMPT to instruct the checker to independently re-compute each arithmetic operation from scratch (not just review), and explicitly write out the re-computation before confirming or correcting the answer.",
+                "score": 0.7803030303030303
+            }
+        }
+    },
+    "4": {
+        "score": 0.8143939393939394,
+        "success": {
+            "10": {
+                "modification": "Modify SYNTHESIZE_MATH_PROMPT to instruct the LLM to independently re-solve the problem from scratch when solutions disagree, rather than just analyzing which solution is correct. This makes the synthesizer an active solver rather than just a reviewer.",
+                "score": 0.8257575757575758
+            }
+        },
+        "failure": {
+            "9": {
+                "modification": "Added a third independent solution (SOLVE_MATH_THIRD_PROMPT) that uses a units-tracking and careful re-reading approach. Modified the SYNTHESIZE_MATH_PROMPT to accept three solutions (A, B, C) instead of two, enabling majority voting among three independent solutions. Updated the synthesizer's input to include solution3's response. This provides a tiebreaker when Solution A and B disagree, improving robustness through 3-way ensemble voting.",
+                "score": 0.803030303030303
+            },
+            "13": {
+                "modification": "Modified VERIFY_MATH_PROMPT to instruct the verifier to independently recompute every arithmetic operation from scratch (rather than just \"checking\" calculations), and to propagate any corrections through the rest of the solution. This makes the verifier an active recomputer rather than a passive reviewer, improving detection of subtle arithmetic errors.",
+                "score": 0.7765151515151515
+            },
+            "16": {
+                "modification": "Modify SOLVE_MATH_ALT_PROMPT to use a \"draw a timeline/table and track each entity separately\" approach, giving a genuinely different problem-solving perspective that is more visual/structured and less likely to make the same errors as the step-by-step approach.",
+                "score": 0.8068181818181818
+            }
+        }
+    },
+    "9": {
+        "score": 0.803030303030303,
+        "success": {
+            "12": {
+                "modification": "Modify SYNTHESIZE_MATH_PROMPT to instruct the model to independently re-solve the problem first, then compare with the three solutions, rather than just comparing them - this adds an implicit 4th solution and improves the synthesis quality",
+                "score": 0.8295454545454546
+            }
+        },
+        "failure": {
+            "11": {
+                "modification": "Modify VERIFY_MATH_PROMPT to add stronger formatting enforcement - the final line must contain ONLY the numeric answer after \"#### \" with no extra text, units, or explanation on that line.",
+                "score": 0.7803030303030303
+            }
+        }
+    },
+    "10": {
+        "score": 0.8257575757575758,
+        "success": {},
+        "failure": {
+            "14": {
+                "modification": "Modify SYNTHESIZE_MATH_PROMPT to always independently re-derive the answer from scratch regardless of whether solutions agree, treating the two solutions only as hints to check against, rather than trusting them. This forces the synthesizer to be a true independent solver.",
+                "score": 0.7916666666666666
+            }
+        }
+    }
+}

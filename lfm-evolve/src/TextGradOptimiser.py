@@ -84,7 +84,7 @@ class TextGradOptimiser(Optimiser):
 
         optimizer = TextGradOptimizer(
             graph=workflow_graph,
-            optimize_mode="all", # 'all', 'system_prompt' or 'instruction'
+            optimize_mode="system_prompt",
             executor_llm=executor_llm,
             optimizer_llm=optimiser_llm,
             batch_size=self.batch_size,
@@ -93,10 +93,10 @@ class TextGradOptimiser(Optimiser):
             eval_every_n_steps=1,
             eval_rounds=1,
             save_path=str(self.output_dir),
+            save_interval=1,
             rollback=True,
             constraints=[],
         )
-
         results_before = optimizer.evaluate(dataset=benchmark, eval_mode="test")
         print(f"Before optimization: {results_before}")
 

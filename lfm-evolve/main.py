@@ -6,8 +6,14 @@ import os
 import argparse
 import dotenv
 
-import litellm
 from evoagentx.models import LiteLLMConfig, LiteLLM
+import litellm
+
+litellm.turn_off_message_logging = True
+litellm.success_callback = []
+litellm.failure_callback = []
+litellm._async_success_callback = []
+litellm._async_failure_callback = []
 
 # Load env once, up front, so ANTHROPIC_API_KEY is available everywhere below.
 dotenv.load_dotenv()
@@ -80,7 +86,7 @@ def main():
             rounds=args.rounds,
             output_dir=os.path.join(args.output_dir, "textgrad"),
             executor_config=lfm_config(),
-            optimiser_config=lfm_config(),
+            optimiser_config=claude_config(),
         ),
         "mipro": lambda args: MiproOptimiser(
             seed=args.seed,
