@@ -7,13 +7,13 @@ from pathlib import Path
 from src.Optimiser import Optimiser
 from evoagentx.optimizers import MiproOptimizer
 from evoagentx.models import LiteLLMConfig, LiteLLM
-from evoagentx.benchmark import MATH
+from evoagentx.benchmark import GSM8K
 from evoagentx.core.callbacks import suppress_logger_info
 from evoagentx.utils.mipro_utils.register_utils import MiproRegistry
 from evoagentx.optimizers.engine.registry import OptimizableField
 
-class GSM8KSplitsMipro(MATH):
-    """Split MATH data into train/test for MIPRO optimization."""
+class GSM8KSplitsMipro(GSM8K):
+    """Split GSM8K data into train/test for MIPRO optimization."""
 
     def __init__(self, seed: int = 42):
         self.split_seed = seed
@@ -25,7 +25,8 @@ class GSM8KSplitsMipro(MATH):
         permutation = np.random.permutation(len(self._test_data))
         full_test = self._test_data
         self._train_data = [full_test[idx] for idx in permutation[:100]]
-        self._test_data = [full_test[idx] for idx in permutation[100:200]]
+        self._dev_data   = [full_test[idx] for idx in permutation[100:200]]   # populate DEV
+        self._test_data  = [full_test[idx] for idx in permutation[200:400]]
 
     def get_input_keys(self):
         return ["problem"]
