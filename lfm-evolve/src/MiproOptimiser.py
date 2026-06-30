@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Any, Tuple
 import json
-import numpy as np
+import numpy as npi
+from pathlib import Path
 
 from src.Optimiser import Optimiser
 from evoagentx.optimizers import MiproOptimizer
@@ -120,7 +121,7 @@ class MiproOptimiser(Optimiser):
         print(f"After optimization: {results_after}")
 
         # Save results
-        results_path = self.output_dir / "mipro_results.json"
+        results_path = Path(self.output_dir) / "mipro_results.json"
         with open(results_path, "w") as f:
             json.dump({
                 "after": results_after,
