@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, Tuple
 import json
-import numpy as npi
+import numpy as np
 from pathlib import Path
 
 from src.Optimiser import Optimiser
