@@ -106,8 +106,7 @@ def model_label(model=None):
     summary keys). e.g. 'qwen3:1.7b' -> 'qwen3_1.7b'."""
     raw = model or DEFAULT_EXECUTOR_MODEL
     short = raw.split("/")[-1]
-    return short.replace(":", "_").replace("/", "_")
-
+    return short.replace(":", "_").replace("/", "_").replace(".", "_").replace("-", "_")
 
 def claude_config():
     """Cloud optimiser model (Claude Sonnet 4.6)."""
