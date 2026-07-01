@@ -61,7 +61,9 @@ class MathSolverProgram:
             params = json.load(f)
         self.prompt = params["prompt"]
 
-    def __call__(self, problem: str) -> Tuple[str, dict]:
+    def __call__(self, problem: str = None, **kwargs) -> Tuple[str, dict]:
+        if problem is None:
+            problem = kwargs.get("problem")
         prompt = self.prompt.format(problem=problem)
         response = self.model.generate(prompt=prompt)
         solution = response.content
