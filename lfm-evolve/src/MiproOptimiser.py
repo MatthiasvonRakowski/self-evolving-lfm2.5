@@ -1,60 +1,53 @@
 from pathlib import Path
-from typing import Any, Tuple
+from typing import Tuple
 import json
-import numpy as np
-from pathlib import Path
 
 from src.Optimiser import Optimiser
 from evoagentx.optimizers import MiproOptimizer
 from evoagentx.models import LiteLLMConfig, LiteLLM
-from evoagentx.benchmark import GSM8K
 from evoagentx.core.callbacks import suppress_logger_info
 from evoagentx.utils.mipro_utils.register_utils import MiproRegistry
 from evoagentx.optimizers.engine.registry import OptimizableField
+from src.benchmarks import get_benchmark, HAS_GOLD_ANSWERS
 
-class GSM8KSplitsMipro(GSM8K):
-    """Split GSM8K data into train/test for MIPRO optimization."""
+# Seed prompt per benchmark. All three benchmarks expose a "problem" key
+# holding the fully formatted input (see src/benchmarks/__init__.py), so the
+# same {problem} placeholder works everywhere.
+SEED_PROMPT = {
+    "gsm8k": (
+        "Solve the math problem step by step. "
+        "Show your reasoning, then give the final numerical answer.\n\n"
+        "Problem: {problem}"
+    ),
+    "mmlu_pro": (
+        "Answer the multiple-choice question. Think step by step about each "
+        'option, then finish your response with the exact sentence: '
+        '"The answer is (X)" where X is the correct option letter.\n\n'
+        "{problem}"
+    ),
+    "ifeval": (
+        "Follow every instruction in the prompt exactly, and respond only "
+        "with the requested content.\n\n"
+        "Prompt: {problem}"
+    ),
+}
 
-    def __init__(self, seed: int = 42):
-        self.split_seed = seed
-        super().__init__()
 
-    def _load_data(self):
-        super()._load_data()
-        np.random.seed(self.split_seed)
-        permutation = np.random.permutation(len(self._test_data))
-        full_test = self._test_data
-        self._train_data = [full_test[idx] for idx in permutation[:100]]
-        self._dev_data   = [full_test[idx] for idx in permutation[100:200]]   # populate DEV
-        self._test_data  = [full_test[idx] for idx in permutation[200:400]]
-
-    def get_input_keys(self):
-        return ["problem"]
-
-    def evaluate(self, prediction: Any, label: Any) -> dict:
-        return super().evaluate(prediction, label)
-
-
-class MathSolverProgram:
-    """Simple math solver program whose prompt MIPRO will optimize.
+class PromptSolverProgram:
+    """Generic single-prompt program whose prompt MIPRO will optimize.
 
     MIPRO requires the program to have:
     - __call__(problem) -> (prediction, execution_data)
     - save(path) / load(path) for serialization
     """
 
-    def __init__(self, model: LiteLLM):
+    def __init__(self, model: LiteLLM, seed_prompt: str):
         self.model = model
-        self.prompt = (
-            "Solve the math problem step by step. "
-            "Show your reasoning, then give the final numerical answer.\n\n"
-            "Problem: {problem}"
-        )
+        self.prompt = seed_prompt
 
     def save(self, path: str):
-        params = {"prompt": self.prompt}
         with open(path, "w") as f:
-            json.dump(params, f)
+            json.dump({"prompt": self.prompt}, f)
 
     def load(self, path: str):
         with open(path, "r") as f:
@@ -73,37 +66,40 @@ class MathSolverProgram:
 class MiproOptimiser(Optimiser):
 
     def __init__(self, seed: int, rounds: int, output_dir: Path,
-                 executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig):
+                 executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
+                 benchmark: str = "gsm8k"):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
+        self.benchmark_name = benchmark
 
     def run(self):
-        print("Running MIPRO Optimiser...")
+        print(f"Running MIPRO Optimiser on {self.benchmark_name} ...")
 
         executor_llm = LiteLLM(config=self.executor_config)
         optimiser_llm = LiteLLM(config=self.optimiser_config)
 
         # Build the program
-        program = MathSolverProgram(model=executor_llm)
+        program = PromptSolverProgram(model=executor_llm, seed_prompt=SEED_PROMPT[self.benchmark_name])
 
         # Register the prompt parameter for optimization
         registry = MiproRegistry()
         field = OptimizableField(
-            name="math_solver_prompt",
+            name="solver_prompt",
             getter=lambda: program.prompt,
             setter=lambda value: setattr(program, "prompt", value),
         )
         registry.register_field(field)
 
         # Load benchmark
-        benchmark = GSM8KSplitsMipro(seed=self.seed)
+        benchmark = get_benchmark(self.benchmark_name, seed=self.seed if self.seed is not None else 42)
+        has_answers = HAS_GOLD_ANSWERS[self.benchmark_name]
 
         # Create optimizer
         optimizer = MiproOptimizer(
             registry=registry,
             program=program,
             optimizer_llm=optimiser_llm,
-            max_bootstrapped_demos=4,
-            max_labeled_demos=4,
+            max_bootstrapped_demos=4 if has_answers else 0,
+            max_labeled_demos=4 if has_answers else 0,
             num_threads=1,
             eval_rounds=1,
             num_candidates=6,

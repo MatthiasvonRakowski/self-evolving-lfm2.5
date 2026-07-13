@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify the SOLVE_MATH_PROMPT to encourage more structured decomposition by explicitly identifying key information and unknowns before solving, which helps reduce errors in multi-step problems.",
+    "before": 0.8888888888888888,
+    "after": 0.8598484848484849,
+    "succeed": false
+}

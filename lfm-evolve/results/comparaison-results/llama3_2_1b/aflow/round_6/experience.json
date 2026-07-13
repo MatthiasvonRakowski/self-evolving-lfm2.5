@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Modified SOLVE_MATH_PROMPT to include explicit self-verification steps and double-checking arithmetic, which improves individual solution accuracy and the majority voting success rate. Also slightly improved REVIEW_MATH_PROMPT to be more decisive.",
+    "before": 0.375,
+    "after": 0.3068181818181818,
+    "succeed": false
+}

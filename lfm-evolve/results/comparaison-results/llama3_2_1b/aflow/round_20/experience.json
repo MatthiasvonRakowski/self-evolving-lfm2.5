@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Add a third distinct prompt SOLVE_MATH_PROMPT_ALT2 that uses a \"working backwards from what's asked\" approach, and change sol3 to use this new prompt instead of reusing SOLVE_MATH_PROMPT, making all three solutions use genuinely different strategies to improve voting diversity.",
+    "before": 0.375,
+    "after": 0.29924242424242425,
+    "succeed": false
+}

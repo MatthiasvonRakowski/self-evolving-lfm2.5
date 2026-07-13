@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Changed SOLVE_MATH_PROMPT_ALT to use a \"word problem decomposition\" approach that first identifies all given quantities and what needs to be found, then sets up calculations explicitly. This makes sol2 genuinely different from sol1/sol3, improving voting diversity.",
+    "before": 0.375,
+    "after": 0.3446969696969697,
+    "succeed": false
+}

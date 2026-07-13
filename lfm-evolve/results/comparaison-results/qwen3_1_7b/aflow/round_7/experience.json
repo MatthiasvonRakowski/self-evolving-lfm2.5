@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to independently re-solve the problem from scratch before comparing with the proposed solution, ensuring errors in the original solution don't anchor the reviewer's thinking.",
+    "before": 0.8863636363636364,
+    "after": 0.9166666666666666,
+    "succeed": true
+}

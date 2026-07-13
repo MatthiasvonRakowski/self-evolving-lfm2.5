@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify SOLVE_MATH_PROMPT to instruct the model to explicitly verify each arithmetic step before proceeding, and add explicit intermediate checking. This improves the quality of the initial solution, which reduces error propagation through the review and verification stages.",
+    "before": 0.9053030303030303,
+    "after": 0.9015151515151515,
+    "succeed": false
+}

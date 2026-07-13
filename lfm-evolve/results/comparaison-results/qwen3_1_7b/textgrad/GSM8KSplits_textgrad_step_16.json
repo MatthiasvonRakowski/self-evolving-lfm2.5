@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the math problem step by step. Show your reasoning, then give the final numerical answer."
+            },
+            "system_prompt": "You are a precise mathematical reasoning agent operating within a structured answer-generation pipeline. When solving math problems, follow these rules strictly:\n\n1. Decompose the solution into clearly numbered, sequential steps \u2014 one operation per line, using plain text only. Do not use bullet points, markdown formatting, or introductory preamble phrases.\n2. Annotate every arithmetic operation inline using the format `a*b=<<a*b=result>>result` (e.g., `23-5=<<23-5=18>>18`). Use `*` for multiplication, not `\u00d7`.\n3. Follow the exact logical order implied by the problem. Do not introduce intermediate derived quantities unless the problem explicitly requires them. Prioritize canonical, minimal, and reproducible solution paths.\n4. End every response with the final numerical answer on its own line in the format: `#### <number>` \u2014 no other label or formatting.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "title_format": null,
+            "tool_names": null
+        }
+    ]
+}

@@ -1,0 +1,106 @@
+{
+    "0": {
+        "score": 0.38888888888888884,
+        "success": {},
+        "failure": {
+            "2": {
+                "modification": "Add a review/verification step after the initial solution. The second Custom call takes the problem and initial solution as input, reviews the reasoning, and outputs a corrected final answer if needed. This adds one new prompt (REVIEW_MATH_PROMPT) and modifies the graph to chain two Custom calls.",
+                "score": 0.30303030303030304
+            },
+            "4": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to include explicit instructions for careful arithmetic verification and structured problem decomposition, making the single-pass solution more accurate.",
+                "score": 0.29924242424242425
+            },
+            "5": {
+                "modification": "Added a new first step using a Custom call with EXTRACT_PROMPT that extracts key quantities and relationships from the problem. The extracted structure is then passed as additional context to the solver (SOLVE_MATH_PROMPT). This enriches the solver's input with pre-analyzed structure rather than adding a review/verification step. Two prompts are added: EXTRACT_PROMPT and a slightly modified SOLVE_MATH_PROMPT that references the extracted information.",
+                "score": 0.2689393939393939
+            },
+            "18": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use a more structured expert reasoning framework that asks the model to define variables, set up equations, compute carefully, and do a quick sanity check - all within a single call. This is fundamentally different from previous attempts as it changes the cognitive framework rather than adding steps or extraction.",
+                "score": 0.1553030303030303
+            },
+            "19": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"worked example\" framing that emphasizes writing out each arithmetic operation explicitly on its own line, helping the model avoid skipping steps and making arithmetic errors. This is different from all previous attempts - not a framework, not extraction, not verification, just a different narrative framing focused on explicit arithmetic notation.",
+                "score": 0.3143939393939394
+            }
+        }
+    },
+    "2": {
+        "score": 0.30303030303030304,
+        "success": {
+            "3": {
+                "modification": "Add a third independent solution generation step and implement majority voting among three solutions to improve answer reliability",
+                "score": 0.375
+            }
+        },
+        "failure": {
+            "9": {
+                "modification": "Modify SOLVE_MATH_PROMPT to include explicit arithmetic double-checking during initial solve, and update REVIEW_MATH_PROMPT to be more focused on format consistency. This helps reduce errors in the initial solution, making the review more reliable.",
+                "score": 0.25
+            }
+        }
+    },
+    "3": {
+        "score": 0.375,
+        "success": {},
+        "failure": {
+            "6": {
+                "modification": "Modified SOLVE_MATH_PROMPT to include explicit self-verification steps and double-checking arithmetic, which improves individual solution accuracy and the majority voting success rate. Also slightly improved REVIEW_MATH_PROMPT to be more decisive.",
+                "score": 0.3068181818181818
+            },
+            "8": {
+                "modification": "Modified SOLVE_MATH_PROMPT_ALT to use a \"units/equations first\" algebraic approach instead of general structured approach, making it more distinct from SOLVE_MATH_PROMPT to increase solution diversity and improve majority voting.",
+                "score": 0.2803030303030303
+            },
+            "14": {
+                "modification": "Changed sol3 to use a new SOLVE_MATH_PROMPT_ALT2 prompt that approaches problems by first estimating the answer range, then solving step-by-step with units tracking. This makes all three solutions use genuinely different strategies, improving diversity for majority voting.",
+                "score": 0.29545454545454547
+            },
+            "15": {
+                "modification": "Changed SOLVE_MATH_PROMPT_ALT to use a \"word problem decomposition\" approach that first identifies all given quantities and what needs to be found, then sets up calculations explicitly. This makes sol2 genuinely different from sol1/sol3, improving voting diversity.",
+                "score": 0.3446969696969697
+            }
+        }
+    },
+    "6": {
+        "score": 0.3068181818181818,
+        "success": {
+            "10": {
+                "modification": "Modify SOLVE_MATH_PROMPT_ALT to use a \"working backwards verification\" approach - a fundamentally different solving strategy that increases solution diversity and improves majority voting accuracy.",
+                "score": 0.3371212121212121
+            },
+            "11": {
+                "modification": "Modify SOLVE_MATH_PROMPT_ALT to use an \"algebraic equation setup\" approach - explicitly define variables, write equations, then solve systematically. This creates a fundamentally different solving strategy from the step-by-step arithmetic approach in SOLVE_MATH_PROMPT, increasing solution diversity for better majority voting.",
+                "score": 0.32196969696969696
+            }
+        },
+        "failure": {
+            "7": {
+                "modification": "Add a third distinct solving prompt SOLVE_MATH_PROMPT_VERIFY and use it for sol3 to increase solution diversity for better majority voting",
+                "score": 0.2727272727272727
+            }
+        }
+    },
+    "10": {
+        "score": 0.3371212121212121,
+        "success": {},
+        "failure": {
+            "12": {
+                "modification": "Replace sol3's instruction from SOLVE_MATH_PROMPT to a new SOLVE_MATH_PROMPT_COT that decomposes the problem into sub-steps before solving, increasing diversity among the three solutions.",
+                "score": 0.19696969696969696
+            },
+            "13": {
+                "modification": "Replace sol3's instruction from SOLVE_MATH_PROMPT to a new SOLVE_MATH_PROMPT_EQ that uses an equation/variable-setup approach, increasing diversity among the three solutions.",
+                "score": 0.22348484848484848
+            },
+            "16": {
+                "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to independently solve the problem from scratch first, then use that independent solution to adjudicate among the provided attempts, making the review more reliable and less biased toward potentially wrong solutions.",
+                "score": 0.2803030303030303
+            },
+            "17": {
+                "modification": "Replace SOLVE_MATH_PROMPT for sol3 with a new SOLVE_MATH_PROMPT_VERIFY that approaches the problem by explicitly defining variables and setting up equations before solving, increasing solution diversity among the three attempts.",
+                "score": 0.19318181818181818
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a review/verification step after the initial solution. The second Custom call takes the problem and initial solution as input, reviews the reasoning, and outputs a corrected final answer if needed. This adds one new prompt (REVIEW_MATH_PROMPT) and modifies the graph to chain two Custom calls.",
+    "before": 0.38888888888888884,
+    "after": 0.30303030303030304,
+    "succeed": false
+}

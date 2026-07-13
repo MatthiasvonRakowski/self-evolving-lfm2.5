@@ -1,0 +1,7 @@
+{
+    "father node": 6,
+    "modification": "Add a third distinct solving prompt SOLVE_MATH_PROMPT_VERIFY and use it for sol3 to increase solution diversity for better majority voting",
+    "before": 0.3068181818181818,
+    "after": 0.2727272727272727,
+    "succeed": false
+}

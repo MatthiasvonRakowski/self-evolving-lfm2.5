@@ -1,119 +1,23 @@
+# src.common must be imported first: it loads .env, silences litellm logging
+# and applies the LiteLLM api_base monkeypatch (see its docstring).
+from src.common import (
+    resolve_model_id,
+    executor_config,
+    model_label,
+    claude_config,
+    tee_to_file,
+)
 from src.AFlowOptimiser import AFlowOptimiser
 from src.TextGradOptimiser import TextGradOptimiser
 from src.MiproOptimiser import MiproOptimiser
+from src.BilevelOptimiser import BilevelOptimiser
+from src.bilevel.inner_base import InnerBudget
 import os
 import json
 import time
 import traceback
 import argparse
 import datetime
-import sys
-import contextlib
-import dotenv
-from evoagentx.models import LiteLLMConfig, LiteLLM
-import litellm
-
-litellm.turn_off_message_logging = True
-litellm.success_callback = []
-litellm.failure_callback = []
-litellm._async_success_callback = []
-litellm._async_failure_callback = []
-
-
-class _Tee:
-    """Write to several streams at once (console + per-run log file)."""
-
-    def __init__(self, *streams):
-        self.streams = streams
-
-    def write(self, data):
-        for s in self.streams:
-            s.write(data)
-            s.flush()
-
-    def flush(self):
-        for s in self.streams:
-            s.flush()
-
-
-@contextlib.contextmanager
-def tee_to_file(log_path):
-    """Duplicate stdout+stderr into log_path for the duration of the block,
-    while still printing to the console."""
-    os.makedirs(os.path.dirname(log_path) or ".", exist_ok=True)
-    f = open(log_path, "a", buffering=1)
-    old_out, old_err = sys.stdout, sys.stderr
-    sys.stdout = _Tee(old_out, f)
-    sys.stderr = _Tee(old_err, f)
-    try:
-        yield
-    finally:
-        sys.stdout, sys.stderr = old_out, old_err
-        f.close()
-
-# Load env once, up front, so ANTHROPIC_API_KEY is available everywhere below.
-dotenv.load_dotenv()
-os.environ["ANTHROPIC_API_BASE"] = "https://api.anthropic.com"  # extra safety; harmless
-
-# Default local executor model (your custom 16k-context LFM2.5 Modelfile build).
-# Any value(s) passed via --models override this.
-DEFAULT_EXECUTOR_MODEL = "ollama_chat/lfm2.5-16k"
-
-# ---------------------------------------------------------------------------
-# DURABLE FIX for the global litellm.api_base leak.
-#
-# EvoAgentX requires api_base for local models and, on init, sets the
-# module-global `litellm.api_base = config.api_base`. That global overrides
-# both per-instance api_base and the ANTHROPIC_API_BASE env var, so any local
-# (Ollama) model would otherwise hijack every later Anthropic call and route it
-# to localhost. We wrap init_model to null the global after EVERY model init,
-# so the executor and optimiser can coexist and AFlow rebuilding the executor
-# mid-run can't re-poison it. Local still reaches Ollama via litellm's default
-# ollama host; Anthropic reaches its real endpoint.
-# ---------------------------------------------------------------------------
-_orig_init_model = LiteLLM.init_model
-
-
-def _init_model_no_global_base(self):
-    _orig_init_model(self)
-    litellm.api_base = None
-
-
-LiteLLM.init_model = _init_model_no_global_base
-# ---------------------------------------------------------------------------
-
-
-def resolve_model_id(model=None):
-    """Full litellm model id. None -> LFM2.5 default. Bare Ollama names like
-    'qwen3:1.7b' get the 'ollama_chat/' prefix so they work from the CLI."""
-    model_id = model or DEFAULT_EXECUTOR_MODEL
-    if "/" not in model_id:
-        model_id = f"ollama_chat/{model_id}"
-    return model_id
-
-
-def executor_config(model=None):
-    """Local executor model via Ollama."""
-    return LiteLLMConfig(
-        model=resolve_model_id(model),
-        is_local=True,
-        api_base="http://localhost:11434",
-    )
-
-
-def model_label(model=None):
-    """Short, filesystem-safe label for a model (used for output dirs and the
-    summary keys). e.g. 'qwen3:1.7b' -> 'qwen3_1.7b'."""
-    raw = model or DEFAULT_EXECUTOR_MODEL
-    short = raw.split("/")[-1]
-    return short.replace(":", "_").replace("/", "_").replace(".", "_").replace("-", "_")
-
-def claude_config():
-    """Cloud optimiser model (Claude Sonnet 4.6)."""
-    return LiteLLMConfig(
-        model="anthropic/claude-sonnet-4-6",
-        anthropic_key=os.environ["ANTHROPIC_API_KEY"],
-    )
 
 
 def build_method(method, args, model, out_dir):
@@ -128,6 +32,7 @@ def build_method(method, args, model, out_dir):
             executor_config=exec_cfg,
             optimiser_config=claude_config(),
             graph_path=args.graph_path,
+            benchmark=args.benchmark,
         )
     if method == "textgrad":
         return TextGradOptimiser(
@@ -136,6 +41,7 @@ def build_method(method, args, model, out_dir):
             output_dir=os.path.join(out_dir, "textgrad"),
             executor_config=exec_cfg,
             optimiser_config=claude_config(),
+            benchmark=args.benchmark,
         )
     if method == "mipro":
         return MiproOptimiser(
@@ -144,6 +50,25 @@ def build_method(method, args, model, out_dir):
             output_dir=os.path.join(out_dir, "mipro"),
             executor_config=exec_cfg,
             optimiser_config=claude_config(),
+            benchmark=args.benchmark,
+        )
+    if method == "bilevel":
+        return BilevelOptimiser(
+            seed=args.seed,
+            rounds=args.rounds,
+            output_dir=os.path.join(out_dir, "bilevel"),
+            executor_config=exec_cfg,
+            optimiser_config=claude_config(),
+            graph_path=args.graph_path,
+            benchmark=args.benchmark,
+            inner=args.inner,
+            inner_budget=InnerBudget(
+                mipro_candidates=args.inner_mipro_candidates,
+                mipro_steps=args.inner_mipro_steps,
+                tg_steps=args.inner_tg_steps,
+                dev_eval_k=args.dev_eval_k,
+                seed=args.seed if args.seed is not None else 42,
+            ),
         )
     raise ValueError(f"Unknown method: {method}")
 
@@ -172,7 +97,11 @@ def main():
     argparser.add_argument("--seed", type=int, default=None, help="Random seed for reproducibility.")
     argparser.add_argument("--rounds", type=int, default=None, help="Number of optimization rounds to run.")
     argparser.add_argument("--output_dir", type=str, default="output", help="Directory to save optimization results.")
-    argparser.add_argument("--graph_path", type=str, default="src/aflow_workflow", help="Path to the graph file.")
+    argparser.add_argument(
+        "--graph_path", type=str, default=None,
+        help="Path to the AFlow seed graph directory. Defaults to "
+             "src/aflow_workflow/<benchmark>/ (per --benchmark) when omitted.",
+    )
     argparser.add_argument(
         "--models", nargs="+", default=[None],
         help="One or more executor models to optimise (Ollama model names, e.g. "
@@ -182,10 +111,27 @@ def main():
     )
     argparser.add_argument(
         "--method", nargs="+",
-        choices=["aflow", "textgrad", "mipro"],
-        default=["aflow", "textgrad", "mipro"],  # run ALL three by default
+        choices=["aflow", "textgrad", "mipro", "bilevel"],
+        default=["aflow", "textgrad", "mipro"],  # run the three baselines by default
         help="Optimiser(s) to run. Can specify multiple.",
     )
+    argparser.add_argument(
+        "--benchmark", choices=["gsm8k", "mmlu_pro", "ifeval"], default="gsm8k",
+        help="Benchmark to optimise on (default: gsm8k).",
+    )
+    argparser.add_argument(
+        "--inner", choices=["mipro", "textgrad", "mipro+textgrad", "none"],
+        default="mipro+textgrad",
+        help="[bilevel] Inner prompt optimiser(s) run on each candidate workflow.",
+    )
+    argparser.add_argument("--inner_mipro_candidates", type=int, default=4,
+                           help="[bilevel] MIPRO instruction candidates per inner run.")
+    argparser.add_argument("--inner_mipro_steps", type=int, default=4,
+                           help="[bilevel] MIPRO optimisation steps per inner run.")
+    argparser.add_argument("--inner_tg_steps", type=int, default=2,
+                           help="[bilevel] TextGrad-lite refinement steps per inner run.")
+    argparser.add_argument("--dev_eval_k", type=int, default=40,
+                           help="[bilevel] Dev-subsample size used to score inner candidates.")
     argparser.add_argument(
         "--resume", action="store_true",
         help="Skip model+method combinations already marked 'success' in run_summary.json.",

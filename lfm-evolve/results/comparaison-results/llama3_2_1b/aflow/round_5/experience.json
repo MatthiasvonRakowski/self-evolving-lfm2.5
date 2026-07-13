@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added a new first step using a Custom call with EXTRACT_PROMPT that extracts key quantities and relationships from the problem. The extracted structure is then passed as additional context to the solver (SOLVE_MATH_PROMPT). This enriches the solver's input with pre-analyzed structure rather than adding a review/verification step. Two prompts are added: EXTRACT_PROMPT and a slightly modified SOLVE_MATH_PROMPT that references the extracted information.",
+    "before": 0.38888888888888884,
+    "after": 0.2689393939393939,
+    "succeed": false
+}

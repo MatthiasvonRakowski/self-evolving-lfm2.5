@@ -1,0 +1,7 @@
+{
+    "father node": 10,
+    "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to independently solve the problem from scratch first, then use that independent solution to adjudicate among the provided attempts, making the review more reliable and less biased toward potentially wrong solutions.",
+    "before": 0.3371212121212121,
+    "after": 0.2803030303030303,
+    "succeed": false
+}

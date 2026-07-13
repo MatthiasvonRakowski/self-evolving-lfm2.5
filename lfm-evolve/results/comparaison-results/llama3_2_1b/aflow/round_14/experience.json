@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Changed sol3 to use a new SOLVE_MATH_PROMPT_ALT2 prompt that approaches problems by first estimating the answer range, then solving step-by-step with units tracking. This makes all three solutions use genuinely different strategies, improving diversity for majority voting.",
+    "before": 0.375,
+    "after": 0.29545454545454547,
+    "succeed": false
+}

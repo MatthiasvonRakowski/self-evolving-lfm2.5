@@ -1,9 +1,8 @@
 import evoagentx.workflow.operators as operator
-import src.aflow_workflow.prompt as prompt_custom
+import output2.llama3_2_1b.aflow.round_1.prompt as prompt_custom
 from evoagentx.models.model_configs import LLMConfig
 from evoagentx.benchmark.benchmark import Benchmark
 from evoagentx.models.model_utils import create_llm_instance
-
 
 class Workflow:
     def __init__(self, name: str, llm_config: LLMConfig, benchmark: Benchmark | None = None):
@@ -17,4 +16,8 @@ class Workflow:
             input=problem,
             instruction=prompt_custom.SOLVE_MATH_PROMPT,
         )
-        return solution["response"]
+        verified = await self.custom(
+            input=f"Problem: {problem}\n\nProposed Solution:\n{solution['response']}",
+            instruction=prompt_custom.VERIFY_MATH_PROMPT,
+        )
+        return verified["response"]

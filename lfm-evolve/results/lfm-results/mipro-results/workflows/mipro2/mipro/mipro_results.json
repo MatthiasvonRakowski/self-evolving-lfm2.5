@@ -1,0 +1,5 @@
+{
+  "after": 2.32,
+  "seed": null,
+  "optimized_prompt": "Solve the math problem step by step. Show your reasoning, then give the final numerical answer.\n\nProblem: {{problem}}"
+}
