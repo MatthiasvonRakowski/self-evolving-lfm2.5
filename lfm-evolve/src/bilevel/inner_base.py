@@ -99,22 +99,33 @@ async def eval_dev_subsample(workflow: Callable, benchmark: Benchmark, k: int,
     return float(np.mean(scores)) if scores else 0.0
 
 
+class _BackgroundLoop:
+    """A single event loop that lives for the process's lifetime in its own
+    daemon thread, so repeated run_async() calls reuse one loop instead of
+    creating (and abandoning) a fresh one each time. litellm's async HTTP
+    client caches its aiohttp ClientSession against whichever loop is
+    running; tearing a loop down per call (the previous asyncio.run()-per-call
+    approach) abandoned that session without closing it, producing a flood
+    of "Unclosed client session"/"Unclosed connector" warnings over a long
+    run with many inner-loop candidate calls."""
+
+    _loop: Any = None
+    _lock = threading.Lock()
+
+    @classmethod
+    def get(cls):
+        with cls._lock:
+            if cls._loop is None:
+                loop = asyncio.new_event_loop()
+                threading.Thread(target=loop.run_forever, daemon=True).start()
+                cls._loop = loop
+            return cls._loop
+
+
 def run_async(coro) -> Any:
     """Run an async coroutine to completion from sync code, regardless of
     whether the calling thread already has a running event loop (MIPRO's
     internal search calls the wrapped program synchronously, but we're
     invoked from inside AFlowOptimizer's own event loop)."""
-    box: Dict[str, Any] = {}
-
-    def runner():
-        try:
-            box["result"] = asyncio.run(coro)
-        except Exception as e:
-            box["error"] = e
-
-    thread = threading.Thread(target=runner)
-    thread.start()
-    thread.join()
-    if "error" in box:
-        raise box["error"]
-    return box["result"]
+    future = asyncio.run_coroutine_threadsafe(coro, _BackgroundLoop.get())
+    return future.result()
