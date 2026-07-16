@@ -113,3 +113,34 @@ def claude_config():
         model="anthropic/claude-sonnet-4-6",
         anthropic_key=os.environ["ANTHROPIC_API_KEY"],
     )
+
+
+def hf_load_dataset(*args, timeouts=(30, 60, 120), **kwargs):
+    """datasets.load_dataset with HF Hub timeouts bumped and retried.
+
+    The Hub's metadata/etag HEAD requests (e.g. README.md) default to a 10s
+    timeout, which read-times-out on slow/unstable connections well before
+    the actual data transfer would. huggingface_hub reads
+    HF_HUB_ETAG_TIMEOUT/HF_HUB_DOWNLOAD_TIMEOUT dynamically at call time (not
+    baked into function defaults), so patching them at runtime works
+    regardless of import order.
+    """
+    import huggingface_hub.constants as hf_constants
+    from datasets import load_dataset
+
+    last_err = None
+    for i, timeout_s in enumerate(timeouts):
+        hf_constants.HF_HUB_ETAG_TIMEOUT = timeout_s
+        hf_constants.HF_HUB_DOWNLOAD_TIMEOUT = timeout_s
+        try:
+            return load_dataset(*args, **kwargs)
+        except Exception as e:
+            last_err = e
+            print(f"[hf_load_dataset] attempt {i + 1}/{len(timeouts)} "
+                  f"(timeout={timeout_s}s) failed: {e}")
+    raise RuntimeError(
+        f"Failed to load HuggingFace dataset {args!r} after {len(timeouts)} "
+        f"attempts with increasing timeouts {timeouts}. This usually means "
+        f"the network to huggingface.co is slow, blocked, or proxied. Check "
+        f"connectivity, or pre-populate the cache/jsonl file manually."
+    ) from last_err

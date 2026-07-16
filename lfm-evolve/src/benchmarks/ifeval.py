@@ -41,9 +41,9 @@ class IFEval(Benchmark):
     def _read_data(self) -> list:
         file_path = os.path.join(self.path, "ifeval.jsonl")
         if not os.path.exists(file_path):
-            from datasets import load_dataset
+            from src.common import hf_load_dataset
             logger.info("Downloading google/IFEval from HuggingFace ...")
-            ds = load_dataset("google/IFEval")["train"]
+            ds = hf_load_dataset("google/IFEval")["train"]
             os.makedirs(self.path, exist_ok=True)
             with open(file_path, "w") as f:
                 for row in ds:

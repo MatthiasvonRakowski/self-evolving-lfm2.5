@@ -38,9 +38,9 @@ class MMLUPro(Benchmark):
 
     # -- data ---------------------------------------------------------------
     def _download_and_cache(self):
-        from datasets import load_dataset
+        from src.common import hf_load_dataset
         logger.info("Downloading TIGER-Lab/MMLU-Pro from HuggingFace ...")
-        ds = load_dataset("TIGER-Lab/MMLU-Pro")
+        ds = hf_load_dataset("TIGER-Lab/MMLU-Pro")
         os.makedirs(self.path, exist_ok=True)
         for split in ("validation", "test"):
             file_path = os.path.join(self.path, f"{split}.jsonl")
