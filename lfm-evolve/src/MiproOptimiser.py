@@ -103,7 +103,7 @@ class MiproOptimiser(Optimiser):
             num_threads=1,
             eval_rounds=1,
             num_candidates=6,
-            max_steps=10,
+            max_steps=self.rounds if self.rounds else 10,
             auto=None,
             save_path=str(self.output_dir),
         )

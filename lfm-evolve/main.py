@@ -6,6 +6,7 @@ from src.common import (
     model_label,
     claude_config,
     tee_to_file,
+    summarize_usage,
 )
 from src.AFlowOptimiser import AFlowOptimiser
 from src.TextGradOptimiser import TextGradOptimiser
@@ -187,6 +188,8 @@ def main():
             save_summary(summary_path, summary)
 
             log_path = os.path.join(model_out, "logs", f"{method}.log")
+            usage_log_path = os.path.join(model_out, "usage", f"{method}.jsonl")
+            os.environ["LLM_USAGE_LOG"] = usage_log_path
             try:
                 with tee_to_file(log_path):
                     opt = build_method(method, args, model, model_out)
@@ -198,6 +201,7 @@ def main():
                     "elapsed_sec": elapsed,
                     "executor_model": resolved,
                     "log": log_path,
+                    "usage": summarize_usage(usage_log_path),
                 }
                 save_summary(summary_path, summary)
                 print(f"--- {label}/{method} finished OK in {elapsed}s (log: {log_path}) ---")
@@ -219,6 +223,7 @@ def main():
                     "error": str(e),
                     "traceback": tb,
                     "log": log_path,
+                    "usage": summarize_usage(usage_log_path),
                 }
                 save_summary(summary_path, summary)
                 print(f"\n!!! {label}/{method} FAILED after {elapsed}s: {e}")
@@ -227,6 +232,8 @@ def main():
                     print("--- --stop_on_error set: aborting everything ---")
                     _print_final(summary, args)
                     return
+            finally:
+                os.environ.pop("LLM_USAGE_LOG", None)
 
     _print_final(summary, args)
 

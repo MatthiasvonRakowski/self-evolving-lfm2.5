@@ -13,6 +13,7 @@ check -- are all computed after inner optimization, not raw/seed-prompt
 performance.
 """
 
+import json
 import os
 import sys
 from pathlib import Path
@@ -101,4 +102,12 @@ class BilevelOptimiser(Optimiser):
             bilevel_has_gold_answers=HAS_GOLD_ANSWERS[self.benchmark_name],
         )
         optimizer.optimize(benchmark)
+
+        # Snapshot the best round now, before test() appends test-set entries
+        # to results.json in the same shape as validation entries (which
+        # would otherwise corrupt post-hoc best-round selection in evaluate.py).
+        best_round_path = Path(self.output_dir) / "best_round.json"
+        with open(best_round_path, "w") as f:
+            json.dump({"best_round": optimizer._load_best_round()}, f, indent=2)
+
         optimizer.test(benchmark)

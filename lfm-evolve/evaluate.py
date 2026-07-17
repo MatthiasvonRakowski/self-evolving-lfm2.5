@@ -4,11 +4,13 @@ from src.common import resolve_model_id, executor_config, model_label
 
 import argparse
 import asyncio
+import datetime
 import importlib
 import json
 import os
 import re
 import sys
+import time
 import types
 from collections import defaultdict
 from pathlib import Path
@@ -78,12 +80,28 @@ def load_baseline_workflow_class(benchmark_name: str) -> Callable:
     return module.Workflow
 
 
-def resolve_bilevel_round_dir(optimizer_output_dir: str, label: str) -> Optional[Path]:
-    """Best round (by mean dev score across validation_rounds repeats) of a
-    completed bilevel run, resolved the same way AFlowOptimizer._load_best_round
-    does internally."""
-    bilevel_dir = Path(optimizer_output_dir) / label / "bilevel"
-    results_path = bilevel_dir / "results.json"
+def resolve_round_dir(base: Path) -> Optional[Path]:
+    """Best round directory of a completed aflow/bilevel run under `base`
+    (<optimizer_output_dir>/<label>/<aflow|bilevel>/).
+
+    Prefers best_round.json, written by AFlowOptimiser/BilevelOptimiser right
+    after optimize() and before test() -- at that point results.json holds
+    only validation entries. Falls back to the old mean-by-round computation
+    over results.json (by mean dev score across validation_rounds repeats,
+    the same way AFlowOptimizer._load_best_round does internally) for
+    artifacts trained before best_round.json existed; note that fallback can
+    be wrong once test() has appended test-set entries to results.json in the
+    same shape as validation entries.
+    """
+    base = Path(base)
+    best_round_path = base / "best_round.json"
+    if best_round_path.exists():
+        with open(best_round_path) as f:
+            best_round = json.load(f)["best_round"]
+        round_dir = base / f"round_{best_round}"
+        return round_dir if round_dir.exists() else None
+
+    results_path = base / "results.json"
     if not results_path.exists():
         return None
     with open(results_path) as f:
@@ -95,7 +113,7 @@ def resolve_bilevel_round_dir(optimizer_output_dir: str, label: str) -> Optional
     if not scores:
         return None
     best_round = max(scores, key=lambda rnd: sum(scores[rnd]) / len(scores[rnd]))
-    round_dir = bilevel_dir / f"round_{best_round}"
+    round_dir = base / f"round_{best_round}"
     return round_dir if round_dir.exists() else None
 
 
@@ -187,12 +205,35 @@ def run_textgrad_predictor(path: str, benchmark, executor_llm: LiteLLM, concurre
 def resolve_artifact_source(artifact: str, benchmark_name: str, label: str, args) -> Optional[str]:
     """Returns a filesystem path for artifacts that need one (aflow/textgrad/
     mipro/bilevel), or None if unavailable for this model. baseline needs no
-    path (it's the seed workflow shipped in the repo)."""
+    path (it's the seed workflow shipped in the repo).
+
+    bilevel has no entry in ARTIFACT_PATHS (it's new), so it's always
+    resolved dynamically from args.optimizer_output_dir. aflow/textgrad/mipro
+    default to the hardcoded ARTIFACT_PATHS (old pre-trained artifacts)
+    unless --artifacts_from_output is set, in which case they're resolved
+    fresh from <optimizer_output_dir>/<label>/<artifact>/, matching what a
+    concurrent main.py run just produced.
+    """
     if artifact == "baseline":
         return "src.aflow_workflow." + benchmark_name  # not a filesystem path, just a marker
     if artifact == "bilevel":
-        round_dir = resolve_bilevel_round_dir(args.optimizer_output_dir, label)
+        round_dir = resolve_round_dir(Path(args.optimizer_output_dir) / label / "bilevel")
         return str(round_dir) if round_dir else None
+    if getattr(args, "artifacts_from_output", False):
+        base = Path(args.optimizer_output_dir) / label / artifact
+        if artifact == "aflow":
+            round_dir = resolve_round_dir(base)
+            return str(round_dir) if round_dir else None
+        if artifact == "textgrad":
+            # New training runs name the artifact after the benchmark eval
+            # class (e.g. GSM8KEval_textgrad_best.json), not a fixed name.
+            matches = sorted(base.glob("*_textgrad_best.json"))
+            if not matches:
+                matches = sorted(base.glob("*_textgrad_final.json"))
+            return str(matches[0]) if matches else None
+        if artifact == "mipro":
+            path = base / "best_program.json"
+            return str(path) if path.exists() else None
     return ARTIFACT_PATHS.get(label, {}).get(artifact)
 
 
@@ -293,7 +334,12 @@ def main():
     parser.add_argument("--output_dir", type=str, default="eval-results")
     parser.add_argument("--optimizer_output_dir", type=str, default="output",
                          help="Where main.py wrote optimizer runs, used to resolve the 'bilevel' artifact "
-                              "(<optimizer_output_dir>/<model_label>/bilevel/).")
+                              "(<optimizer_output_dir>/<model_label>/bilevel/) and, with "
+                              "--artifacts_from_output, aflow/textgrad/mipro too.")
+    parser.add_argument("--artifacts_from_output", action="store_true",
+                         help="Resolve aflow/textgrad/mipro artifacts fresh from --optimizer_output_dir "
+                              "instead of the hardcoded ARTIFACT_PATHS (old pre-trained artifacts). "
+                              "baseline is unaffected.")
     parser.add_argument("--resume", action="store_true", help="Skip cells already marked 'success'.")
     args = parser.parse_args()
 
@@ -319,18 +365,28 @@ def main():
                     continue
 
                 print(f"\n=== {benchmark_name} / {label} / {artifact} ===")
+                started_at = datetime.datetime.now().isoformat(timespec="seconds")
+                t0 = time.time()
                 try:
                     result = asyncio.run(run_cell(benchmark_name, model, artifact, args))
                 except Exception as e:
                     import traceback
                     print(f"!!! FAILED: {e}")
-                    summary[benchmark_name][label][artifact] = {"status": "failed", "error": str(e),
-                                                                  "traceback": traceback.format_exc()}
+                    summary[benchmark_name][label][artifact] = {
+                        "status": "failed", "error": str(e),
+                        "traceback": traceback.format_exc(),
+                        "started_at": started_at,
+                        "elapsed_sec": round(time.time() - t0, 1),
+                    }
                     save_json_atomic(summary_path, summary)
                     continue
 
                 if result is None:
-                    summary[benchmark_name][label][artifact] = {"status": "unavailable"}
+                    summary[benchmark_name][label][artifact] = {
+                        "status": "unavailable",
+                        "started_at": started_at,
+                        "elapsed_sec": round(time.time() - t0, 1),
+                    }
                     save_json_atomic(summary_path, summary)
                     continue
 
@@ -342,6 +398,8 @@ def main():
                     "n": result["n"],
                     "artifact_source": result["artifact_source"],
                     "path": cell_path,
+                    "started_at": started_at,
+                    "elapsed_sec": round(time.time() - t0, 1),
                 }
                 save_json_atomic(summary_path, summary)
                 print(f"  -> mean {result['main_metric']}: {result['mean_score']:.4f}  (n={result['n']})")
