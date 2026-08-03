@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a review/verification step after the initial solution, where the model checks the work and provides a verified final answer. This adds one new prompt (VERIFY_MATH_PROMPT) and one additional custom call in the workflow.",
+    "before": 0.8633333333333333,
+    "after": 0.87,
+    "succeed": true
+}

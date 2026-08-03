@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a \"known/unknown mapping with unit tracking\" approach: the model first creates a two-column table of givens vs. what's asked, then solves while writing units next to every number in every step. This differs from quantity labeling (which just names quantities upfront) by requiring unit annotation on every intermediate value throughout the solution.",
+    "before": 0.9033333333333333,
+    "after": 0.88,
+    "succeed": false
+}

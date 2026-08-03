@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added ensemble approach: two independent Custom calls with different problem-framing prompts (arithmetic-focused vs. logical reasoning-focused), followed by a synthesis Custom call that picks the most consistent answer. This is fundamentally different from the single-pass approach and doesn't repeat any prohibited patterns.",
+    "before": 0.9033333333333333,
+    "after": 0.82,
+    "succeed": false
+}

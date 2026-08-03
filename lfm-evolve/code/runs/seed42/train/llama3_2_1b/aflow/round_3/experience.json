@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to include more structured instructions: added explicit steps for problem identification, detailed arithmetic writing, contextual verification, and stricter output format requirements (emphasizing that only a single number should follow \"#### \" with no units or extra text). The graph structure remains unchanged to avoid the penalized review pattern.",
+    "before": 0.49333333333333335,
+    "after": 0.43,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify VERIFY_MATH_PROMPT to add a clearer \"Step 5: Final Decision\" that explicitly restates the correct numerical answer after the comparison, reducing cases where the answer extraction fails or the verifier is indecisive.",
+    "before": 0.9,
+    "after": 0.88,
+    "succeed": false
+}

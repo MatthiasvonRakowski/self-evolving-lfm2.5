@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Function Purpose"
+            },
+            "system_prompt": "Step-by-Step Solution",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

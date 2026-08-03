@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modify SOLVE_MATH_PROMPT to explicitly instruct the model to verify its own arithmetic at each step before proceeding, making the initial solution more reliable before the verification step.",
+    "before": 0.87,
+    "after": 0.9,
+    "succeed": true
+}

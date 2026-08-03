@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify SOLVE_MATH_PROMPT to include a more structured problem-solving framework that emphasizes identifying key information, setting up equations clearly, and computing systematically, leading to a precise final answer format.",
+    "before": 0.7689393939393939,
+    "after": 0.7803030303030303,
+    "succeed": true
+}

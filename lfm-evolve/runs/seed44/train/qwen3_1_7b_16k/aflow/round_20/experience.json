@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify CLASSIFY_PROBLEM_PROMPT to also extract key numerical values and quantities from the problem, so the solver receives both the category AND a structured list of key numbers/quantities, reducing arithmetic misreading errors in step 2.",
+    "before": 0.94,
+    "after": 0.87,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Add a verification stage (Stage 3) after solving, where the model checks the arithmetic of the solution and confirms or corrects the final answer. This adds one new prompt (VERIFY_PROMPT) and one additional custom call in the graph.",
+    "before": 0.9,
+    "after": 0.92,
+    "succeed": true
+}

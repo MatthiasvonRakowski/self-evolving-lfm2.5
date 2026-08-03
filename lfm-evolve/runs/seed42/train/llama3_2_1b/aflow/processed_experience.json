@@ -1,0 +1,42 @@
+{
+    "0": {
+        "score": 0.49333333333333335,
+        "success": {},
+        "failure": {
+            "2": {
+                "modification": "Add a second custom call to verify/review the initial solution, implementing a review pattern to catch errors. This adds one new prompt and one additional custom call in the graph.",
+                "score": 0.34
+            },
+            "3": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include more structured instructions: added explicit steps for problem identification, detailed arithmetic writing, contextual verification, and stricter output format requirements (emphasizing that only a single number should follow \"#### \" with no units or extra text). The graph structure remains unchanged to avoid the penalized review pattern.",
+                "score": 0.43
+            },
+            "4": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a more concise, direct chain-of-thought style that emphasizes careful arithmetic at each step, and explicitly instructs to write out each calculation. This is a single prompt change - no graph structure changes.",
+                "score": 0.42
+            },
+            "5": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use a 5-step \"identify \u2192 question \u2192 plan \u2192 compute \u2192 answer\" structure that is fundamentally different from previous attempts. Instead of general chain-of-thought or structured instructions, this explicitly separates number extraction, question identification, operation planning, and computation into distinct labeled phases. The graph structure remains unchanged (single custom call, no review pattern).",
+                "score": 0.07
+            },
+            "8": {
+                "modification": "Added ensemble approach: generate two independent solutions using the same prompt, then use a third custom call to select the most consistent/correct answer between them. This is fundamentally different from a review pattern - it's parallel generation + majority selection rather than sequential verify/review.",
+                "score": 0.0
+            }
+        }
+    },
+    "4": {
+        "score": 0.42,
+        "success": {},
+        "failure": {
+            "6": {
+                "modification": "Added a second Custom call (verification step) that reviews the initial solution. The workflow now: (1) solves the problem, then (2) verifies/corrects the solution. This implements a solve-then-verify pattern to reduce arithmetic errors.",
+                "score": 0.36
+            },
+            "7": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to add an explicit \"verification summary\" step where the model must list all key numbers, re-trace the arithmetic chain concisely after solving, and confirm the answer matches before writing ####. This forces internal consistency checking within a single pass without adding a second operator call.",
+                "score": 0.36
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify REVISE_MATH_PROMPT to add stronger format enforcement and explicit instruction to verify the final numerical answer before outputting it, ensuring the `#### ` prefix is never omitted even when the LLM is focused on correcting errors.",
+    "before": 0.87,
+    "after": 0.88,
+    "succeed": true
+}

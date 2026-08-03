@@ -1,0 +1,62 @@
+{
+    "0": {
+        "score": 0.8888888888888888,
+        "success": {},
+        "failure": {
+            "2": {
+                "modification": "Add a review/verification step after the initial solution to catch errors and confirm the answer",
+                "score": 0.8863636363636364
+            },
+            "6": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to encourage more structured decomposition by explicitly identifying key information and unknowns before solving, which helps reduce errors in multi-step problems.",
+                "score": 0.8598484848484849
+            },
+            "8": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to use a more authoritative \"expert mathematician\" framing with explicit instruction to double-check arithmetic before writing the final answer, and to clearly separate the final numerical answer. This avoids the banned \"verification step\" (which adds a second LLM call) while improving single-pass accuracy through prompt-level guidance.",
+                "score": 0.8560606060606061
+            },
+            "9": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to use a \"arithmetic equation\" style where each calculation is written as an explicit equation on its own line, forcing the model to be precise about each arithmetic operation rather than computing mentally. This is fundamentally different from verification (one call), decomposition (no unknown-identification step), or expert framing.",
+                "score": 0.8598484848484849
+            }
+        }
+    },
+    "2": {
+        "score": 0.8863636363636364,
+        "success": {
+            "4": {
+                "modification": "Add a third custom call (VERIFY step) that takes the reviewed solution and re-confirms the final numerical answer, ensuring consistency between the work shown and the final answer stated.",
+                "score": 0.9053030303030303
+            },
+            "7": {
+                "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to independently re-solve the problem from scratch before comparing with the proposed solution, ensuring errors in the original solution don't anchor the reviewer's thinking.",
+                "score": 0.9166666666666666
+            }
+        },
+        "failure": {}
+    },
+    "4": {
+        "score": 0.9053030303030303,
+        "success": {},
+        "failure": {
+            "5": {
+                "modification": "Modify VERIFY_MATH_PROMPT to emphasize independent recomputation first, then comparison, reducing the risk of both solutions sharing the same error going undetected.",
+                "score": 0.9053030303030303
+            }
+        }
+    },
+    "5": {
+        "score": 0.9053030303030303,
+        "success": {},
+        "failure": {
+            "10": {
+                "modification": "Add a 4th custom step (FORMAT step) after verification to cleanly extract and format the final numerical answer, ensuring the \"#### \" prefix is always present and correct.",
+                "score": 0.9015151515151515
+            },
+            "11": {
+                "modification": "Modify VERIFY_MATH_PROMPT to emphasize careful independent computation and explicit step-by-step arithmetic, reducing verbosity and focusing on getting the correct numerical answer. This helps the model spend more cognitive effort on actual computation rather than meta-analysis.",
+                "score": 0.9015151515151515
+            }
+        }
+    }
+}

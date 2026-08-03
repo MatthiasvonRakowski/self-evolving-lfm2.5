@@ -1,0 +1,107 @@
+[
+    {
+        "round": 0,
+        "score": 0.95,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 02:48:30"
+    },
+    {
+        "round": 1,
+        "score": 0.94,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 04:54:54"
+    },
+    {
+        "round": 2,
+        "score": 0.95,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 08:17:32"
+    },
+    {
+        "round": 3,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 11:48:33"
+    },
+    {
+        "round": 4,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 15:26:59"
+    },
+    {
+        "round": 0,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-20 23:01:11"
+    },
+    {
+        "round": 1,
+        "score": 0.95,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 02:42:20"
+    },
+    {
+        "round": 2,
+        "score": 0.92,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 06:49:40"
+    },
+    {
+        "round": 3,
+        "score": 0.0,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 06:59:15"
+    },
+    {
+        "round": 4,
+        "score": 0.9,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 10:25:07"
+    },
+    {
+        "round": 5,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 12:26:28"
+    },
+    {
+        "round": 6,
+        "score": 0.97,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 14:52:51"
+    },
+    {
+        "round": 7,
+        "score": 0.95,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 17:28:00"
+    },
+    {
+        "round": 8,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 20:07:57"
+    },
+    {
+        "round": 9,
+        "score": 0.96,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 22:17:13"
+    }
+]

@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modified VERIFY_MATH_PROMPT to instruct the verifier to independently recompute every arithmetic operation from scratch (rather than just \"checking\" calculations), and to propagate any corrections through the rest of the solution. This makes the verifier an active recomputer rather than a passive reviewer, improving detection of subtle arithmetic errors.",
+    "before": 0.8143939393939394,
+    "after": 0.7765151515151515,
+    "succeed": false
+}

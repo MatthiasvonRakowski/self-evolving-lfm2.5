@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a \"worked example scaffolding\" approach: the model first explicitly constructs a simpler parallel problem of the same type and solves it as a template, then maps that solution structure directly onto the actual problem. This differs from analogical reasoning (which recalls from memory) by requiring the model to actively generate and solve a parallel mini-problem first before tackling the real one.",
+    "before": 0.9033333333333333,
+    "after": 0.86,
+    "succeed": false
+}

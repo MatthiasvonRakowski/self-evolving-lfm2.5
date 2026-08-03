@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Modified SOLVE_MATH_PROMPT to include explicit arithmetic verification at each step and clearer intermediate value tracking, making the initial solution more accurate and reducing the review step's correction burden.",
+    "before": 0.93,
+    "after": 0.95,
+    "succeed": true
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modified SOLVE_MATH_PROMPT to add a mandatory SANITY_CHECK step before the final answer line. This forces the model to re-read the question target and verify the final VAR matches it, catching unit/quantity mismatches without adding a new operator call or restructuring the whole approach.",
+    "before": 0.94,
+    "after": 0.9,
+    "succeed": false
+}

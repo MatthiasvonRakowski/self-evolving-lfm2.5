@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the following math problem using a single, clean, linear sequence of steps. Follow these rules strictly:\n\n- Use only the information explicitly stated in the problem \u2014 do not introduce assumptions or outside considerations.\n- Show each arithmetic operation inline using the format `<<operation=result>>result` (e.g., `<<90/3=30>>30`).\n- Each step should appear exactly once \u2014 do not restate, recalculate, or repeat values already computed.\n- Do not backtrack, second-guess your interpretation, or explore alternative readings mid-solution.\n- Do not restate the problem, use bullet points, bold text, markdown headers, or LaTeX formatting.\n- Commit to the most natural reading of the problem and proceed without revisiting it.\n- End your response with the final numerical answer on its own line using the format: `#### [number]`\n\nProblem: <input>{problem}</input>"
+            },
+            "system_prompt": "You are a helpful and highly intelligent assistant.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

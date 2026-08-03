@@ -1,0 +1,67 @@
+{
+    "4": {
+        "score": 0.85,
+        "success": {},
+        "failure": {
+            "1": {
+                "modification": "Modify SOLVE_MATH_PROMPT to add explicit instruction to recheck each arithmetic step and clearly box/state the final answer, improving accuracy on intermediate calculation errors without adding extra graph nodes.",
+                "score": 0.7933333333333333
+            },
+            "4": {
+                "modification": "Added a decomposition step (new Custom call) that first extracts key facts, quantities, and solution structure from the problem, then passes this structured understanding along with the original problem to the solving step. This differs from the previous approach by providing enriched context rather than a review/verification pass.",
+                "score": 0.78
+            },
+            "7": {
+                "modification": "Modify DECOMPOSE_PROMPT to generate a detailed calculation plan (with explicit arithmetic setup for each step) rather than just extracting facts. This gives the solver a clearer roadmap and reduces intermediate arithmetic errors, without adding new nodes.",
+                "score": 0.7666666666666667
+            },
+            "9": {
+                "modification": "Added a second independent solve step (SOLVE_ALT_PROMPT) using a \"work backwards from the goal\" methodology, and added a reconciliation step (RECONCILE_PROMPT) that compares both solutions and resolves disagreements. This is a genuine ensemble/self-consistency approach that was not tried in previous iterations, differing fundamentally from the failed verification/recheck approaches.",
+                "score": 0.7733333333333333
+            }
+        }
+    },
+    "1": {
+        "score": 0.7716666666666667,
+        "success": {
+            "2": {
+                "modification": "Added a second custom call (REVIEW_MATH_PROMPT) that takes the original problem and the initial solution as input, re-checks the arithmetic, and outputs a corrected final answer. This review step catches arithmetic errors that the first pass might have made.",
+                "score": 0.8
+            }
+        },
+        "failure": {
+            "5": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to restructure it into 5 explicit phases (Understand, Plan, Compute, Verify, Answer) with a new \"Plan\" phase that requires writing equations before computing, and added specific double-check instructions for multi-digit arithmetic. The final answer format is also clarified to exclude units on the answer line.",
+                "score": 0.72
+            },
+            "6": {
+                "modification": "Added a decomposition preprocessing step: a new DECOMPOSE_PROMPT custom call analyzes the problem structure (quantities, unknowns, operation sequence) before the main solve step. The decomposition output is concatenated with the original problem as input to the solver, giving it a structured plan to follow. This differs from a review/verification step \u2014 it improves the forward pass by pre-structuring the problem rather than checking after the fact.",
+                "score": 0.7533333333333333
+            },
+            "8": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add an explicit equation-setup phase where the model defines variables and writes symbolic equations before substituting numbers, separating conceptual understanding from arithmetic execution. This is fundamentally different from previous approaches (no new operators, no review step, no decomposition call).",
+                "score": 0.7266666666666667
+            }
+        }
+    },
+    "7": {
+        "score": 0.85,
+        "success": {},
+        "failure": {
+            "3": {
+                "modification": "Added a third `custom` call using a new FINALIZE_MATH_PROMPT that compares both the initial solution and the reviewed solution, resolving any disagreements and producing a definitive final answer. This adds a tiebreaker/consolidation step to the existing solve-review pipeline.",
+                "score": 0.7933333333333333
+            }
+        }
+    },
+    "0": {
+        "score": 0.9,
+        "success": {},
+        "failure": {
+            "10": {
+                "modification": "Modified the graph to prepend \"Think carefully and step by step:\\n\" to the problem input in the Custom call, providing a lightweight chain-of-thought nudge through the input parameter rather than the prompt. Also refined SOLVE_MATH_PROMPT to be slightly more structured with explicit arithmetic checking emphasis.",
+                "score": 0.7
+            }
+        }
+    }
+}

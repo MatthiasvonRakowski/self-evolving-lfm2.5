@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a preprocessing Custom call that rephrases the math problem in clearer terms before solving it, providing the clarified version as context to the main solver.",
+    "before": 0.9033333333333333,
+    "after": 0.91,
+    "succeed": true
+}

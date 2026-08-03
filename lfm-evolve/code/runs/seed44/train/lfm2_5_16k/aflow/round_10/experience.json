@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify SOLVE_MATH_PROMPT to include a self-check instruction before outputting the final answer, prompting the model to verify its own calculations once before committing to the answer.",
+    "before": 0.9,
+    "after": 0.87,
+    "succeed": false
+}

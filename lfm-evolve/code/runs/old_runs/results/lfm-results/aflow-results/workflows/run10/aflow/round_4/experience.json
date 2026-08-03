@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Added a decomposition step (new Custom call) that first extracts key facts, quantities, and solution structure from the problem, then passes this structured understanding along with the original problem to the solving step. This differs from the previous approach by providing enriched context rather than a review/verification pass.",
+    "before": 0.85,
+    "after": 0.78,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 15,
+    "modification": "Modify SOLVE_MATH_PROMPT to add an explicit \"alternative method\" verification step that forces the model to approach the problem from a different angle before committing to an answer, reducing systematic errors that persist through review.",
+    "before": 0.97,
+    "after": 0.93,
+    "succeed": false
+}

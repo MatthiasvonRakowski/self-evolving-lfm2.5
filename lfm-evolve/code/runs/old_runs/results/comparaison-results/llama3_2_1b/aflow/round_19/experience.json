@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a \"worked example\" framing that emphasizes writing out each arithmetic operation explicitly on its own line, helping the model avoid skipping steps and making arithmetic errors. This is different from all previous attempts - not a framework, not extraction, not verification, just a different narrative framing focused on explicit arithmetic notation.",
+    "before": 0.38888888888888884,
+    "after": 0.3143939393939394,
+    "succeed": false
+}

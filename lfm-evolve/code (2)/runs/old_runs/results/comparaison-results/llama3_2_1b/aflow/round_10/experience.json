@@ -1,0 +1,7 @@
+{
+    "father node": 6,
+    "modification": "Modify SOLVE_MATH_PROMPT_ALT to use a \"working backwards verification\" approach - a fundamentally different solving strategy that increases solution diversity and improves majority voting accuracy.",
+    "before": 0.3068181818181818,
+    "after": 0.3371212121212121,
+    "succeed": true
+}

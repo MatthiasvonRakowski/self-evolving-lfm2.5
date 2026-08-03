@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use a 5-step \"identify \u2192 question \u2192 plan \u2192 compute \u2192 answer\" structure that is fundamentally different from previous attempts. Instead of general chain-of-thought or structured instructions, this explicitly separates number extraction, question identification, operation planning, and computation into distinct labeled phases. The graph structure remains unchanged (single custom call, no review pattern).",
+    "before": 0.49333333333333335,
+    "after": 0.07,
+    "succeed": false
+}

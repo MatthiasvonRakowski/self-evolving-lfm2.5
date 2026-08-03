@@ -1,0 +1,36 @@
+{
+  "started_at": "2026-07-18T01:00:57",
+  "args": {
+    "seeds": [
+      42
+    ],
+    "models": [
+      "lfm2.5-16k",
+      "qwen3-1.7b-16k"
+    ],
+    "methods": [
+      "aflow",
+      "textgrad",
+      "mipro",
+      "bilevel"
+    ],
+    "rounds": 20,
+    "n_test": 300,
+    "base_dir": "runs",
+    "smoke": false,
+    "skip_preflight": false,
+    "stop_on_error": false
+  },
+  "seeds": {
+    "42": {
+      "train": {
+        "status": "running",
+        "started_at": "2026-07-20T22:32:09"
+      }
+    }
+  },
+  "current": {
+    "seed": 42,
+    "stage": "train"
+  }
+}

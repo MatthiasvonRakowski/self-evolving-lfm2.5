@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modify SOLVE_MATH_PROMPT to include explicit arithmetic double-checking during initial solve, and update REVIEW_MATH_PROMPT to be more focused on format consistency. This helps reduce errors in the initial solution, making the review more reliable.",
+    "before": 0.30303030303030304,
+    "after": 0.25,
+    "succeed": false
+}

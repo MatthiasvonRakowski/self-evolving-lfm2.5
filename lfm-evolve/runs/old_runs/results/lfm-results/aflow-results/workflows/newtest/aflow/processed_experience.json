@@ -1,0 +1,12 @@
+{
+    "0": {
+        "score": 0.7676268439301615,
+        "success": {
+            "1": {
+                "modification": "Add a second Custom call (review/verify step) that takes the original problem and the initial solution, then verifies or corrects the answer, outputting the final result in the required format.",
+                "score": 0.7765151515151515
+            }
+        },
+        "failure": {}
+    }
+}

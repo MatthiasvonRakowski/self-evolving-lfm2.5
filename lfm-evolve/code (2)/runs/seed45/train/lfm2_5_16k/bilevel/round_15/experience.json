@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify SOLVE_MATH_PROMPT_A to use a structured \"information table\" approach where the solver first lists all given facts in a structured format before performing calculations. This forces careful problem reading and reduces misinterpretation errors, making Solution A more complementary to Solution B's equation approach.",
+    "before": 0.9,
+    "after": 0.85,
+    "succeed": false
+}

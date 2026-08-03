@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to include a structured problem decomposition approach that identifies given quantities, unknown quantities, and equations before solving - fundamentally different from simple step-by-step solving, improving accuracy through better problem representation rather than review.",
+    "before": 0.89,
+    "after": 0.9,
+    "succeed": true
+}

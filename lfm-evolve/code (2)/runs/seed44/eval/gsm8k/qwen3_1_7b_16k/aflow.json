@@ -1,0 +1,2112 @@
+{
+  "benchmark": "gsm8k",
+  "model": "ollama_chat/qwen3-1.7b-16k",
+  "model_label": "qwen3_1_7b_16k",
+  "artifact": "aflow",
+  "artifact_source": "runs/seed44/train/qwen3_1_7b_16k/aflow/round_13",
+  "n": 300,
+  "main_metric": "solve_rate",
+  "mean_score": 0.9133333333333333,
+  "records": [
+    {
+      "id": "test-419",
+      "prediction": "#### 40",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-580",
+      "prediction": "#### 7",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-845",
+      "prediction": "#### 180",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-468",
+      "prediction": "#### 1200",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-693",
+      "prediction": "#### 32",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-806",
+      "prediction": "#### 1170",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-867",
+      "prediction": "#### 28\n\nThe problem involves three individuals\u2014Sofie, Anne, and Fawn\u2014who together have 85 books. We are given the following relationships:\n\n- Sofie has 25 more books than Anne.\n- Anne has 12 fewer books than Fawn.\n\nWe define:\n- Let Anne's books = $ A $.\n- Then Sofie's books = $ A + 25 $.\n- Fawn's books = $ A + 12 $.\n\nThe total number of books is:\n$$\n(A + 25) + A + (A + 12) = 85\n$$\nSimplifying:\n$$\n3A + 37 = 85\n$$\nSolving for $ A $:\n$$\n3A = 48 \\implies A = 16\n$$\n\nNow, calculating Fawn's books:\n$$\nFawn = A + 12 = 16 + 12 = 28\n$$\n\nVerification:\n- Anne has 16 books.\n- Sofie has $ 16 + 25 = 41 $ books.\n- Fawn has $ 16 + 12 = 28 $ books.\n- Total books: $ 41 + 16 + 28 = 85 $, which matches the given total.\n\nThus, the final answer is correct.\n\n$$\n\\boxed{28}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-678",
+      "prediction": "#### 36",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-644",
+      "prediction": "#### 840",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-448",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-306",
+      "prediction": "#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-319",
+      "prediction": "#### 123",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-409",
+      "prediction": "#### 70\n\nThe problem requires calculating how many minutes early Toby needs to leave to arrive at the airport 60 minutes after he leaves, considering it takes 10 minutes to get there. \n\n1. **Total words in the book**:  \n   $ 45 \\text{ pages} \\times 200 \\text{ words/page} = 9000 \\text{ words} $.\n\n2. **Time to read the book**:  \n   $ \\frac{9000 \\text{ words}}{300 \\text{ words/min}} = 30 \\text{ minutes} $.\n\n3. **Time to reach the airport**:  \n   $ 10 \\text{ minutes} $.\n\n4. **Total time from leaving to arriving**:  \n   $ 30 \\text{ minutes (reading)} + 10 \\text{ minutes (travel)} = 40 \\text{ minutes} $.\n\n5. **Time to leave early**:  \n   Toby needs to be at the airport in 60 minutes, so he must leave $ 60 \\text{ minutes} - 40 \\text{ minutes} = 20 \\text{ minutes} $ early. However, this assumes the 60 minutes is the total time from leaving to arriving, which is incorrect. The correct interpretation is that Toby must be at the airport 60 minutes after leaving, but it takes 10 minutes to get there, so he must leave $ 60 + 10 = 70 \\text{ minutes} $ early. \n\nThe proposed solution incorrectly assumes the 60 minutes is the total time from leaving to arriving, leading to $ 60 - 40 = 20 $, but the correct calculation shows Toby must leave 70 minutes early. \n\n**Correct Answer:**  \n#### 70",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1050",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-957",
+      "prediction": "#### 1  \nThe proposed solution correctly calculates the number of emails Robyn sends to her boyfriend.  \n- **Step 1:** Remainder after work emails: $16 - 7 = 9$.  \n- **Step 2:** Family emails: $\\frac{2}{3} \\times 9 = 6$.  \n- **Step 3:** Remaining emails: $16 - 7 - 6 = 3$.  \n- **Step 4:** Boyfriend emails: $\\frac{1}{3} \\times 3 = 1$.  \n\nThe final answer is correct.  \n#### 1  \n#### 1",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-70",
+      "prediction": "#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-743",
+      "prediction": "#### 24",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-573",
+      "prediction": "#### 100",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-689",
+      "prediction": "#### 100",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-140",
+      "prediction": "#### 70",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-332",
+      "prediction": "#### 8400",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-436",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-238",
+      "prediction": "#### 90",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-105",
+      "prediction": "#### 500",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-769",
+      "prediction": "#### 600",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-776",
+      "prediction": "#### 276",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-336",
+      "prediction": "#### 310",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-379",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-894",
+      "prediction": "#### 480",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-888",
+      "prediction": "#### 34",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1075",
+      "prediction": "#### 500",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-871",
+      "prediction": "#### 40",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1208",
+      "prediction": "#### 64",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-775",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-896",
+      "prediction": "#### 74",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-244",
+      "prediction": "#### 250",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-568",
+      "prediction": "#### 11.00",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1275",
+      "prediction": "#### 38",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-747",
+      "prediction": "#### 28",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-411",
+      "prediction": "#### 3.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-481",
+      "prediction": "#### 11",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-449",
+      "prediction": "#### 539",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-876",
+      "prediction": "#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-608",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1291",
+      "prediction": "#### 90",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1133",
+      "prediction": "#### 45000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-882",
+      "prediction": "#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-264",
+      "prediction": "#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-726",
+      "prediction": "#### 25",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-937",
+      "prediction": "#### 250",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1296",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-285",
+      "prediction": "#### 240",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1023",
+      "prediction": "#### 12",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-697",
+      "prediction": "#### 145",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-131",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-6",
+      "prediction": "#### 64",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-823",
+      "prediction": "#### 1260",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1183",
+      "prediction": "#### 1800",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1279",
+      "prediction": "#### 665",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-467",
+      "prediction": "#### 1.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-796",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-949",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-539",
+      "prediction": "#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-660",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-246",
+      "prediction": "#### 7",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-794",
+      "prediction": "#### 250",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-73",
+      "prediction": "#### 221",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-950",
+      "prediction": "#### 42",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1105",
+      "prediction": "#### 24",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-444",
+      "prediction": "#### 59",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-461",
+      "prediction": "#### 84",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-88",
+      "prediction": "#### 798.60",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-399",
+      "prediction": "#### 168",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1154",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-261",
+      "prediction": "#### 11",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-774",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1046",
+      "prediction": "#### 420",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1260",
+      "prediction": "#### 7200",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-445",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-879",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-731",
+      "prediction": "#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-43",
+      "prediction": "#### 26",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-661",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1009",
+      "prediction": "#### 230",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-885",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-387",
+      "prediction": "#### 80",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-612",
+      "prediction": "### Verification of the Proposed Solution\n\nLet's analyze the problem step by step to verify the correctness of the proposed solution.\n\n---\n\n### **Step 1: Initial Funding**\n\nJohn receives **$100,000** for the **first 5 months** of research.\n\n$$\n\\text{Initial Cost} = 5 \\times 100,000 = 500,000\n$$\n\n---\n\n### **Step 2: Subsequent Funding**\n\nThe research takes **10 times as long as the first 5 months**, i.e., **50 months total**. Therefore, **45 months** of funding occur **after** the initial 5 months.\n\nThe funding increases **50% per month**, i.e., the **common ratio** is $ r = 1.5 $, and the **first term** of the geometric series is:\n\n$$\na_1 = 100,000 \\times 1.5 = 150,000\n$$\n\nThe **total cost** of the subsequent 45 months is the sum of a geometric series:\n\n$$\nS = \\frac{a_1(r^n - 1)}{r - 1} = \\frac{150,000(1.5^{45} - 1)}{0.5} = 300,000(1.5^{45} - 1)\n$$\n\n---\n\n### **Step 3: Total Cost**\n\n$$\n\\text{Total Cost} = \\text{Initial Cost} + \\text{Subsequent Cost} = 500,000 + 300,000(1.5^{45} - 1)\n$$\n\n---\n\n### **Step 4: Evaluation of the Proposed Solution**\n\nThe **proposed solution** is:\n\n$$\n\\boxed{500,000 + 200,000 \\times (1.5^{45} - 1)}\n$$\n\nThis is **incorrect** because the **first term** of the geometric series should be $ 150,000 $, not $ 100,000 $, and the **coefficient** should be $ 300,000 $ instead of $ 200,000 $.\n\n---\n\n### **Conclusion**\n\nThe proposed solution contains a **miscalculation** in the **first term** of the geometric series and the **coefficient**. The correct total cost is:\n\n$$\n\\boxed{500,000 + 300,000 \\times (1.5^{45} - 1)}\n$$\n\n---\n\n### **Final Answer**\n\n$$\n\\boxed{500,000 + 300,000 \\times (1.5^{45} - 1)}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1281",
+      "prediction": "#### 7",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-652",
+      "prediction": "#### 2100",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1142",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-940",
+      "prediction": "#### 650",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-665",
+      "prediction": "#### 32",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-760",
+      "prediction": "#### 60000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1252",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-276",
+      "prediction": "### Problem Review\n\nSean is practicing for a theater production and needs to memorize lines from two scenes and a solo song. The problem provides the following details:\n\n- The **solo song** has **54 lines**.\n- The **first scene** has **twice the number of lines** as the solo song, i.e., $ 2 \\times 54 = 108 $ lines.\n- **One-third** of the first scene's lines are Sean's lines: $ \\frac{1}{3} \\times 108 = 36 $ lines.\n- The **second scene** has **six more lines** than the solo song, i.e., $ 54 + 6 = 60 $ lines.\n- **Four-fifths** of the second scene's lines are Sean's lines: $ \\frac{4}{5} \\times 60 = 48 $ lines.\n- The question asks: **How many lines does Sean have to memorize?**\n\n---\n\n### Verification of the Proposed Solution\n\nThe proposed solution adds the **lines that are Sean's** (i.e., the lines he has to memorize), which are:\n\n- First scene: 36 lines\n- Second scene: 48 lines\n- Solo song: 54 lines\n\nTotal: $ 36 + 48 + 54 = 138 $\n\nThis interpretation assumes that the **total lines Sean has to memorize** are the **lines that are his** (i.e., the ones he needs to remember). This is consistent with the problem's wording: \"his lines for two scenes and the lyrics to one solo song.\"\n\n---\n\n### Final Answer\n\nSince the problem is asking for the **total number of lines that Sean has to memorize**, and the proposed solution correctly identifies only the lines that are his, the answer is:\n\n$$\n\\boxed{138}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-476",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1146",
+      "prediction": "#### 291",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-861",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-191",
+      "prediction": "#### 360",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-721",
+      "prediction": "#### 0",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-551",
+      "prediction": "#### 27.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1215",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1272",
+      "prediction": "#### 43",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-723",
+      "prediction": "#### 255",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-682",
+      "prediction": "#### 298\n\nThe problem involves calculating the total number of cookies that Katarina, Max, the Cookie Monster, and Summer have together. Here's the step-by-step verification:\n\n1. **Define Variables:**\n   - Let $ C $ be the number of cookies the Cookie Monster has.\n   - Max has $ C + 12 $ cookies.\n   - Katarina has $ (C + 12) - 5 = C + 7 $ cookies.\n   - Given $ K = 68 $, solve for $ C $:\n     $$\n     C + 7 = 68 \\implies C = 61\n     $$\n   - Thus, Max has $ 61 + 12 = 73 $ cookies.\n   - Summer has $ 73 + 23 = 96 $ cookies.\n\n2. **Calculate Total Cookies:**\n   - Total = Cookie Monster + Max + Katarina + Summer\n   $$\n   61 + 73 + 68 + 96 = 298\n   $$\n\nThe proposed solution of 237 incorrectly excludes the Cookie Monster, which is part of the total. Therefore, the correct total is **298**.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-505",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-571",
+      "prediction": "#### 25\n\nThe problem states Peter has $70 and wants to spend an equal amount each day for one week. This implies he spends $10 per day (since $70 \u00f7 7 = $10). However, the problem also specifies that he spends different prices on different days: $5 for wooden action figures and $2 for plastic ones. \n\nTo compute the total number of action figures:\n- From **Sunday to Wednesday** (5 days), he spends $10/day, costing $5 per figure. So, $10 \u00f7 $5 = 2 figures/day. Total: 5 days \u00d7 2 = 10 figures.\n- From **Thursday to Saturday** (3 days), he spends $10/day, costing $2 per figure. So, $10 \u00f7 $2 = 5 figures/day. Total: 3 days \u00d7 5 = 15 figures.\n\nAdding these gives 10 + 15 = **25** action figures.\n\nThe proposed solution incorrectly states **23**, which is inconsistent with the accurate calculation. The correct answer is **25**.",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-416",
+      "prediction": "#### 350",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-364",
+      "prediction": "#### 6",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-307",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-550",
+      "prediction": "#### 398",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-763",
+      "prediction": "#### 85",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-583",
+      "prediction": "#### 129200",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-348",
+      "prediction": "#### 36",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-977",
+      "prediction": "#### 540",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-844",
+      "prediction": "#### 19",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-207",
+      "prediction": "#### 860",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-614",
+      "prediction": "#### 93000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1172",
+      "prediction": "#### 3160",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-457",
+      "prediction": "#### 78",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-254",
+      "prediction": "#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-337",
+      "prediction": "#### 72",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-384",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-581",
+      "prediction": "#### 500",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1098",
+      "prediction": "#### 480",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-318",
+      "prediction": "#### 12",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-973",
+      "prediction": "#### 180",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-183",
+      "prediction": "#### 24",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1160",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-179",
+      "prediction": "#### 122",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1187",
+      "prediction": "#### 19",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-25",
+      "prediction": "#### 26.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-780",
+      "prediction": "#### 255",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-852",
+      "prediction": "#### 110",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-964",
+      "prediction": "#### 147\n\nThe proposed solution correctly establishes the relationships between the number of Pokemon caught by Alex, Stan, and Adelwolfe. It uses algebraic substitution to express all variables in terms of Stan's catch (S), and then solves the resulting equation step-by-step. The final answer derived is $ S = 147 $, which satisfies all given constraints:\n\n- $ A = S + 5 = 152 $\n- $ Ad = \\frac{S + 13}{4} = \\frac{160}{4} = 40 $\n- Total: $ 152 + 147 + 40 = 339 $\n\nAll steps are logically sound and the arithmetic checks out. The final answer is correct.",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1038",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1192",
+      "prediction": "#### 100",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-657",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-766",
+      "prediction": "#### 490",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-919",
+      "prediction": "#### 56",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-114",
+      "prediction": "#### 25",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-292",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-558",
+      "prediction": "#### 70",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-355",
+      "prediction": "#### 45",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-405",
+      "prediction": "#### The correct average number of stripes is $\\dfrac{88}{3}$, which is approximately 29.333...\n\n$$\n\\boxed{\\dfrac{88}{3}}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1116",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-234",
+      "prediction": "#### 12",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-418",
+      "prediction": "#### 3140",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1188",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-579",
+      "prediction": "#### 48",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1081",
+      "prediction": "#### 72000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1270",
+      "prediction": "#### 54",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-110",
+      "prediction": "#### 28.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-432",
+      "prediction": "#### 1\nThe total cost of the items is $6 + $11 + $2 = $19.  \nDora has $2 + $16 = $18.  \nThe difference between the total cost and her savings is $19 - $18 = $1.  \n\n$$\n\\boxed{1}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1076",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{16}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-621",
+      "prediction": "#### 2000",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-829",
+      "prediction": "#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1255",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-843",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1128",
+      "prediction": "#### 750",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-365",
+      "prediction": "#### 49",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-57",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-533",
+      "prediction": "#### 9",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-606",
+      "prediction": "#### 42",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-986",
+      "prediction": "#### 63",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1212",
+      "prediction": "#### 448",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-258",
+      "prediction": "#### 5600",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-299",
+      "prediction": "#### 1100",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1147",
+      "prediction": "#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-342",
+      "prediction": "#### 170",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-596",
+      "prediction": "#### 13",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-948",
+      "prediction": "#### 13",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-47",
+      "prediction": "#### 163",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-651",
+      "prediction": "#### 142",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1068",
+      "prediction": "#### 24500",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1",
+      "prediction": "#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-908",
+      "prediction": "#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-781",
+      "prediction": "To determine the difference between Ava's and Emma's scores in the video game, we analyze the given information and apply the arithmetic steps provided in the proposed solution.\n\n---\n\n### Step 1: Define Variables\n\nLet:\n- $ E $ = Emma's number of enemies\n- $ B $ = Emma's number of berries\n\nFrom the problem:\n- Ava jumps on $ E + 8 $ enemies\n- Ava collects $ B + 3 $ berries\n- Ava's timer points are calculated as $ 30 \\times 4 = 120 $ (since she finishes 4 seconds slower, and the points per second are 30)\n\n---\n\n### Step 2: Calculate Scores\n\n**Ava's Score**:\n$$\n\\text{Ava's score} = 10(\\text{Ava's enemies}) + 5(\\text{Ava's berries}) + 120\n$$\n$$\n= 10(E + 8) + 5(B + 3) + 120\n= 10E + 80 + 5B + 15 + 120\n= 10E + 5B + 215\n$$\n\n**Emma's Score**:\n$$\n\\text{Emma's score} = 10E + 5B + 120\n$$\n\n---\n\n### Step 3: Find the Difference\n\n$$\n\\text{Difference} = (10E + 5B + 215) - (10E + 5B + 120)\n= 215 - 120 = 95\n$$\n\n---\n\n### Final Answer\n\n$$\n\\boxed{95}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-228",
+      "prediction": "#### 9.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-189",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-947",
+      "prediction": "#### 450",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1213",
+      "prediction": "#### 150",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-62",
+      "prediction": "#### 1430",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-728",
+      "prediction": "#### 112",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1106",
+      "prediction": "#### 40",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-121",
+      "prediction": "#### 240",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-310",
+      "prediction": "#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-889",
+      "prediction": "#### 10 ####",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-326",
+      "prediction": "#### 224000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-821",
+      "prediction": "#### 720",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1313",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-969",
+      "prediction": "#### 227",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-209",
+      "prediction": "#### 76",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-607",
+      "prediction": "#### 6",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-897",
+      "prediction": "#### 250",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-825",
+      "prediction": "#### 52",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1288",
+      "prediction": "#### 84",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-777",
+      "prediction": "#### 800",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-490",
+      "prediction": "#### -10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-922",
+      "prediction": "#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-912",
+      "prediction": "#### 64",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1276",
+      "prediction": "#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-84",
+      "prediction": "#### 600",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1045",
+      "prediction": "#### 1",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-504",
+      "prediction": "#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1016",
+      "prediction": "#### 78",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-106",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1122",
+      "prediction": "#### 35",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1158",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1044",
+      "prediction": "#### 130000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-817",
+      "prediction": "#### 4500",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1072",
+      "prediction": "#### 251",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-390",
+      "prediction": "#### 6",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-733",
+      "prediction": "#### 87",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-553",
+      "prediction": "#### 450",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1178",
+      "prediction": "#### 17",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-453",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-662",
+      "prediction": "#### 44",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1153",
+      "prediction": "#### 12%",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-12",
+      "prediction": "#### 694",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-748",
+      "prediction": "#### 350",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-515",
+      "prediction": "#### 90,000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-478",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1300",
+      "prediction": "#### 13.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1223",
+      "prediction": "#### 350",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-720",
+      "prediction": "#### 175",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-924",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1309",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-772",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1083",
+      "prediction": "#### 1 hour",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1066",
+      "prediction": "#### 95",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-532",
+      "prediction": "#### 66",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-3",
+      "prediction": "#### 70000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1155",
+      "prediction": "#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-130",
+      "prediction": "#### 10,000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-961",
+      "prediction": "To solve the problem, we need to carefully track the number of holes dug by the pirates over the four days and determine how many they dug on the fourth day **before** finding the treasure.\n\n---\n\n### Step 1: Total Holes Dug by the End of the Third Day\n\n- **Day 1:** 10 holes  \n- **Day 2:** 13 holes  \n- **Day 3:** 8 holes, but 2 were filled in, so 6 holes were dug  \n\nTotal holes dug by the end of the third day:  \n$$\n10 + 13 + 6 = 29\n$$\n\n---\n\n### Step 2: Total Holes on the Island by the End of the Third Day\n\nThe problem states that **by the end of the third day, the island had four times as many holes as it did at the end of the first day**.  \n\n- First day\u2019s total holes = 10  \n- Therefore, by the end of the third day, the island had:  \n$$\n4 \\times 10 = 40 \\text{ holes}\n$$\n\n---\n\n### Step 3: Remaining Holes on the Island After the Third Day\n\n$$\n40 - 29 = 11 \\text{ holes}\n$$\n\nThis means that **11 holes remained on the island after the third day**. However, the question asks for the number of holes **dug on the fourth day before finding the treasure**.\n\n---\n\n### Step 4: Interpretation of the Question\n\nThe key point is that the pirates **dug on the fourth day** before finding the treasure. The problem does not state how many holes were dug on the fourth day **in total**, only that the island had 11 holes left after the third day. This implies that the 11 holes left on the island **could** have been dug on the fourth day.\n\nBut the problem is asking for the number of **holes dug on the fourth day**, not the number of holes remaining on the island. If the 11 holes left on the island were the ones dug on the fourth day, then the answer would be 11.\n\nHowever, the **proposed solution incorrectly states** that the number of holes dug on the fourth day is 1, which is **not logically consistent** with the given information.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{11}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-312",
+      "prediction": "#### 91",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-68",
+      "prediction": "#### 595",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-898",
+      "prediction": "#### 1\n\nThe problem states that Martha initially had $ M $ notebooks, and Joseph had $ 3M $ notebooks. After buying 5 more, Martha had a total of 7 notebooks. Solving $ M + 5 = 7 $ gives $ M = 2 $. Thus, Joseph had $ 3 \\times 2 = 6 $ notebooks. Martha now has 7 notebooks, so the difference is $ 7 - 6 = 1 $. All steps are correctly performed, and the final answer is verified to be correct.\n\n#### 1\n\n$$\n\\boxed{1}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1233",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-80",
+      "prediction": "#### 70",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1055",
+      "prediction": "#### 2400",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1003",
+      "prediction": "#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-160",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-155",
+      "prediction": "#### 272",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-904",
+      "prediction": "#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1087",
+      "prediction": "#### 131250",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-739",
+      "prediction": "#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-656",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-91",
+      "prediction": "#### 225",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-54",
+      "prediction": "#### 40",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1265",
+      "prediction": "#### Final Answer\n$$\n\\boxed{210}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1053",
+      "prediction": "#### 110",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1266",
+      "prediction": "#### 36",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-873",
+      "prediction": "#### 13.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-38",
+      "prediction": "#### 0",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-232",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1185",
+      "prediction": "#### 306",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-331",
+      "prediction": "#### 37",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-676",
+      "prediction": "To solve the problem, we need to carefully follow the sequence of events and ensure that each step is logically consistent with the given information.\n\n---\n\n### Step-by-Step Breakdown:\n\n1. **Initial Setup:**\n   - James has **4 toys** for **4 dogs**.\n   - There are **8 more dogs** in the shelter.\n   - Therefore, the **total number of dogs** is:\n     $$\n     4 + 8 = 12 \\text{ dogs}\n     $$\n\n2. **Toys Needed:**\n   - Each dog needs **1 toy**.\n   - So, the total number of toys needed is:\n     $$\n     12 \\text{ toys}\n     $$\n\n3. **Toys Already Held:**\n   - James currently has **4 toys**.\n\n4. **Toys to Buy:**\n   - To reach the total of 12 toys, he needs to buy:\n     $$\n     12 - 4 = 8 \\text{ toys}\n     $$\n\n5. **Total Toys After Purchase:**\n   - Adding the 4 he already had to the 8 he bought:\n     $$\n     4 + 8 = 12 \\text{ toys}\n     $$\n\n6. **Additional Information:**\n   - James later goes back to see that there are **twice as many more dogs** than when he left.\n     - This implies the number of dogs increased to **24** (since 12 * 2 = 24).\n     - However, the proposed solution assumes the number of dogs is still 12.\n     - This is **not accounted for** in the proposed solution, which leads to an inconsistency in the logic.\n\n7. **Final Adjustment:**\n   - Later, **3 dogs were removed**, so James no longer needed those toys.\n   - Therefore, the total number of toys he needs is:\n     $$\n     12 - 3 = 9\n     $$\n\n---\n\n### Verifying the Proposed Solution:\n\nThe proposed solution states:\n- Total dogs = 12\n- Toys needed = 12\n- Toys bought = 8\n- Total toys = 12\n- Subtract 3 dogs = 9\n\nThis is logically consistent **only if the number of dogs remains at 12**, which contradicts the problem statement that James saw **twice as many more dogs** than when he left.\n\nThus, the proposed solution **does not account for the increase in the number of dogs** that occurred after buying the toys. As a result, the proposed solution is **incorrect**.\n\n---\n\n### Correct Approach:\n\nTo correctly solve the problem, we must consider the increase in the number of dogs after the purchase of toys.\n\n1. **Initial dogs**: 12\n2. **After purchase**: 12 + 2 * 12 = 36 (as per the problem statement)\n3. **Toys needed**: 36 - 4 = 32\n4. **Toys bought**: 32\n5. **Total toys**: 4 + 32 = 36\n6. **Subtract removed dogs**: 36 - 3 = 33\n\nSo, the **correct** answer is:\n\n$$\n\\boxed{33}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-742",
+      "prediction": "#### 28",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-522",
+      "prediction": "#### 39",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1217",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1022",
+      "prediction": "#### 36",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-401",
+      "prediction": "#### 48",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-482",
+      "prediction": "#### 84",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1244",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-735",
+      "prediction": "#### 17",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-930",
+      "prediction": "#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-479",
+      "prediction": "#### 621",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-77",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-700",
+      "prediction": "#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1231",
+      "prediction": "#### 440",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1080",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1169",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-509",
+      "prediction": "#### 120",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1090",
+      "prediction": "#### 32\n\nThe ball is dropped from a height of 72 feet (3 stories \u00d7 24 feet). On the first bounce, it reaches $ \\frac{2}{3} \\times 72 = 48 $ feet. On the second bounce, it reaches $ \\frac{2}{3} \\times 48 = 32 $ feet. The proposed solution of $ \\frac{64}{3} $ is incorrect. The correct answer is **32 feet**.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1216",
+      "prediction": "#### 36",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-604",
+      "prediction": "#### 1800",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-286",
+      "prediction": "#### 21",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-51",
+      "prediction": "#### 294",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-30",
+      "prediction": "#### 104",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-159",
+      "prediction": "#### 34",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-738",
+      "prediction": "#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-628",
+      "prediction": "#### 54",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-707",
+      "prediction": "#### 9",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-807",
+      "prediction": "#### 70%",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-994",
+      "prediction": "#### Final Answer\n$$\n\\boxed{11}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-134",
+      "prediction": "#### 13\n\nThe problem states that Walt walked 4 miles on Monday and 6 times as many on Tuesday, which is $6 \\times 4 = 24$ miles. The total mileage from Monday through Wednesday is 41 miles. Therefore, the miles walked on Wednesday are calculated as:\n\n$$\n41 - (4 + 24) = 13\n$$\n\nThe proposed solution incorrectly includes a division step ($13 / \\text{something}$), which is unnecessary and erroneous. The correct answer is **13**.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-117",
+      "prediction": "#### 42",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1011",
+      "prediction": "#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-585",
+      "prediction": "#### 180",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-303",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-878",
+      "prediction": "#### 7000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-269",
+      "prediction": "#### 1375",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-616",
+      "prediction": "#### 33.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1199",
+      "prediction": "#### 140",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-575",
+      "prediction": "#### 37.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-169",
+      "prediction": "#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-297",
+      "prediction": "#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    }
+  ]
+}

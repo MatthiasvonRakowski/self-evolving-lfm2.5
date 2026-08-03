@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify the SOLVE_MATH_PROMPT to include explicit step-by-step arithmetic verification instructions within the single call. The prompt now instructs the model to (1) solve step by step, (2) explicitly double-check each arithmetic operation, and (3) then output the final answer. This improves accuracy without adding extra operator calls.",
+    "before": 0.875,
+    "after": 0.94,
+    "succeed": true
+}

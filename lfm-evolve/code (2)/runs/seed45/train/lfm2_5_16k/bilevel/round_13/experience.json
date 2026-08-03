@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Add a post-ensemble verification step (VERIFY_PROMPT) that checks the ensemble's chosen answer by substituting it back into the problem to confirm correctness, and corrects it if the check fails.",
+    "before": 0.9,
+    "after": 0.86,
+    "succeed": false
+}

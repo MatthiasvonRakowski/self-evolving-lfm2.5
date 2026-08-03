@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modify VERIFY_MATH_PROMPT to instruct the model to first independently solve the problem from scratch, then compare with the proposed solution, and output the more reliable answer. This changes the verification from a \"checking\" approach to an \"independent re-solving + comparison\" approach.",
+    "before": 0.87,
+    "after": 0.9,
+    "succeed": true
+}

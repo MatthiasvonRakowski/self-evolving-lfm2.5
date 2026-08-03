@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Modified SOLVE_MATH_PROMPT_ALT to use a \"units/equations first\" algebraic approach instead of general structured approach, making it more distinct from SOLVE_MATH_PROMPT to increase solution diversity and improve majority voting.",
+    "before": 0.375,
+    "after": 0.2803030303030303,
+    "succeed": false
+}

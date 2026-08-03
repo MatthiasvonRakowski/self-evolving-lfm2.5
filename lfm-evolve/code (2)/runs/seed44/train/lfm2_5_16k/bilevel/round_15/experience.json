@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to use a backward verification method: start from the proposed final answer and work backwards through the problem conditions to verify it satisfies all constraints, rather than checking steps forward or re-solving from scratch.",
+    "before": 0.92,
+    "after": 0.92,
+    "succeed": false
+}

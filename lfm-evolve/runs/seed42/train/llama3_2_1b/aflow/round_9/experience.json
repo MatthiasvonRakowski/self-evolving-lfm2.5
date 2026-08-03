@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified only SOLVE_MATH_PROMPT: Changed the instructional framing from \"step by step\" tutor style to a \"think aloud / scratch paper\" style that explicitly requires every arithmetic operation to be written out (e.g., \"3 \u00d7 4 = 12\") before proceeding, and to track running totals clearly. This differs from previous attempts by not using numbered steps/structure and instead encouraging natural arithmetic tracking, while keeping the graph structure identical (single custom call, no review pattern).",
+    "before": 0.49333333333333335,
+    "after": 0.37,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify VERIFY_MATH_PROMPT to emphasize careful independent computation and explicit step-by-step arithmetic, reducing verbosity and focusing on getting the correct numerical answer. This helps the model spend more cognitive effort on actual computation rather than meta-analysis.",
+    "before": 0.9053030303030303,
+    "after": 0.9015151515151515,
+    "succeed": false
+}

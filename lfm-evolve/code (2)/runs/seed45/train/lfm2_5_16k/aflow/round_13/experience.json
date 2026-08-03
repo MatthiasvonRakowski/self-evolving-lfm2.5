@@ -1,0 +1,7 @@
+{
+    "father node": 8,
+    "modification": "Modified the REVIEW_MATH_PROMPT to explicitly instruct the reviewer to write \"SOLUTION A IS CORRECT\" or \"SOLUTION B IS CORRECT\" as a structured marker. Then updated the graph's Step 5 logic to reliably detect which solution the review prefers using these explicit markers, rather than the previous heuristic approach. Also changed the condition from checking \"CORRECT\" not in review to checking \"INCORRECT\" in review, making it more robust. This ensures when the review identifies a correct solution, we return the actually-preferred solution rather than always defaulting to answer1.",
+    "before": 0.88,
+    "after": 0.86,
+    "succeed": false
+}

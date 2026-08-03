@@ -1,0 +1,93 @@
+{
+    "0": {
+        "score": 0.9033333333333333,
+        "success": {
+            "7": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use a self-ask decomposition approach where the model explicitly breaks down the problem into sub-questions, answers each one, then synthesizes the final answer. This is fundamentally different from the previous approach (which was just \"step by step\") by introducing structured sub-question decomposition within a single prompt.",
+                "score": 0.92
+            },
+            "8": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"quantity labeling\" approach where the model explicitly identifies and labels all quantities in the problem before solving, then tracks each named quantity through calculations. This differs from previous approaches by front-loading a structured extraction phase.",
+                "score": 0.93
+            },
+            "10": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use an \"analogical reasoning\" approach: the model first identifies the problem type, recalls a similar simpler problem of the same type, then applies that solution pattern to the actual problem. This is fundamentally different from all prohibited approaches (no second verification step, no quantity labeling, no ensemble, no sub-question decomposition, no emphasis on step-by-step arithmetic checking). The graph structure remains the same single-pass Custom call.",
+                "score": 0.94
+            },
+            "11": {
+                "modification": "Add a preprocessing Custom call that rephrases the math problem in clearer terms before solving it, providing the clarified version as context to the main solver.",
+                "score": 0.91
+            },
+            "16": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"state transition\" approach: the model explicitly identifies the initial state, each event that changes quantities, and the final state, treating the problem as a sequence of state changes. This differs from all prohibited approaches by framing arithmetic as state machine transitions rather than equations, sub-questions, unit tracking, or other prohibited methods.",
+                "score": 0.93
+            }
+        },
+        "failure": {
+            "4": {
+                "modification": "Add a second verification/correction step using Custom operator that reviews the initial solution and corrects any errors before returning the final answer.",
+                "score": 0.9
+            },
+            "5": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to be more explicit about careful step-by-step calculation, emphasizing verification of arithmetic and ensuring the final answer format is strictly followed with \"#### \" prefix on its own line.",
+                "score": 0.9
+            },
+            "9": {
+                "modification": "Added ensemble approach: two independent Custom calls with different problem-framing prompts (arithmetic-focused vs. logical reasoning-focused), followed by a synthesis Custom call that picks the most consistent answer. This is fundamentally different from the single-pass approach and doesn't repeat any prohibited patterns.",
+                "score": 0.82
+            },
+            "13": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"known/unknown mapping with unit tracking\" approach: the model first creates a two-column table of givens vs. what's asked, then solves while writing units next to every number in every step. This differs from quantity labeling (which just names quantities upfront) by requiring unit annotation on every intermediate value throughout the solution.",
+                "score": 0.88
+            },
+            "15": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"concrete equation chain\" approach: the model is instructed to express every reasoning step as an explicit mathematical equation or arithmetic expression (e.g., \"5 \u00d7 3 = 15\"), forming a chain of equations from problem data to final answer. This differs from all prohibited approaches by making equation notation (not prose, not labeled quantities, not sub-questions, not analogies) the primary reasoning vehicle throughout the solution.",
+                "score": 0.87
+            },
+            "19": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a \"worked example scaffolding\" approach: the model first explicitly constructs a simpler parallel problem of the same type and solves it as a template, then maps that solution structure directly onto the actual problem. This differs from analogical reasoning (which recalls from memory) by requiring the model to actively generate and solve a parallel mini-problem first before tackling the real one.",
+                "score": 0.86
+            }
+        }
+    },
+    "4": {
+        "score": 0.9,
+        "success": {
+            "6": {
+                "modification": "Add a second independent solution pass with a different reasoning prompt, then synthesize both solutions to get the most reliable final answer. This adds an ensemble/voting mechanism while keeping complexity manageable.",
+                "score": 0.93
+            }
+        },
+        "failure": {}
+    },
+    "6": {
+        "score": 0.93,
+        "success": {
+            "12": {
+                "modification": "Add a fourth verification step after synthesis that performs explicit arithmetic verification of the final answer, reducing the chance of errors slipping through",
+                "score": 0.95
+            }
+        },
+        "failure": {
+            "14": {
+                "modification": "Modify SYNTHESIZE_MATH_PROMPT to always independently re-derive the answer with explicit computation, rather than just comparing/choosing between solutions A and B. This ensures the final answer is always independently verified through fresh calculation.",
+                "score": 0.82
+            }
+        }
+    },
+    "12": {
+        "score": 0.95,
+        "success": {
+            "18": {
+                "modification": "Add a third independent solution (solution3) and implement majority voting: if any two of three solutions agree on the final answer (extracted via regex), pass that agreed answer directly to verification, skipping synthesis. Only synthesize when all three disagree.",
+                "score": 0.96
+            }
+        },
+        "failure": {
+            "17": {
+                "modification": "Add conditional logic: extract final answers from solution1 and solution2 using regex; if both agree, skip the synthesis step and pass the agreed solution directly to verification; only use synthesis when they disagree. This reduces error-prone synthesis when both solutions already match.",
+                "score": 0.94
+            }
+        }
+    }
+}

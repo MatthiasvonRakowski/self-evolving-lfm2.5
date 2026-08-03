@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified only the SOLVE_MATH_PROMPT to use a rigid 5-section structure (GIVEN/PLAN/SOLVE/CHECK/ANSWER) that forces explicit arithmetic steps and a built-in CHECK phase, replacing the previous free-form step-by-step instruction. No graph structure was changed.",
+    "before": 0.9133333333333334,
+    "after": 0.93,
+    "succeed": true
+}

@@ -1,0 +1,59 @@
+{
+    "0": {
+        "score": 0.9133333333333334,
+        "success": {
+            "4": {
+                "modification": "Modified only the SOLVE_MATH_PROMPT to use a rigid 5-section structure (GIVEN/PLAN/SOLVE/CHECK/ANSWER) that forces explicit arithmetic steps and a built-in CHECK phase, replacing the previous free-form step-by-step instruction. No graph structure was changed.",
+                "score": 0.93
+            },
+            "7": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use a \"variable register\" style where the model must explicitly maintain and update a named variable table after each step, writing each variable assignment as \"VAR[name] = value\" before performing the next operation. This forces the model to track intermediate values in a structured register format, which is fundamentally different from all previous approaches (structured sections, scratchpad arithmetic, ensemble voting).",
+                "score": 0.94
+            }
+        },
+        "failure": {
+            "2": {
+                "modification": "Add a second Custom call to review and verify the initial solution, correcting any arithmetic errors before returning the final answer.",
+                "score": 0.9
+            },
+            "3": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include more explicit instructions for careful arithmetic, identifying key quantities, and verifying the final numerical computation before outputting it. No graph structure changes.",
+                "score": 0.88
+            },
+            "5": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to use an explicit \"scratchpad arithmetic\" style that forces the model to write out every single arithmetic operation on its own line with the format \"a op b = c\", and to re-read the problem statement before answering. This is a fundamentally different prompting strategy from the previous structured sections approach.",
+                "score": 0.91
+            },
+            "6": {
+                "modification": "Changed the graph from a single Custom call to an ensemble of two parallel Custom calls (algebraic approach + verbal reasoning approach) followed by a synthesis/judge step that reconciles the two answers. This is fundamentally different from the previous single-call or review/verify approach - it uses an ensemble voting strategy where two independently-reasoned solutions are compared, and disagreements are resolved by a judge. Added two new prompts (SOLVE_MATH_ALGEBRAIC_PROMPT and SOLVE_MATH_VERBAL_PROMPT) with different reasoning styles, plus an ENSEMBLE_PICK_PROMPT for the synthesis step.",
+                "score": 0.88
+            }
+        }
+    },
+    "7": {
+        "score": 0.94,
+        "success": {},
+        "failure": {
+            "8": {
+                "modification": "Add a second custom call for self-review/verification of the solution, with a new VERIFY_MATH_PROMPT that checks the solution and outputs a corrected final answer if errors are found.",
+                "score": 0.93
+            },
+            "9": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to add an explicit instruction to verify each arithmetic calculation inline before proceeding, and to restate the question being answered before giving the final answer. This helps catch errors in single-pass solving.",
+                "score": 0.88
+            },
+            "10": {
+                "modification": "Modified the SOLVE_MATH_PROMPT from a \"variable register\" (VAR[name]) approach to a \"Goal-Given-Plan-Solve-Answer\" structured approach. This fundamentally changes the reasoning pattern by forcing the model to first declare what it's solving for (GOAL), enumerate all knowns (GIVEN), plan the steps before executing (PLAN), then solve step-by-step (SOLVE), reducing errors from jumping into calculations without a clear target.",
+                "score": 0.88
+            },
+            "11": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add a mandatory SANITY_CHECK step before the final answer line. This forces the model to re-read the question target and verify the final VAR matches it, catching unit/quantity mismatches without adding a new operator call or restructuring the whole approach.",
+                "score": 0.9
+            },
+            "12": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add an explicit \"RECOMPUTE FINAL\" step that forces the model to re-derive the last two steps independently before stating the answer. This catches the most common error type (final combination step) without adding a second operator call or restructuring the graph.",
+                "score": 0.9
+            }
+        }
+    }
+}

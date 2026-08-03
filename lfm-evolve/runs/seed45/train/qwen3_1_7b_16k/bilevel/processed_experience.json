@@ -1,0 +1,32 @@
+{
+    "0": {
+        "score": 0.91,
+        "success": {},
+        "failure": {
+            "1": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include more structured, explicit reasoning steps (identify info, define variables, show arithmetic, double-check calculations) while keeping the single-call architecture. This encourages more careful computation and reduces arithmetic errors without adding a second verification step.",
+                "score": 0.9
+            }
+        }
+    },
+    "3": {
+        "score": 0.93,
+        "success": {
+            "2": {
+                "modification": "Modified SOLVE_MATH_PROMPT to include explicit arithmetic verification at each step and clearer intermediate value tracking, making the initial solution more accurate and reducing the review step's correction burden.",
+                "score": 0.95
+            }
+        },
+        "failure": {}
+    },
+    "2": {
+        "score": 0.95,
+        "success": {},
+        "failure": {
+            "3": {
+                "modification": "Add a second independent solution step using a different problem-solving approach (working backwards / verification-first), then pass all three solutions to the final arbiter for majority-vote style arbitration.",
+                "score": 0.91
+            }
+        }
+    }
+}

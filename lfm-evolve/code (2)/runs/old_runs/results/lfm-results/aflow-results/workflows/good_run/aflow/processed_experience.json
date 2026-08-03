@@ -1,0 +1,149 @@
+{
+    "0": {
+        "score": 0.7689393939393939,
+        "success": {
+            "1": {
+                "modification": "Add a second Custom call that reviews the initial solution and produces a verified final answer, implementing a review-revise pattern",
+                "score": 0.7727272727272727
+            },
+            "2": {
+                "modification": "Modify SOLVE_MATH_PROMPT to add explicit arithmetic verification instruction and more structured step-by-step guidance, encouraging the model to re-check each calculation before moving forward.",
+                "score": 0.7954545454545454
+            },
+            "5": {
+                "modification": "Modify SOLVE_MATH_PROMPT to include a more structured problem-solving framework that emphasizes identifying key information, setting up equations clearly, and computing systematically, leading to a precise final answer format.",
+                "score": 0.7803030303030303
+            },
+            "15": {
+                "modification": "Modified the input string passed to the Custom call to append a concise inline reminder specifically requesting that the answer line contains ONLY '#### ' followed by digits, reinforcing format compliance at the input level. The SOLVE_MATH_PROMPT was also simplified to remove the \"math tutor\" persona framing and made more direct/imperative, reducing verbosity while keeping the step-by-step and format instructions clear. This differs from the sample by changing both the appended input reminder wording and the prompt tone/structure.",
+                "score": 0.7840909090909091
+            },
+            "22": {
+                "modification": "Replaced the single Custom call with a parallel ensemble of 3 independent Custom calls solving the same problem, followed by a majority-voting Custom call that selects the most consistent answer. This self-consistency approach is fundamentally different from all previous single-pass prompt modifications.",
+                "score": 0.8484848484848485
+            },
+            "23": {
+                "modification": "Added a two-step decomposition-then-solve pattern: a first Custom call decomposes the problem into explicit key quantities and relationships, and a second Custom call uses that structured decomposition as additional context to solve the problem. This is fundamentally different from all previous single-pass approaches and the prohibited review/reformat patterns - it uses problem decomposition as a preprocessing step to reduce arithmetic errors by forcing explicit variable identification before computation.",
+                "score": 0.7916666666666666
+            }
+        },
+        "failure": {
+            "6": {
+                "modification": "Add a second Custom call that takes the initial solution and reformats/extracts the final numerical answer to ensure consistent #### formatting, rather than reviewing or revising the solution logic.",
+                "score": 0.7689393939393939
+            },
+            "8": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a structured 6-step problem-solving framework (READ\u2192DEFINE\u2192EQUATIONS\u2192SOLVE\u2192VERIFY\u2192ANSWER) that explicitly requires variable definition, equation writing, and explicit arithmetic notation. This is fundamentally different from the previous prompt which was more conversational. The graph structure remains the same (single Custom call) since the experience notes prohibit adding second calls.",
+                "score": 0.6439393939393939
+            },
+            "12": {
+                "modification": "Modified the input passed to the Custom call by appending an inline reminder about the answer format directly in the input string (not the prompt). This reinforces the #### formatting requirement at the input level without changing the overall prompt structure. The prompt itself was also lightly adjusted to add numbered steps for clarity without introducing a new framework name or structured methodology that previously failed.",
+                "score": 0.7689393939393939
+            },
+            "13": {
+                "modification": "Modify SOLVE_MATH_PROMPT to explicitly instruct that the answer after \"#### \" must be only the bare number (no units, no words, no punctuation), and reframe the instruction to emphasize careful step-by-step arithmetic with explicit intermediate calculations shown.",
+                "score": 0.7575757575757576
+            },
+            "16": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a few-shot exemplar approach, including one brief worked example that demonstrates the exact step-by-step reasoning and #### format expected. This is fundamentally different from all previous instruction-only prompts - it shows rather than tells, leveraging in-context learning to improve both reasoning quality and format consistency.",
+                "score": 0.7689393939393939
+            },
+            "17": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a chain-of-thought style with explicit instruction to think about the problem as a sequence of arithmetic operations, writing each operation on its own line with its result, before stating the final answer. This is different from all previous approaches: it emphasizes per-operation line-by-line arithmetic logging rather than \"steps\" or frameworks, targeting arithmetic accuracy rather than format or structure.",
+                "score": 0.5303030303030303
+            }
+        }
+    },
+    "1": {
+        "score": 0.7727272727272727,
+        "success": {
+            "3": {
+                "modification": "Added two new custom calls: (1) SOLVE_MATH_ALT_PROMPT generates an independent second solution using a different approach, and (2) RECONCILE_PROMPT compares the verified solution and the alternate solution, resolving any disagreements to produce a final robust answer. This ensemble/cross-check mechanism catches errors that the single verify step might miss.",
+                "score": 0.7992424242424242
+            }
+        },
+        "failure": {}
+    },
+    "3": {
+        "score": 0.7992424242424242,
+        "success": {
+            "9": {
+                "modification": "Modify RECONCILE_PROMPT to add an explicit instruction that when solutions disagree, the reconciler must independently re-solve the problem step by step from scratch (not just re-examine), treating it as a fresh problem, before determining the correct answer. This gives stronger guidance for conflict resolution without adding code complexity.",
+                "score": 0.8181818181818182
+            },
+            "14": {
+                "modification": "Modify RECONCILE_PROMPT to require the reconciler to first independently solve the problem as step 1 before examining Solutions A and B, using that independent result as an authoritative check when solutions disagree.",
+                "score": 0.8068181818181818
+            },
+            "18": {
+                "modification": "Added a second verification step for the alternative solution: after generating `alt_initial` from `SOLVE_MATH_ALT_PROMPT`, it now passes through `VERIFY_MATH_PROMPT` (same verifier used for solution 1) to produce a verified `alt_answer`. The reconciler now receives two independently *verified* solutions instead of one verified and one raw, improving the quality of both inputs to reconciliation.",
+                "score": 0.821969696969697
+            }
+        },
+        "failure": {
+            "4": {
+                "modification": "Add a conditional disagreement detection step: extract the #### answers from verified_answer and alt_answer, and if they differ, run an extra deep-analysis custom call before reconciliation to provide a more focused conflict-resolution context.",
+                "score": 0.7878787878787878
+            }
+        }
+    },
+    "2": {
+        "score": 0.7954545454545454,
+        "success": {},
+        "failure": {
+            "7": {
+                "modification": "Add a second Custom call (review step) that takes the original problem and the initial solution, checks all arithmetic, and outputs a verified final answer. This replaces single-pass with a solve+verify pipeline.",
+                "score": 0.7878787878787878
+            },
+            "11": {
+                "modification": "Modify SOLVE_MATH_PROMPT to add explicit chain-of-thought with a built-in self-verification step within the same prompt, asking the model to re-examine each computed value and confirm the final answer directly addresses the question, without adding a second operator call.",
+                "score": 0.7575757575757576
+            }
+        }
+    },
+    "9": {
+        "score": 0.8181818181818182,
+        "success": {
+            "21": {
+                "modification": "Added a third independent solving step (SOLVE_MATH_THIRD_PROMPT) that uses a meticulous step-by-step verification approach, and updated RECONCILE_PROMPT to use majority voting among 3 solutions (A, B, C). This ensemble of 3 solutions with majority voting is more robust than comparing just 2 solutions.",
+                "score": 0.8333333333333334
+            }
+        },
+        "failure": {
+            "10": {
+                "modification": "Add a final sanity-check/validation step after reconciliation that re-reads the original problem and the reconciled answer to confirm correctness, providing one more opportunity to catch errors before final output.",
+                "score": 0.7916666666666666
+            }
+        }
+    },
+    "14": {
+        "score": 0.8068181818181818,
+        "success": {
+            "19": {
+                "modification": "Added a pre-reconciliation answer extraction step using regex in the graph code to detect numerical agreement/disagreement between Solution A and Solution B. An explicit agreement note (highlighting if answers match or conflict) is appended to the reconciler's input, making disagreements more salient so the reconciler applies extra scrutiny when needed. Also updated RECONCILE_PROMPT to explicitly reference the NOTE flag for DISAGREE cases.",
+                "score": 0.8181818181818182
+            }
+        },
+        "failure": {}
+    },
+    "19": {
+        "score": 0.8181818181818182,
+        "success": {},
+        "failure": {
+            "20": {
+                "modification": "Modify RECONCILE_PROMPT to explicitly instruct majority voting among the three answers (Solution A, Solution B, and its own independent solve), and add explicit instruction to re-verify arithmetic when there's disagreement.",
+                "score": 0.7954545454545454
+            }
+        }
+    },
+    "22": {
+        "score": 0.8484848484848485,
+        "success": {},
+        "failure": {
+            "24": {
+                "modification": "Add a verification step after voting: the voted answer is fed back with the original problem for a final check and correction, providing an additional layer of validation beyond simple majority voting.",
+                "score": 0.8446969696969697
+            }
+        }
+    }
+}

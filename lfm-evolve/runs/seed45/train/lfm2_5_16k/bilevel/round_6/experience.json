@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify SOLVE_MATH_PROMPT to include explicit instructions for inline arithmetic verification at each step, encouraging the model to write out calculations carefully and check them as it goes, rather than in a separate step.",
+    "before": 0.8566666666666666,
+    "after": 0.84,
+    "succeed": false
+}

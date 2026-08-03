@@ -1,0 +1,42 @@
+import evoagentx.workflow.operators as operator
+import workflows.run10_seed85.aflow.round_24.prompt as prompt_custom
+from evoagentx.models.model_configs import LLMConfig
+from evoagentx.benchmark.benchmark import Benchmark
+from evoagentx.models.model_utils import create_llm_instance
+
+class Workflow:
+    def __init__(self, name: str, llm_config: LLMConfig, benchmark: Benchmark | None = None):
+        self.name = name
+        self.llm = create_llm_instance(llm_config)
+        self.benchmark = benchmark
+        self.custom = operator.Custom(self.llm)
+
+    async def __call__(self, problem: str, **kwargs) -> str:
+        import asyncio
+
+        # Generate 3 independent solutions in parallel for self-consistency
+        tasks = [
+            self.custom(input=problem, instruction=prompt_custom.SOLVE_MATH_PROMPT),
+            self.custom(input=problem, instruction=prompt_custom.SOLVE_MATH_PROMPT),
+            self.custom(input=problem, instruction=prompt_custom.SOLVE_MATH_PROMPT),
+        ]
+        results = await asyncio.gather(*tasks)
+
+        solutions_text = "\n\n---\n\n".join(
+            [f"Solution {i+1}: {r['response']}" for i, r in enumerate(results)]
+        )
+
+        # Vote on the most consistent answer
+        voted = await self.custom(
+            input=solutions_text,
+            instruction=prompt_custom.VOTE_PROMPT,
+        )
+        voted_answer = voted["response"]
+
+        # Verify the voted answer against the original problem
+        verify_input = f"Problem: {problem}\n\nProposed answer: {voted_answer}"
+        final = await self.custom(
+            input=verify_input,
+            instruction=prompt_custom.VERIFY_PROMPT,
+        )
+        return final["response"]

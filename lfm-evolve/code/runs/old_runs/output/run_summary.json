@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "models": [
+      "ollama_chat/lfm2.5-16k"
+    ],
+    "methods": [
+      "bilevel"
+    ],
+    "seed": null,
+    "rounds": 1,
+    "last_launch": "2026-07-13T17:02:36"
+  },
+  "lfm2_5_16k": {
+    "bilevel": {
+      "status": "running",
+      "started_at": "2026-07-13T17:02:36",
+      "executor_model": "ollama_chat/lfm2.5-16k"
+    }
+  }
+}

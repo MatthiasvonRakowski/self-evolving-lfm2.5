@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify SOLVE_MATH_PROMPT to instruct the solver to explicitly write out each arithmetic operation as a separate numbered step with the computation shown (e.g., \"Step 3: 5 \u00d7 12 = 60\"), making intermediate calculations explicit and unambiguous, which gives the reviewer clearer checkpoints to verify against.",
+    "before": 0.92,
+    "after": 0.83,
+    "succeed": false
+}

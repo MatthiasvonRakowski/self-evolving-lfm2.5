@@ -1,0 +1,2112 @@
+{
+  "benchmark": "ifeval",
+  "model": "ollama_chat/qwen3-1.7b-16k",
+  "model_label": "qwen3_1_7b_16k",
+  "artifact": "bilevel",
+  "artifact_source": "runs/seed42/train/qwen3_1_7b_16k/bilevel/round_3",
+  "n": 300,
+  "main_metric": "prompt_strict_acc",
+  "mean_score": 0.13333333333333333,
+  "records": [
+    {
+      "id": 2299,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3439,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1377,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2591,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1012,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3191,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1098,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3425,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3502,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2304,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2532,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3371,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2395,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3324,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1634,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 301,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2943,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2829,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1314,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1659,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1781,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3035,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3401,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1139,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2337,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3198,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2396,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3057,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2324,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3505,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2247,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2622,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1773,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2467,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3478,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2164,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2292,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1481,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3084,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1793,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2070,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3327,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3089,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1691,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1082,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 334,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1348,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3272,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2250,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2097,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3445,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3724,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1040,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2787,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3753,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2616,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1132,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1512,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 349,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2268,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3415,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 357,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2515,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1967,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1381,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2341,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3131,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1893,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3126,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3703,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1800,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2977,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1367,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2362,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 32,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3369,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 127,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2759,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2667,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1906,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2957,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2685,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2192,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3653,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1130,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1845,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1713,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3709,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 152,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1936,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 295,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2010,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2392,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2374,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3294,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2653,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2985,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3633,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2828,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1480,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3534,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2303,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3305,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2328,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2779,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 219,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1216,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3367,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2416,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3224,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2441,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1879,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2195,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2142,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3323,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1928,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1609,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1108,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1823,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1075,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3506,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2136,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2765,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2918,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3567,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1342,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1069,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 288,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3407,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1300,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3518,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3563,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3063,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1019,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1518,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1251,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2691,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1516,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2825,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 322,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 296,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2728,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2350,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3091,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1162,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3001,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3071,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1834,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2969,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1667,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1644,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2246,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2909,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1670,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2887,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 142,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2602,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2912,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2617,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2871,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1265,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3484,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2790,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1147,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3629,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2162,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1582,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3572,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2941,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3073,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1092,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1128,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2209,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2997,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3619,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2398,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2811,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2028,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 321,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1219,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3329,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 202,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3109,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1087,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2023,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 332,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 337,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2216,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 102,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1466,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3424,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 340,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3414,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3281,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 30,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2751,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2449,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 286,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1393,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3710,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2929,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3750,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1620,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1908,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2785,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1646,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2583,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1566,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1498,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2084,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2436,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3513,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2139,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1477,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2225,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3376,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1759,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1601,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2736,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3434,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2447,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3130,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2820,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1593,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2015,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1332,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3743,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1546,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1372,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2457,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1361,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3156,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3455,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1656,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1943,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2239,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1129,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 163,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1379,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 292,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1072,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1629,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 3565,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1843,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1322,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2230,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3315,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1001,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1233,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1645,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1107,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 19,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2563,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2605,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1389,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2628,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2549,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3540,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2143,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2713,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1154,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 167,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3623,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1580,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 251,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 371,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 24,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3081,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 218,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3428,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1236,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3719,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2662,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1287,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2422,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1094,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3280,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3617,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1730,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2485,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3362,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 2577,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2069,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1180,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2482,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2637,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2752,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1980,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1258,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3697,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1561,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1220,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2904,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2439,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 2589,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 1.0
+      }
+    },
+    {
+      "id": 1619,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 331,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3549,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 3732,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    },
+    {
+      "id": 1746,
+      "prediction": "<error: name 'asyncio' is not defined>",
+      "metrics": {
+        "prompt_strict_acc": 0.0
+      }
+    }
+  ]
+}

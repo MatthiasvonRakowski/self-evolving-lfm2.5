@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-07-19T10:44:57",
+  "args": {
+    "seeds": [
+      44
+    ],
+    "models": [
+      "lfm2.5-16k",
+      "qwen3-1.7b-16k"
+    ],
+    "methods": [
+      "aflow",
+      "mipro",
+      "bilevel"
+    ],
+    "rounds": 20,
+    "n_test": 300,
+    "base_dir": "runs",
+    "smoke": false,
+    "skip_preflight": false,
+    "stop_on_error": false
+  },
+  "seeds": {
+    "44": {
+      "train": {
+        "status": "success",
+        "started_at": "2026-07-22T09:34:39",
+        "ended_at": "2026-07-22T09:34:56",
+        "elapsed_sec": 17.2,
+        "returncode": 0,
+        "log": "runs/seed44/train_driver.log"
+      },
+      "eval": {
+        "status": "success",
+        "started_at": "2026-07-22T09:34:56",
+        "ended_at": "2026-07-23T09:55:51",
+        "elapsed_sec": 87654.3,
+        "returncode": 0,
+        "log": "runs/seed44/eval_driver.log"
+      }
+    },
+    "42": {
+      "train": {
+        "status": "running",
+        "started_at": "2026-07-22T09:31:25"
+      }
+    }
+  },
+  "current": {
+    "seed": 44,
+    "stage": "eval"
+  }
+}

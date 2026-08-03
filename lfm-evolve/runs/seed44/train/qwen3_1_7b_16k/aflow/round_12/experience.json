@@ -1,0 +1,7 @@
+{
+    "father node": 11,
+    "modification": "Modify ALT_SOLVE_PROMPT to use a \"unit tracking / systematic equation setup\" approach instead of just \"different order of operations\", making it more genuinely different from Solution A to improve error detection in the verification stage.",
+    "before": 0.93,
+    "after": 0.74,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Changed the graph from a single Custom call to an ensemble of two parallel Custom calls (algebraic approach + verbal reasoning approach) followed by a synthesis/judge step that reconciles the two answers. This is fundamentally different from the previous single-call or review/verify approach - it uses an ensemble voting strategy where two independently-reasoned solutions are compared, and disagreements are resolved by a judge. Added two new prompts (SOLVE_MATH_ALGEBRAIC_PROMPT and SOLVE_MATH_VERBAL_PROMPT) with different reasoning styles, plus an ENSEMBLE_PICK_PROMPT for the synthesis step.",
+    "before": 0.9133333333333334,
+    "after": 0.88,
+    "succeed": false
+}

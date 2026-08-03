@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modify the SOLVE_MATH_PROMPT to include explicit instructions for careful arithmetic verification and structured problem decomposition, making the single-pass solution more accurate.",
+    "before": 0.38888888888888884,
+    "after": 0.29924242424242425,
+    "succeed": false
+}

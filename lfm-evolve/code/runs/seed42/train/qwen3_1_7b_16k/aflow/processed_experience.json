@@ -1,0 +1,103 @@
+{
+    "0": {
+        "score": 0.96,
+        "success": {},
+        "failure": {
+            "1": {
+                "modification": "Added a second Custom call (REVIEW_MATH_PROMPT) that reviews the initial solution for arithmetic and logic errors, then outputs a verified final answer. This adds a self-review step after the initial solve, which helps catch mistakes without changing the single-solve prompt.",
+                "score": 0.94
+            },
+            "2": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include explicit instructions for: (1) identifying given information, (2) breaking into numbered steps, (3) verifying arithmetic after solving, and (4) a clearer output format requirement. This keeps the single-call structure (avoiding the penalized two-call approach) while improving reasoning quality through better prompt guidance.",
+                "score": 0.95
+            },
+            "3": {
+                "modification": "Modified SOLVE_MATH_PROMPT to include more explicit step-by-step guidance: (1) identify what is asked, (2) list key facts/numbers, (3) solve with explicit arithmetic shown for each operation, (4) verify the final answer makes sense, (5) output format reinforced. This stays as a single-call graph modification only in the prompt text.",
+                "score": 0.95
+            },
+            "4": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a more authoritative \"expert mathematician\" persona instead of \"math tutor\", and to explicitly instruct labeling of each intermediate result with its meaning/unit, which helps prevent quantity confusion errors. This is a single prompt text change only.",
+                "score": 0.84
+            },
+            "5": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add an explicit instruction to re-read the original problem statement after reaching an answer to confirm the answer addresses exactly what was asked (not a sub-quantity or wrong variable). This targets a different error type than arithmetic verification.",
+                "score": 0.92
+            },
+            "6": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a structured checklist/template format where the model must explicitly fill in labeled sections (UNDERSTAND, PLAN, EXECUTE, CHECK, ANSWER), rather than prose instructions. This changes the prompt's fundamental structure from instructional text to a response template, which guides the model's output format more strictly and reduces free-form reasoning errors.",
+                "score": 0.96
+            },
+            "7": {
+                "modification": "Modified the CHECK section of SOLVE_MATH_PROMPT to explicitly require recomputing every arithmetic operation independently from scratch (rather than just a general verification), targeting arithmetic errors as the primary failure mode. This adds a more rigorous and specific arithmetic re-verification instruction within the existing proven checklist structure, while keeping the single-call graph unchanged.",
+                "score": 0.94
+            },
+            "8": {
+                "modification": "Modified SOLVE_MATH_PROMPT to use a few-shot example approach instead of the checklist/template format. Added one concrete worked example demonstrating the expected reasoning style and \"#### \" output format. This is fundamentally different from all previous instruction-based or checklist-based prompts - it shows rather than tells, leveraging in-context learning to guide both reasoning quality and output format.",
+                "score": 0.92
+            },
+            "9": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add an explicit \"LABEL\" section before EXECUTE that requires assigning a distinct variable name and unit to each quantity mentioned in the problem. This forces the model to disambiguate quantities before computing, targeting variable-confusion errors which are different from arithmetic errors. The checklist structure is preserved.",
+                "score": 0.93
+            },
+            "16": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add explicit instructions in the UNDERSTAND section requiring the model to (1) underline/state the exact question being asked, and (2) list every quantity with name, value, and unit in a structured sub-list. Also added a requirement in the ANSWER section to confirm the answer's unit matches what was asked. This targets quantity-confusion at the problem-reading stage while keeping the proven checklist structure intact.",
+                "score": 0.94
+            }
+        }
+    },
+    "3": {
+        "score": 0.95,
+        "success": {
+            "10": {
+                "modification": "Add a second custom review step that takes the problem and initial solution, verifies the reasoning and arithmetic, and outputs a final corrected answer if needed.",
+                "score": 0.96
+            }
+        },
+        "failure": {}
+    },
+    "10": {
+        "score": 0.96,
+        "success": {
+            "19": {
+                "modification": "Add a second independent solver before the review step, so the reviewer sees two independent solutions and can identify which is correct or reconcile them - this is an ensemble approach fundamentally different from just modifying prompts.",
+                "score": 0.97
+            }
+        },
+        "failure": {
+            "11": {
+                "modification": "Add a third custom step (final synthesis) that consolidates the original solution and review to produce a more reliable final answer, catching cases where the reviewer might introduce new errors or miss issues.",
+                "score": 0.95
+            },
+            "12": {
+                "modification": "Modified SOLVE_MATH_PROMPT to add a RECOMPUTE substep that independently re-calculates key arithmetic before finalizing, reducing errors entering the review phase.",
+                "score": 0.96
+            },
+            "13": {
+                "modification": "Modify REVIEW_MATH_PROMPT to require independent re-solving before comparison, making the review process more robust by not anchoring to the original solution's reasoning path.",
+                "score": 0.83
+            },
+            "14": {
+                "modification": "Modify REVIEW_MATH_PROMPT to add an explicit NUMBER EXTRACTION step at the beginning, requiring the reviewer to list all numbers directly from the problem statement before verifying the solution, reducing misread number errors.",
+                "score": 0.96
+            },
+            "17": {
+                "modification": "Modify REVIEW_MATH_PROMPT to add a targeted \"RECOMPUTE\" substep that independently recalculates only the final arithmetic steps (not full re-solve), helping catch arithmetic errors in the last steps without anchoring bias.",
+                "score": 0.96
+            },
+            "18": {
+                "modification": "Modify REVIEW_MATH_PROMPT to add a \"GOAL\" step as the very first step, requiring the reviewer to explicitly state what value/quantity the problem is asking to find, before checking the solution. This catches cases where the solver computed the right numbers but answered the wrong question.",
+                "score": 0.96
+            }
+        }
+    },
+    "12": {
+        "score": 0.96,
+        "success": {
+            "15": {
+                "modification": "Add a third Custom step that compares initial and review answers and resolves discrepancies by doing an independent re-solve",
+                "score": 0.97
+            }
+        },
+        "failure": {}
+    }
+}

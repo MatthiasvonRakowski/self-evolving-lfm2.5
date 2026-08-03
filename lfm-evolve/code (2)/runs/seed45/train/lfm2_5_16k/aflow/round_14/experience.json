@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify REVIEW_MATH_PROMPT to explicitly require \"PREFER A\" or \"PREFER B\" output, and update the return logic to parse which solution was preferred and return the corresponding answer.",
+    "before": 0.87,
+    "after": 0.8,
+    "succeed": false
+}

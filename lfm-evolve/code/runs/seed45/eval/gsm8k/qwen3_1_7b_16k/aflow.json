@@ -1,0 +1,2112 @@
+{
+  "benchmark": "gsm8k",
+  "model": "ollama_chat/qwen3-1.7b-16k",
+  "model_label": "qwen3_1_7b_16k",
+  "artifact": "aflow",
+  "artifact_source": "runs/seed45/train/qwen3_1_7b_16k/aflow/round_18",
+  "n": 300,
+  "main_metric": "solve_rate",
+  "mean_score": 0.8733333333333333,
+  "records": [
+    {
+      "id": "test-475",
+      "prediction": "#### Step-by-Step Verification\n\n**Problem:**  \nWe are given that three-fourths of the students have a desktop computer at home, and 20 students do not. We are to find the total number of students.\n\n**Proposed Solution A:**  \nLet the total number of students be $ x $.  \nSince one-fourth of the students do not have a desktop computer:  \n$$\n\\frac{1}{4}x = 20 \\implies x = 20 \\times 4 = 80\n$$  \nVerification:  \n- Three-fourths of 80: $ \\frac{3}{4} \\times 80 = 60 $  \n- Students without computers: $ 80 - 60 = 20 $  \n**Conclusion:** Solution A is correct.\n\n**Proposed Solution B:**  \nSame reasoning as Solution A.  \n$$\n\\frac{1}{4}x = 20 \\implies x = 80\n$$  \nVerification:  \n- Three-fourths of 80: $ \\frac{3}{4} \\times 80 = 60 $  \n- Students without computers: $ 80 - 60 = 20 $  \n**Conclusion:** Solution B is correct.\n\n**Proposed Solution C:**  \nIncomplete, but logically equivalent to Solutions A and B.  \nAssuming it is correct (as it gives the same answer), it aligns with the other solutions.\n\n---\n\n### Final Determination  \nAll three solutions agree on the final answer: **80 students**.\n\n---\n\n### Final Answer  \n$$\n\\boxed{80}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-952",
+      "prediction": "#### Final Answer\n$$\n\\boxed{150}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-721",
+      "prediction": "#### Final Answer\n$$\n\\boxed{4}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-258",
+      "prediction": "The problem calculates the weight of a redwood tree after 30% of its wood is eaten by termites. \n\n1. **Total sections**: 200 feet \u00f7 10 feet/section = 20 sections.  \n2. **Total weight**: 20 sections \u00d7 400 pounds/section = 8000 pounds.  \n3. **Weight lost**: 30% of 8000 = 0.3 \u00d7 8000 = 2400 pounds.  \n4. **Remaining weight**: 8000 - 2400 = 5600 pounds.  \n\nThe proposed solution is correct.  \n\n#### 5600",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-849",
+      "prediction": "#### Final Answer\n$$\n\\boxed{10}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-169",
+      "prediction": "The proposed solution correctly calculates twice Ethel's money (2 \u00d7 8 = 16) and adds $2 to get Jimmy's amount (16 + 2 = 18). All steps are numerically accurate. \n\n#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-675",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-876",
+      "prediction": "The proposed solution correctly calculates the number of marbles Paul has left. The steps are accurate: starting with 52 marbles, adding 28 gives 80, then losing 1/4 (20 marbles) leaves 60. \n\n#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-464",
+      "prediction": "#### 18\n#### 18",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-351",
+      "prediction": "### Final Answer:\n\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-627",
+      "prediction": "#### Final Answer  \n#### 72  \n#### 72",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-742",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{28}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-892",
+      "prediction": "#### Final Answer\n$$\n\\boxed{55}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-398",
+      "prediction": "#### 25\n25",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1193",
+      "prediction": "#### Final Answer\n$$\n\\boxed{280}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-312",
+      "prediction": "#### 91\n#### 91",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-527",
+      "prediction": "#### Final Answer\n$$\n\\boxed{21}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-725",
+      "prediction": "#### Final Answer\n$$\n\\boxed{18}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1247",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3360}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-416",
+      "prediction": "#### Final Answer\n$$\n\\boxed{350}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1299",
+      "prediction": "#### Final Answer\n$$\n\\boxed{31.00}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-65",
+      "prediction": "#### Final Answer\n$$\n\\boxed{300}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-2",
+      "prediction": "#### 3\n\n#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-741",
+      "prediction": "#### Final Answer\n$$\n\\boxed{25}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-907",
+      "prediction": "#### Corrected Solution\n\n1. **Initial quantities**:\n   - Blue shoe boxes: 7\n   - Red shoe boxes: 9\n\n2. **Boxes used**:\n   - Blue boxes used: 3\n   - Red boxes used: $ \\frac{1}{3} \\times 9 = 3 $\n\n3. **Remaining boxes**:\n   - Blue boxes left: $ 7 - 3 = 4 $\n   - Red boxes left: $ 9 - 3 = 6 $\n\n4. **Total remaining boxes**:\n   - $ 4 + 6 = 10 $\n\nThe arithmetic is correct. The final answer is:\n\n$$\n\\boxed{10}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-176",
+      "prediction": "#### Final Answer\n$$\n\\boxed{15}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1259",
+      "prediction": "### Problem Recap\nWe are given:\n- There are 5 phones in total: 1 main phone and 4 additional phones.\n- The main phone costs **twice as much** as each additional phone.\n- The **main phone plan costs $20**.\n- We are asked to find the **total cost** of the whole phone plan.\n\n---\n\n### Step-by-Step Verification\n\n#### Step 1: Define Variables\nLet the cost of **each additional phone** be $ x $ dollars.  \nThen, the cost of the **main phone** is $ 2x $ dollars (since it's twice as much as each additional phone).\n\n#### Step 2: Total Cost Equation\nThe total cost of all 5 phones is:\n$$\n\\text{Total cost} = \\text{Cost of main phone} + \\text{Cost of 4 additional phones} = 2x + 4x = 6x\n$$\n\nWe are told that the **main phone costs $20**, so:\n$$\n6x = 20\n$$\n\nSolving for $ x $:\n$$\nx = \\frac{20}{6} = \\frac{10}{3} \\approx 3.33\n$$\n\nSo:\n- Each additional phone costs $ \\frac{10}{3} $ dollars.\n- The main phone costs $ 2x = \\frac{20}{3} $ dollars.\n\n#### Step 3: Calculate Total Cost\nThe total cost is:\n$$\n\\text{Total cost} = \\text{Cost of main phone} + \\text{Cost of 4 additional phones} = \\frac{20}{3} + 4 \\times \\frac{10}{3} = \\frac{20}{3} + \\frac{40}{3} = \\frac{60}{3} = 20\n$$\n\nWait! This is incorrect because the **main phone is already given as $20**, not $ \\frac{20}{3} $. The equation $ 6x = 20 $ assumes the main phone is part of the total cost, but it's **already fixed at $20**. The correct setup should be:\n$$\n\\text{Total cost} = \\text{Main phone} + \\text{4 additional phones} = 20 + 4x\n$$\n\nSo, solving:\n$$\n20 + 4x = 20 \\Rightarrow 4x = 0 \\Rightarrow x = 0\n$$\n\nThis is a contradiction, indicating that the initial assumption is flawed. The correct interpretation is that the **main phone is $20**, and the **additional phones cost $10 each** (since it's twice as much as the main phone). Thus:\n\n- Main phone: $20\n- Additional phones: 4 \u00d7 $10 = $40\n- **Total cost**: $20 + $40 = **$60**\n\n---\n\n### Final Answer\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-579",
+      "prediction": "#### Final Answer\n$$\n\\boxed{48}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-878",
+      "prediction": "### Final Answer\n\n#### 38.67",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1051",
+      "prediction": "#### 1630",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-670",
+      "prediction": "The problem requires calculating the total dry ingredients needed for 16 muffins, where each muffin uses 5 tablespoons of flour, 3 tablespoons of sugar, and 0.25 tablespoon of salt. \n\n**Step-by-Step Verification:**\n1. **Per muffin total ingredients:**  \n   $5 \\, \\text{(flour)} + 3 \\, \\text{(sugar)} + 0.25 \\, \\text{(salt)} = 8.25 \\, \\text{tablespoons}$.  \n\n2. **Total for 16 muffins:**  \n   $8.25 \\times 16 = 132 \\, \\text{tablespoons}$.  \n\n**Corrected Calculation:**  \n- Flour: $5 \\times 16 = 80$  \n- Sugar: $3 \\times 16 = 48$  \n- Salt: $0.25 \\times 16 = 4$  \n- **Total:** $80 + 48 + 4 = 132$.  \n\nThe proposed solution is numerically correct.  \n\n#### 132",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-821",
+      "prediction": "#### Corrected Solution\nThe problem involves calculating the total time Sandy walked over two days in minutes. \n\n1. **First day's time**: 8 hours.\n2. **Second day's time**: Half of 8 hours is 4 hours.\n3. **Total time in hours**: 8 + 4 = 12 hours.\n4. **Convert to minutes**: 12 hours \u00d7 60 minutes/hour = 720 minutes.\n\nThe solution is correct.\n\n#### Final Answer\n$$\n\\boxed{720}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1071",
+      "prediction": "#### Corrected Solution:\nThe proposed solution correctly calculates the total cost by applying the promotion. Dennis needs 6 pounds of butter, each at $2.00 after the discount. The total cost is $6 \u00d7 $2.00 = $12.00.\n\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-970",
+      "prediction": "#### 1800",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-654",
+      "prediction": "#### 80\nThe proposed solution correctly calculates that Sally's bank account increased by $220, which is the amount she should have received. Since her weekly wage was supposed to be $300, the amount withheld is $300 - $220 = $80. The final answer is confirmed.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-489",
+      "prediction": "#### 6\n\nThe proposed solution correctly calculates the number of Pomeranians as $ \\frac{2}{3} \\times 27 = 18 $ and then determines the number of girl Pomeranians as $ \\frac{1}{3} \\times 18 = 6 $. All steps are numerically accurate.\n\n$$\n\\boxed{6}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-997",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-447",
+      "prediction": "#### 2\n#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-225",
+      "prediction": "The proposed solution correctly calculates the total cost by multiplying each person's rental cost by the respective hours and summing the results. Both calculations (Carlos: $90, Benji: $90) are accurate, and their sum is $180.\n\n#### 180\n\n#### 180",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-281",
+      "prediction": "#### Final Answer\n$$\n\\boxed{7.00}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-438",
+      "prediction": "#### 7",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1151",
+      "prediction": "The proposed solution correctly follows the steps: starting with 30 roses, subtracting 24 gives 6, then adding 15 results in 21. All arithmetic operations are numerically accurate.\n\n#### 21",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-931",
+      "prediction": "The problem asks how many bouncy balls Sophie bought, given the total number of toys (62) and the existing toys (31 blocks + 8 stuffed animals + 9 rings = 48). The correct calculation is $ 62 - 48 = 14 $. The proposed solution incorrectly writes $ 14 / \\text{something} $, but the arithmetic is correct. \n\n#### 14\n\n#### 14",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-317",
+      "prediction": "### Final Answer\n$$\n\\boxed{140}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-448",
+      "prediction": "#### 5\n\nThe proposed solution is correct. Joey's total is 240, Marcy's is 235, and the difference is 5. \n\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-83",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{623}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-572",
+      "prediction": "#### 308\n\nThe total cost is calculated by summing the spaying fee, vaccine costs, and vase repair costs:\n- Spaying: $200\n- Vaccines: 3 \u00d7 $20 = $60\n- Vases: 4 \u00d7 $12 = $48\n\nAdding these amounts:  \n$200 + $60 + $48 = **$308**. \n\nThe proposed solution is correct. \n\n#### 308",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-908",
+      "prediction": "The problem states that Sarah has 9 books, Joseph initially had twice as many (2\u00d79=18), and then lost 2. The proposed solution correctly calculates 18-2=16. All steps are numerically accurate.\n\n#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-307",
+      "prediction": "#### Final Answer\n$$\n\\boxed{5}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1060",
+      "prediction": "#### Corrected Solution\nThe proposed solution correctly calculates the daily consumption as $ 3 \\text{ cats} \\times 2 \\text{ feedings/day} \\times 60 \\text{ grams/feeding} = 360 \\text{ grams/day} $. Dividing the total food (720 grams) by the daily consumption (360 grams) gives $ \\frac{720}{360} = 2 $ days.\n\n#### Final Answer\n$$\n\\boxed{2}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-683",
+      "prediction": "#### Final Answer\n$$\n\\boxed{80}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-668",
+      "prediction": "The problem states that Sarah's basketball game has 4 quarters, each 12 minutes long, and was extended by 5 minutes in the last quarter. \n\n**Step 1:** Calculate the total time without the extension:  \n4 quarters \u00d7 12 minutes/quarter = 48 minutes.\n\n**Step 2:** Add the extended time:  \n48 minutes + 5 minutes = 53 minutes.\n\nThe proposed solution is correct. \n\n#### 53",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-813",
+      "prediction": "#### 79",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-367",
+      "prediction": "#### Final Answer\n$$\n\\boxed{9}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-477",
+      "prediction": "The proposed solution correctly calculates the total number of books as 20 (300 \u00f7 15) and then divides them equally among 4 kids to get 5 books per child. All steps are numerically accurate.\n\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-123",
+      "prediction": "#### Final Answer\n$$\n\\boxed{44}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-121",
+      "prediction": "The problem asks how many sheets of paper Miguel uses every month, given that he uses 2 pads per week and each pad contains 30 sheets. The proposed solution correctly calculates the weekly usage as $2 \\times 30 = 60$ sheets per week and then multiplies by 4 weeks in a month to get $60 \\times 4 = 240$ sheets per month. All steps are numerically accurate and consistent with standard assumptions in grade-school math (4 weeks per month).\n\n#### Final Answer\n$$\n\\boxed{240}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-246",
+      "prediction": "### Final Answer\n\n#### Corrected Solution:\nThe problem states that the difference in the number of snails between the two aquariums is 32 - 4 = 28. This difference is twice the total number of fish in both aquariums. Let $ F $ be the number of fish in each aquarium. Then the total number of fish is $ 2F $, and the equation becomes:\n\n$$\n28 = 2 \\times (2F) \\Rightarrow 28 = 4F \\Rightarrow F = \\frac{28}{4} = 7\n$$\n\nThus, the number of fish in each aquarium is:\n\n$$\n\\boxed{7}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1139",
+      "prediction": "#### Final Answer\n$$\n\\boxed{700}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-395",
+      "prediction": "To determine how many books Wendy needs to carry, we first interpret the problem's context. The shelving system has 6 rows and 6 columns, resulting in $ 6 \\times 6 = 36 $ spots. The phrase \"20 more than double the number of books\" is interpreted as placing books in these spots, meaning the number of books to place is based on the number of spots.\n\nThe calculation is:\n$$\n2 \\times 36 + 20 = 72 + 20 = 92\n$$\n\nThis interpretation aligns with the context of the problem, and no other solutions correctly apply this logic. The other solutions make assumptions (e.g., the system is empty) that are not supported by the problem statement.\n\n$$\n\\boxed{92}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-746",
+      "prediction": "#### Final Answer\n$$\n\\boxed{1100}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-932",
+      "prediction": "### Evaluation of the Solution\n\nThe problem states that the combined age of Peter, Paul, and Jean is 100 years. We are told that Paul is 10 years older than John, and that Peter's age is equal to the sum of Paul and John's ages. The solution correctly assigns variables and uses the given relationships to derive expressions for their ages.\n\nThe key assumption in the solution is that Jean's age is equal to Peter's age, which allows for a unique solution. This assumption is consistent with the problem's implication that a unique answer is expected.\n\nThe derived ages are:\n- John's age: 14\n- Paul's age: 24\n- Peter's age: 38\n- Jean's age: 38\n\nThe total age is:\n$$\n38 + 24 + 38 = 100\n$$\nThis satisfies all given conditions.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{38}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-71",
+      "prediction": "#### 7425\n\nThe problem states Judy teaches 5 classes each weekday (5 days) and 8 classes on Saturday. Total classes: $5 \\times 5 + 8 = 33$. Each class has 15 students, and she charges $15 per student, so total earnings: $33 \\times (15 \\times 15) = 33 \\times 225 = 7425$. The solution is correct. \n\n#### 7425",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1284",
+      "prediction": "#### Final Answer\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-374",
+      "prediction": "#### Final Answer\n$$\n\\boxed{240000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1236",
+      "prediction": "The proposed solution correctly calculates the distance Michael traveled as 3600 km (50 km/hr \u00d7 72 hours) and determines the percentage as (3600/6000) \u00d7 100% = 60%. The calculation is accurate.\n\n#### 60",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-866",
+      "prediction": "#### 23\n\nThe proposed solution correctly calculates the number of yellow cars by subtracting the sum of red, green, and blue cars from the total. The arithmetic is accurate, and the final answer is confirmed.\n\n#### 23",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-303",
+      "prediction": "#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-536",
+      "prediction": "#### Final Answer\n$$\n\\boxed{16}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-512",
+      "prediction": "#### 110\n\nThe proposed solution correctly calculates Gerald's total earnings as $210 (30 \u00d7 7) and subtracts the $100 he spent, resulting in $110 remaining. The arithmetic is accurate. \n\n#### 110",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-269",
+      "prediction": "#### 1375\n\nThe real estate agent spent $5 on each newspaper ad (50 ads \u00d7 $5 = $250) and $75 on each television ad (15 ads \u00d7 $75 = $1125). Adding these amounts: $250 + $1125 = $1375. The solution is correct.  \n\n#### 1375",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1227",
+      "prediction": "#### 90\n\n#### 90",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1213",
+      "prediction": "#### Corrected Solution\nThe proposed solution is correct. The calculations for both schools' capacities are accurate: Ali's class is 120 students, John's school has 30 students total. Adding them gives a combined capacity of 150 students.\n\n$$\n\\boxed{150}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-161",
+      "prediction": "#### Final Answer  \n$$\n\\boxed{16}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-895",
+      "prediction": "### Final Answer\n$$\n\\boxed{26}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-373",
+      "prediction": "#### Final Answer\n$$\n\\boxed{5}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1172",
+      "prediction": "#### Final Answer:  \n$$\n\\boxed{3160}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-904",
+      "prediction": "The proposed solution correctly calculates the material needed for small and large masks. For small masks: 20 \u00d7 0.5 = 10 yards. For large masks: 8 \u00d7 0.75 = 6 yards. Total material: 10 + 6 = 16 yards. \n\n#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-359",
+      "prediction": "#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1121",
+      "prediction": "#### Final Answer\n$$\n\\boxed{560}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1262",
+      "prediction": "#### 235\n\nAlicia's weekly dry-cleaning cost is calculated as follows:\n\n- **Blouses**: 5 blouses \u00d7 $5.00 = $25.00  \n- **Pants**: 2 pants \u00d7 $8.00 = $16.00  \n- **Skirt**: 1 skirt \u00d7 $6.00 = $6.00  \n\n**Weekly total**: $25.00 + $16.00 + $6.00 = **$47.00**  \n\n**Total for 5 weeks**: $47.00 \u00d7 5 = **$235.00**  \n\nThe solution is correct.  \n\n#### 235",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1228",
+      "prediction": "#### Final Answer\n$$\n\\boxed{5}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-437",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{15}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-87",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{22}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-887",
+      "prediction": "#### Final Answer\n#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-154",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{48}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1231",
+      "prediction": "#### Final Answer\n$$\n\\boxed{440}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-716",
+      "prediction": "#### Final Answer  \n$$\n\\boxed{385000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1278",
+      "prediction": "#### Re-read the problem carefully:\n- Mia's age = 40 years\n- Age difference between Mia and Emma = 16 years (Emma is older)\n- Goal: Find the average age of Mia and Emma\n\n#### Verify each arithmetic operation:\n1. **Calculate Emma's age**:\n   - Emma is 16 years older than Mia:  \n     $$\n     \\text{Emma's age} = 40 + 16 = 56\n     $$\n   - This step is correct.\n\n2. **Calculate the average age**:\n   - Average = (Mia's age + Emma's age) / 2:  \n     $$\n     \\text{Average age} = \\frac{40 + 56}{2} = \\frac{96}{2} = 48\n     $$\n   - This step is correct.\n\n#### Conclusion:\nAll steps in the proposed solution are numerically correct. The final answer is confirmed.\n\n#### Final Answer\n$$\n\\boxed{48}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-542",
+      "prediction": "#### Final Answer\n$$\n\\boxed{50}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-951",
+      "prediction": "#### Final Answer\n$$\n\\boxed{5}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-700",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1001",
+      "prediction": "#### Final Answer\n$$\n\\boxed{1}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-168",
+      "prediction": "#### 16\n\nThe proposed solution correctly identifies Brooke's current age as 8 years old, making Seth's current age $ 2 \\times 8 = 16 $. The check confirms that in 2 years, their ages will be 10 and 18, respectively, summing to 28, which matches the problem's condition. The solution is accurate.",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-393",
+      "prediction": "#### Corrected Solution\n\nThe original cost of the cable subscription is $60. Tim switches to streaming services, where he pays $10 for Netflix and $10 each for Hulu and Disney Plus (totaling $20 for the bundled services). He saves 20% on the bundled services, which amounts to:\n\n$$\n20\\% \\times 20 = 4 \\text{ dollars}\n$$\n\nThus, the new cost for the bundled services is:\n\n$$\n20 - 4 = 16 \\text{ dollars}\n$$\n\nAdding the Netflix cost:\n\n$$\n10 + 16 = 26 \\text{ dollars}\n$$\n\nThe total savings is:\n\n$$\n60 - 26 = 34 \\text{ dollars}\n$$\n\n#### Final Answer\n$$\n\\boxed{34}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-473",
+      "prediction": "#### Verification of Solution\nThe problem states that Matt wants to eat 5 cookies, which is given by the formula:  \n$$\n\\text{Number of cookies} = \\frac{\\text{Number of carrot sticks}}{2} + 2\n$$  \nSubstituting $ x $ for the number of carrot sticks:  \n$$\n\\frac{x}{2} + 2 = 5\n$$  \nSolving step-by-step:  \n1. Subtract 2 from both sides:  \n$$\n\\frac{x}{2} = 3\n$$  \n2. Multiply both sides by 2:  \n$$\nx = 6\n$$  \nPlugging back into the original equation:  \n$$\n\\frac{6}{2} + 2 = 3 + 2 = 5\n$$  \nThe equation holds true, confirming the solution is correct.\n\n#### Final Answer\n$$\n\\boxed{6}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-595",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{42}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-318",
+      "prediction": "#### 12\n\nThe proposed solution correctly calculates the volume of the pool as $6 \\, \\text{ft} \\times 4 \\, \\text{ft} \\times 5 \\, \\text{ft} = 120 \\, \\text{cubic feet}$ and then multiplies by the cost per cubic foot ($0.10) to get a total cost of $12. All steps are numerically correct.\n\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-947",
+      "prediction": "#### Corrected Solution\nThe problem states that the bakery has 40 less than seven times the number of loaves Sam had. Sam had 70 loaves, so seven times that is $7 \\times 70 = 490$. Subtracting 40 gives $490 - 40 = 450$.\n\nAll steps in the proposed solution are numerically correct.\n\n#### Final Answer\n$$\n\\boxed{450}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-740",
+      "prediction": "The proposed solution correctly calculates the cost of 10 gallon jars and 16 half-gallon jars. The cost of a half-gallon jar is $3, leading to $16 \u00d7 $3 = $48. The cost of 10 gallon jars is $50. Adding these gives $50 + $48 = $98. The arithmetic is accurate.\n\n#### 98",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-18",
+      "prediction": "#### Final Answer\n$$\n\\boxed{57500}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-862",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1130",
+      "prediction": "#### 8\n\nThe proposed solution correctly calculates the number of eggs each person painted and determines the difference between Camden's and Arnold's contributions. All steps are logically consistent and numerically accurate. \n\n#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-531",
+      "prediction": "#### Final Answer\n$$\n\\boxed{36}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-659",
+      "prediction": "#### Final Answer\n$$\n\\boxed{120}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1155",
+      "prediction": "#### 30  \n#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-260",
+      "prediction": "#### Final Answer\n$$\n\\boxed{168}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-241",
+      "prediction": "#### Final Answer\n$$\n\\boxed{21}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1158",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1184",
+      "prediction": "<error: Error during single_generate_async of LiteLLM: litellm.APIConnectionError: Ollama_chatException - litellm.Timeout: Connection timed out. Timeout passed=600.0, time taken=600.022 seconds>",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-289",
+      "prediction": "#### Final Answer\n#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-397",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-6",
+      "prediction": "#### Final Answer  \n#### 64",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-888",
+      "prediction": "#### 34",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-54",
+      "prediction": "#### 40",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-178",
+      "prediction": "#### 350\n\n$$\n\\boxed{350}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-267",
+      "prediction": "#### Final Answer\n$$\n\\boxed{118000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-938",
+      "prediction": "#### Final Answer\n$$\n\\boxed{159}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-979",
+      "prediction": "The proposed solution correctly calculates the red car's price as $60 and adds it to the blue car's price of $100 to get a total of $160. All steps are numerically accurate.\n\n#### 160",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-870",
+      "prediction": "#### 500",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-403",
+      "prediction": "#### 4\n\nThe calculation is correct. Mark needs 12 cups of flour (6 bags) and 4 cups of milk (2 bottles). The difference is $6 - 2 = 4$. \n\n#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-911",
+      "prediction": "The proposed solution correctly calculates Farmer Smith's farm as $2 \\times 200 + 100 = 500$ acres, and adds it to Farmer Brown's 200 acres, resulting in a total of $200 + 500 = 700$.\n\n#### 700",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-891",
+      "prediction": "<error: Error during single_generate_async of LiteLLM: litellm.APIConnectionError: Ollama_chatException - litellm.Timeout: Connection timed out. Timeout passed=600.0, time taken=600.008 seconds>",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-329",
+      "prediction": "The proposed solution correctly calculates the percentage points needed (40%) and converts that to time (120 minutes), which is equivalent to 2 hours. All steps are numerically accurate.\n\n#### Final Answer\n#### 2",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1003",
+      "prediction": "#### Final Answer\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-336",
+      "prediction": "#### 310\n\nThe proposed solution correctly calculates the total sugar needed. Mason uses 30 ounces per batch for 8 batches of suckers, resulting in $30 \\times 8 = 240$ ounces. Adding the 70 ounces needed for 1 batch of fudge gives $240 + 70 = 310$ ounces. The arithmetic is accurate.\n\n#### 310",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-314",
+      "prediction": "<error: Error during single_generate_async of LiteLLM: litellm.APIConnectionError: Ollama_chatException - litellm.Timeout: Connection timed out. Timeout passed=600.0, time taken=600.004 seconds>",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-989",
+      "prediction": "<error: Error during single_generate_async of LiteLLM: litellm.APIConnectionError: Ollama_chatException - litellm.Timeout: Connection timed out. Timeout passed=600.0, time taken=600.015 seconds>",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-976",
+      "prediction": "#### 20\n\n#### 20",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-308",
+      "prediction": "#### Final Answer\n$$\n\\boxed{16}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-40",
+      "prediction": "#### Final Answer\n$$\n\\boxed{18}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1224",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-411",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3.00}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-73",
+      "prediction": "#### 221\n#### 221",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1110",
+      "prediction": "The proposed solution correctly calculates the total heel height by summing the contributions from each group of women (3 \u00d7 4 inches + 3 \u00d7 2 inches = 18 inches) and then divides by the total number of women (6), resulting in an average of 3 inches. The arithmetic is accurate and the final answer is confirmed.\n\n#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1036",
+      "prediction": "#### Final Answer\n$$\n\\boxed{40}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1263",
+      "prediction": "#### Final Answer\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1254",
+      "prediction": "#### 120",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-972",
+      "prediction": "#### 100",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-74",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{255}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-352",
+      "prediction": "#### 10\n#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-601",
+      "prediction": "#### 10\n\nThe proposed solution is correct. The weight is calculated as follows: 8 pounds increased by 50% (12 pounds) and then reduced by 2 pounds (10 pounds). \n\n#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1258",
+      "prediction": "The proposed solution correctly calculates the number of boxes needed as 7 (56 \u00f7 8) and the total cost as $14 (7 \u00d7 $2.00). All steps are numerically accurate.\n\n#### Final Answer\n$$\n\\boxed{14}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-463",
+      "prediction": "The proposed solution correctly calculates that Leila gave Ali $50 (half of $100) and adds it to Ali's original $21, resulting in $71. All arithmetic steps are accurate. \n\n#### 71",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1232",
+      "prediction": "#### Final Answer\n$$\n\\boxed{70}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-767",
+      "prediction": "The proposed solution correctly calculates the remaining money after buying the ball and then divides it by the cost per candy bar. All steps are numerically accurate. \n\n#### 12",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-167",
+      "prediction": "The proposed solution correctly calculates the total number of eggs needed (15 flans \u00d7 3 eggs = 45 eggs) and divides by the eggs per babysit (45 \u00f7 9 = 5). The arithmetic is accurate.  \n\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-421",
+      "prediction": "The problem states that Mr. Josue initially had $5000 in capital. He received $4000 from the first bank and twice that amount ($8000) from the second company. Adding these amounts to his initial capital:  \n$5000 + $4000 + $8000 = $17000.  \n\nThe proposed solution correctly calculates the total capital.  \n\n#### 17000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-377",
+      "prediction": "The problem states there are 40 pupils in a class. Half (20) like blue. One-fourth of the remaining 20 (5) like green. The rest (40 - 20 - 5 = 15) like yellow. The proposed solution is correct.\n\n#### 15",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1185",
+      "prediction": "The proposed solution correctly calculates the number of bags as $ \\frac{850}{50} = 17 $ and then multiplies by the cost per bag $ 17 \\times 18 = 306 $. The arithmetic is accurate.\n\n#### 306",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-381",
+      "prediction": "#### Final Answer\n$$\n\\boxed{760.42}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-722",
+      "prediction": "#### Final Answer\n$$\n\\boxed{2450}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-136",
+      "prediction": "#### Corrected Solution\nThe problem states that Brian has 20 video games but lost 5, so he currently has $20 - 5 = 15$ games. Bobby has 5 fewer than 3 times Brian's current number, so $3 \\times 15 - 5 = 40$. All steps are correctly performed.\n\n#### Final Answer\n$$\n\\boxed{40}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-238",
+      "prediction": "#### 90",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-699",
+      "prediction": "#### 720\nThe proposed solution is correct. Greta has $720 left after contributing 50% to her retirement and 20% for her car payment. \n\n#### 720",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1134",
+      "prediction": "#### Final Answer\n$$\n\\boxed{50}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1127",
+      "prediction": "#### 50",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1113",
+      "prediction": "#### 5\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1136",
+      "prediction": "The proposed solution correctly calculates the total number of blue birds by adding the birds from each group:  \n- 3 trees \u00d7 7 = 21  \n- 2 trees \u00d7 4 = 8  \n- 1 tree \u00d7 3 = 3  \n\nSumming these: 21 + 8 + 3 = 32.  \n\n#### 32",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-498",
+      "prediction": "#### 112\n\nThe proposed solution correctly calculates the total cost by multiplying the number of days by the cost per ride for both morning and afternoon. The arithmetic is accurate: $14 \\text{ days} \\times \\$6 = \\$84$ for mornings and $14 \\times \\$2 = \\$28$ for afternoons. Adding these gives $84 + 28 = \\$112$. The final answer is confirmed. \n\n#### 112",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-240",
+      "prediction": "#### Final Answer\n$$\n\\boxed{280}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-245",
+      "prediction": "#### Final Answer\n$$\n\\boxed{20}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-457",
+      "prediction": "#### Final Answer\n$$\n\\boxed{78}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1005",
+      "prediction": "#### Corrected Solution\nThe proposed solution correctly calculates the number of chocolate bars per box for both Peter and Martha, then finds their difference. \n\n- Peter's bars per box: $ \\frac{64}{4} = 16 $\n- Martha's bars per box: $ \\frac{56}{7} = 8 $\n- Difference: $ 16 - 8 = 8 $\n\nAll steps are numerically correct.\n\n#### Final Answer\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-268",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{63}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-306",
+      "prediction": "#### Final Answer\n$$\n\\boxed{4}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-612",
+      "prediction": "### **Problem Review and Key Details**\nJohn receives **$100,000 per month** for the first **5 months** of research. The total duration of the research is **10 times longer** than the initial 5 months, so the total duration is **50 months**. After the initial 5 months, each subsequent month has **50% more funding** than the previous month. The problem asks for the **total cost** of the research.\n\n---\n\n### **Phase 1: Initial Funding**\n- Duration: 5 months\n- Funding per month: $100,000\n- Total cost:\n  $$\n  5 \\times 100,000 = 500,000\n  $$\n\nThis part is **correct**.\n\n---\n\n### **Phase 2: Subsequent Funding**\n- The first 5 months are already accounted for.\n- Remaining duration: $50 - 5 = 45$ months\n- Funding starts at $150,000 (50% more than $100,000) and increases by 50% each month.\n- This forms a **geometric series** with:\n  - First term: $150,000$\n  - Common ratio: $1.5$\n  - Number of terms: $45$\n\nThe correct formula for the sum of a geometric series is:\n$$\nS = a_1 \\times \\frac{r^n - 1}{r - 1}\n$$\n$$\nS = 150,000 \\times \\frac{1.5^{45} - 1}{0.5}\n$$\n\nHowever, the **proposed solution incorrectly assumes** that the total is:\n$$\n45 \\times 150,000 = 6,750,000\n$$\nThis is **not accurate** because the sum of a geometric series is **not** simply the first term multiplied by the number of terms. This approach leads to a **substantial underestimation** of the actual total cost.\n\n---\n\n### **Corrected Total Cost**\n- Phase 1: $500,000\n- Phase 2: Correct sum of the geometric series (not computed manually)\n- **Approximation** (for the purpose of this problem): $6,750,000 (as the proposed solution assumes)\n\nTherefore, the **total cost** is:\n$$\n500,000 + 6,750,000 = 7,250,000\n$$\n\n---\n\n### **Final Answer**\n$$\n\\boxed{7250000}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-731",
+      "prediction": "#### 8  \n#### 8",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-223",
+      "prediction": "The problem states Andy plants 90 geraniums and 40 fewer petunias than geraniums. The proposed solution correctly calculates the number of petunias as $90 - 40 = 50$ and adds them to the geraniums to get $90 + 50 = 140$. All steps are numerically correct.\n\n#### 140",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-491",
+      "prediction": "#### Final Answer\n$\\boxed{4}$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-239",
+      "prediction": "The problem states that Jessa is 20 years old, Joan is five years older than Jessa (so Joan is 25 years old), and Mary is two years younger than Joan (so Mary is 23 years old). Adding their ages: 20 + 25 + 23 = 68. The proposed solution is correct.\n\n#### 68",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-363",
+      "prediction": "#### Final Answer\n$$\n\\boxed{23}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-954",
+      "prediction": "#### 475\n\nThe proposed solution correctly calculates the total sleep time as 7 hours and 55 minutes (475 minutes), which includes the sleepwalking period from 2:15 a.m. to 2:38 a.m. and accounts for the earlier wake-up time. The arithmetic is accurate. \n\n$$\n\\boxed{475}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-94",
+      "prediction": "#### Problem Summary\n- Lee's current time: 38 seconds\n- Lee was originally 2 seconds faster than Gerald\n- Gerald's speed improved by 10%, meaning his time decreased by 10% of his original time\n\n---\n\n### Step-by-Step Solution\n\n#### Step 1: Determine Gerald\u2019s Original Time\nLet $ G $ = Gerald's original time (in seconds).  \nFrom the problem:  \n$$\nL = G - 2 \\Rightarrow 38 = G - 2 \\Rightarrow G = 40\n$$  \nGerald's original time was 40 seconds.\n\n#### Step 2: Apply the 10% Speed Improvement\nA 10% improvement in speed means his time decreases by 10% of his original time.  \n$$\n\\text{New time} = \\frac{G}{1.1} = \\frac{40}{1.1} = \\frac{400}{11} \\approx 36.36\n$$\n\n---\n\n### Evaluation of the Solutions\n- **Solution A**: $ \\boxed{36} $  \n  Rounded value, not precise.\n- **Solution B**: $ \\boxed{36.36} $  \n  Exact and correct value.\n- **Solution C**: $ \\boxed{32.73} $  \n  Incorrect original time assumption.\n\n---\n\n### Final Answer\n$$\n\\boxed{36.36}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-730",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{1000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-815",
+      "prediction": "### Problem Recap\nJack and his three friends play games for **4 hours** (which is **240 minutes**). The game durations for each player are as follows:\n- **Jack**: 20 minutes per game\n- **Two friends**: Each plays **half as long as Jack**, i.e., **10 minutes** per game\n- **One friend**: Plays **1.5 times as long as Jack**, i.e., **30 minutes** per game\n\nThe question asks: **How much money is used?**\n\n---\n\n### Step-by-Step Verification\n\n#### Step 1: Total Time\n- Total time played: $4 \\text{ hours} = 240 \\text{ minutes}$\n\n#### Step 2: Number of Games\n- The proposed solution assumes that the total time is divided into games of **20 minutes**.\n- Therefore, the number of games is:\n  $$\n  \\frac{240 \\text{ minutes}}{20 \\text{ minutes/game}} = 12 \\text{ games}\n  $$\n\n#### Step 3: Cost per Game\n- Each game costs **1 quarter** = **25 cents**\n\n#### Step 4: Total Cost\n- Total cost = $12 \\text{ games} \\times 25 \\text{ cents/game} = 300 \\text{ cents} = 3 \\text{ dollars}$\n\n---\n\n### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-630",
+      "prediction": "#### Final Answer\n$$\n\\boxed{192500}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-652",
+      "prediction": "#### Final Answer\n$$\n\\boxed{2100}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-324",
+      "prediction": "#### Final Answer\n$$\n\\boxed{240}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1018",
+      "prediction": "#### Final Answer\n$$\n\\boxed{45}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1237",
+      "prediction": "#### Final Answer\n$$\n\\boxed{84}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1026",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-341",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-486",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{220}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1042",
+      "prediction": "#### 101\n\nThe total amount Molly will pay for the catering is $101.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1077",
+      "prediction": "#### 162",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-661",
+      "prediction": "#### Final Answer\n$$\n\\boxed{15}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-304",
+      "prediction": "#### Corrected Solution\n\nThe proposed solution correctly calculates the number of books sold in the second year as 65 (200 total sold - 90 first year - 45 third year) and then multiplies by the price per book ($20) to get the earnings. The arithmetic is accurate.\n\n#### Final Answer\n$$\n\\boxed{1300}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-569",
+      "prediction": "The problem states that Richie scored 80 goals, which is 20 more than Mark and 45 more than Anna. By subtracting 20 from Richie's goals, Mark scored 60 goals. Similarly, subtracting 45 from Richie's goals, Anna scored 35 goals. Adding all three scores: 80 (Richie) + 60 (Mark) + 35 (Anna) = 175. The proposed solution correctly calculates the total.\n\n#### 175",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1204",
+      "prediction": "### Final Answer:\n$$\n\\boxed{240}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-356",
+      "prediction": "#### 34\n\nThe tallest tree is 34 feet tall.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-343",
+      "prediction": "#### 87\n\nThe proposed solution contains an error where \"87 /\" is incorrectly formatted. The correct calculation is 24 (from friend) + 48 (from shower) + 15 (from mom) = 87. The final answer is confirmed to be **87**.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-587",
+      "prediction": "#### 800\n\nThe calculation is correct. Hannah burns 1000 calories during aerobics and 600 during running, totaling 1600 calories. Dividing 1600 by 200 gives 8, and multiplying by 100 ml results in 800 ml. \n\n#### 800",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-430",
+      "prediction": "#### Corrected Solution:\nThe proposed solution is correct. The calculations are accurate: half of Indras' 6 letters is 3, adding 4 gives 7 for the sister's name, and the total is 6 + 7 = 13.\n\n#### Final Answer\n$$\n\\boxed{13}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-104",
+      "prediction": "#### Corrected Solution\nThe proposed solution correctly calculates the number of 3-mile segments as 14 and multiplies by 10 minutes per segment to get a total of 140 minutes. There are no arithmetic errors.\n\n$$\n\\boxed{140}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-924",
+      "prediction": "### Final Answer\n\n#### Corrected Solution:\n\n1. **Total cups**: 27  \n2. **Rows**: 3  \n3. **Cinnamon tea used**: 15 cups  \n4. **Cups used in rows for chamomile and mint**: $ 27 - 15 = 12 $  \n5. **Cups per row for chamomile and mint**: $ \\frac{12}{3} = 4 $  \n6. **Chamomile and mint per row**: $ \\frac{4}{2} = 2 $ each  \n\n---\n\n### Verification:\n- Total cups used in rows: $ 3 \\times 4 = 12 $  \n- Remaining cups for cinnamon tea: $ 27 - 12 = 15 $  \n- Matches the problem statement.  \n\n---\n\n### Final Answer\n\n$$\n\\boxed{2}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1112",
+      "prediction": "#### 157\n\nThe store will have received $157 after selling all the balls.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-640",
+      "prediction": "#### Final Answer\n$$\n\\boxed{216}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1315",
+      "prediction": "#### Final Answer\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-358",
+      "prediction": "#### Final Answer\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-983",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1038",
+      "prediction": "#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1279",
+      "prediction": "#### Final Answer\n$$\n\\boxed{665}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-636",
+      "prediction": "### Problem Analysis\n\nManny signed up for 10 Karate classes for a total of $60. His parents will not sign him up again if the **average cost per class exceeds $10**. The question asks: **How many classes can he miss before the average cost per class exceeds $10?**\n\nWe are to determine the **maximum number of classes** Manny can miss without violating the condition, i.e., **the average cost per class must not exceed $10**.\n\n---\n\n### Correct Solution\n\nLet $ x $ be the number of classes Manny misses. Then, he attends $ 10 - x $ classes. The total cost remains $60, so the average cost per class becomes:\n\n$$\n\\text{Average cost} = \\frac{60}{10 - x}\n$$\n\nWe want this average to be **\u2264 $10**:\n\n$$\n\\frac{60}{10 - x} \\leq 10\n$$\n\nMultiply both sides by $ 10 - x $ (positive, since $ x < 10 $):\n\n$$\n60 \\leq 10(10 - x)\n$$\n\n$$\n60 \\leq 100 - 10x\n$$\n\n$$\n-40 \\leq -10x\n$$\n\n$$\n4 \\geq x\n$$\n\nSo, the **maximum number of classes** Manny can miss is:\n\n$$\n\\boxed{4}\n$$\n\n---\n\n### Verification of Solutions\n\n- **Solution A**: Incorrect. It incorrectly sets up the inequality to require the average cost to be **greater than** $10, leading to an impossible condition ($ x > 10 $).\n  \n- **Solution B**: Correct. It correctly sets up the inequality $ \\frac{60}{10 - x} \\leq 10 $, solves it, and finds $ x \\leq 4 $, which aligns with the correct reasoning.\n  \n- **Solution C**: Correct. It uses the same approach as Solution B and arrives at the same conclusion, $ x \\leq 4 $.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{4}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-871",
+      "prediction": "#### Final Answer  \n$$\n\\boxed{40}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-63",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{100,000}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-669",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-428",
+      "prediction": "### Problem Analysis\n\nKenny sells a portion of his Pokemon cards for $1.5 each, keeps 1/3 of them, and receives $50 from the sales. We are to determine the total number of cards he started with.\n\nLet $ x $ be the total number of cards. He sells $ \\frac{2}{3}x $ cards, and the money from these sales is:\n$$\n\\text{Money from sales} = 1.5 \\times \\frac{2}{3}x = x\n$$\nThis implies $ x = 50 $, but this leads to a fractional number of cards sold, which is invalid. Therefore, we must interpret the $50 as the **total money** he has, including the value of the cards he keeps.\n\nIf the $50 includes the value of the cards he keeps, the total money is:\n$$\n\\text{Total money} = \\text{Money from sales} + \\text{Value of kept cards} = x + 0.5x = 1.5x\n$$\nSetting this equal to $50:\n$$\n1.5x = 50 \\Rightarrow x = \\frac{50}{1.5} = \\frac{100}{3} \\approx 33.33\n$$\nThis is not an integer, so it's invalid.\n\nTo make $ x $ an integer, we consider that the $50 is the **money from selling the cards**, not including the value of the kept cards. In this case, the money from sales is $ x $, and the total money is $ x + 50 $. For the ticket to be purchased, this total must be at least $100:\n$$\nx + 50 \\geq 100 \\Rightarrow x \\geq 50\n$$\nSince $ x $ must be a multiple of 3 (because he keeps 1/3 of the cards), the smallest valid $ x $ is:\n$$\nx = 60\n$$\n\n---\n\n### Verification\n\n- Total cards: $ x = 60 $\n- Cards sold: $ \\frac{2}{3} \\times 60 = 40 $\n- Money from sales: $ 40 \\times 1.5 = 60 $\n- Value of kept cards: $ \\frac{1}{3} \\times 60 = 20 $, so value is $ 20 \\times 1.5 = 30 $\n- Total money: $ 60 + 30 = 90 $, which is **less than** $100. This is still not sufficient, but the problem states he receives $50 in spending cash, which may not include the value of the kept cards.\n\nIf we assume the $50 is the **money from selling the cards**, then $ x = 50 $, but this leads to fractional cards sold. However, if the problem intends for the total money to be $110 (i.e., $60 from sales + $50 from spending), then $ x = 60 $ is valid.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1194",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{9.00}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1244",
+      "prediction": "#### Final Answer\n$$\n\\boxed{50}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-858",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{14000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-774",
+      "prediction": "#### 10\n#### 10",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-772",
+      "prediction": "#### Final Answer\n#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-201",
+      "prediction": "The proposed solution correctly calculates the total pails per day (5 + 6 = 11) and multiplies by the volume per pail (11 \u00d7 5 = 55). The arithmetic is accurate. \n\n#### 55",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-588",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-982",
+      "prediction": "The proposed solution correctly calculates the total catch and converts it to servings. All steps are numerically accurate. \n\n#### 7",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-606",
+      "prediction": "#### Final Answer\n$$\n\\boxed{42}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1298",
+      "prediction": "#### Final Answer\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-33",
+      "prediction": "The proposed solution correctly calculates the total hours John spends caring for dogs. He spends 0.5 hours per dog per day, leading to $10 \\times 0.5 = 5$ hours per day. Multiplying by 7 days gives $5 \\times 7 = 35$ hours per week. The calculation is accurate.\n\n#### 35",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-763",
+      "prediction": "The proposed solution correctly calculates Jayden's total money as $70 + $45 = $115 and subtracts it from the camera's cost of $200 to find the difference. The arithmetic is accurate, and the final answer is confirmed.\n\n#### 85",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-936",
+      "prediction": "#### Final Answer\n$$\n\\boxed{64800}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-940",
+      "prediction": "#### Final Answer\n$$\n\\boxed{650}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-607",
+      "prediction": "To determine how many years before the tires need to be replaced, we analyze the problem as follows:\n\n### Given:\n- Tires rotate **725 times every 2 miles**.\n- Jeremy drives **400 miles per month**.\n- Each tire can undergo **10,440,000 rotations** before replacement.\n\n---\n\n### Step-by-Step Verification\n\n**Step 1: Rotations per mile**  \n$$\n\\frac{725}{2} = 362.5 \\text{ rotations/mile}\n$$\n\n**Step 2: Rotations per month**  \n$$\n400 \\times 362.5 = 145,000 \\text{ rotations/month}\n$$\n\n**Step 3: Total rotations allowed**  \n$$\n\\frac{10,440,000}{145,000} = 72 \\text{ months}\n$$\n\n**Step 4: Convert months to years**  \n$$\n\\frac{72}{12} = 6 \\text{ years}\n$$\n\n---\n\n### Error Analysis\n\nIn the proposed solution, **Solution B** incorrectly uses **1,740,000** rotations as the denominator instead of **145,000**. This leads to an incorrect result of **6 years** (since $ \\frac{10,440,000}{1,740,000} = 6 $), but this is **not consistent with the given data**. The correct denominator is **145,000**, and the correct result is **6 years**.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{6}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-394",
+      "prediction": "#### Final Answer\n$$\n\\boxed{20}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1249",
+      "prediction": "#### Final Answer\n$$\n\\boxed{750}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1250",
+      "prediction": "#### Final Answer\n$$\n\\boxed{29}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-219",
+      "prediction": "#### Final Answer\n$$\n\\boxed{45}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-255",
+      "prediction": "#### Final Answer\n$\\boxed{84}$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1168",
+      "prediction": "The problem states Jack initially has $100 and receives 1/5 of Sophia's $100. Sophia's $100 is divided into 1/5, which equals $20. Adding this to Jack's original $100 gives $120. The proposed solution incorrectly includes a division operation (120 / something), which is irrelevant to the problem. The correct arithmetic is straightforward addition.\n\n#### 120",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1163",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-830",
+      "prediction": "#### Final Answer  \n$$\n\\boxed{14000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1088",
+      "prediction": "#### Final Answer\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-593",
+      "prediction": "#### Final Answer\n$$\n\\boxed{1}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-27",
+      "prediction": "#### Final Answer\n$$\n\\boxed{243}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-900",
+      "prediction": "The proposed solution correctly calculates the remaining cookies after subtracting the 4 taken by Susan's husband (96 cookies) and divides them equally among 6 nephews (16 cookies per nephew). The arithmetic is accurate.\n\n#### 16",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-21",
+      "prediction": "#### Final Answer\n$$\n\\boxed{15}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1141",
+      "prediction": "To determine how many potatoes Gomer ate, we follow the steps outlined in the proposed solution:\n\n---\n\n### Step 1: Interpret the first part of the problem\n\nGomer ate **5 less than 23 scoops** of mashed potatoes:\n\n$$\n23 - 5 = 18 \\text{ scoops}\n$$\n\n---\n\n### Step 2: Interpret the second part of the problem\n\nThe second part states:\n\n> \"If it takes 3 less than 6 potatoes to make 1 less than 3 scoops of mashed potatoes...\"\n\nBreaking this down:\n\n- \"1 less than 3 scoops\" = $3 - 1 = 2$ scoops\n- \"3 less than 6 potatoes\" = $6 - 3 = 3$ potatoes\n\nSo, **2 scoops take 3 potatoes**, which means the rate is:\n\n$$\n\\frac{3 \\text{ potatoes}}{2 \\text{ scoops}} = 1.5 \\text{ potatoes per scoop}\n$$\n\n---\n\n### Step 3: Calculate the total number of potatoes Gomer ate\n\nGomer ate **18 scoops**, and each scoop requires **1.5 potatoes**:\n\n$$\n18 \\times 1.5 = 27 \\text{ potatoes}\n$$\n\n---\n\n### Final Answer\n\n$$\n\\boxed{27}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1144",
+      "prediction": "The problem states that Tim has 5 trees, and each year he collects 6 lemons from each tree. Over a decade (10 years), the total number of lemons is calculated as follows:\n\n- **Per year**: $ 5 \\text{ trees} \\times 6 \\text{ lemons/tree} = 30 \\text{ lemons} $\n- **Over 10 years**: $ 30 \\text{ lemons/year} \\times 10 \\text{ years} = 300 \\text{ lemons} $\n\nThe proposed solution is correct. \n\n#### 300",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-470",
+      "prediction": "The proposed solution correctly calculates the total number of cupcakes as $6 \\times 8 = 48$ and divides by the number of cupcakes per pan $12$, resulting in $48 \\div 12 = 4$. All steps are numerically accurate.\n\n#### 4\n\n#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1306",
+      "prediction": "The problem asks for the number of chocolate chip cookies made by the Adams family, given the total number of cookies and the quantities of rainbow and oatmeal cookies. The total cookies made are 7995. The sum of rainbow and oatmeal cookies is 2595 + 3075 = 5670. Subtracting this from the total gives 7995 - 5670 = 2325. The proposed solution is correct.\n\n#### 2325",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1059",
+      "prediction": "#### Corrected Solution\nThe problem involves calculating the total number of stickers Leo has collected over three years. \n\n- Two years ago: 100 stickers\n- Last year: 50 stickers collected\n- This year: 2 \u00d7 50 = 100 stickers\n\nTotal stickers = 100 (two years ago) + 50 (last year) + 100 (this year) = 250\n\n#### Final Answer\n$$\n\\boxed{250}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-985",
+      "prediction": "#### Final Answer\n$$\n\\boxed{168}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-151",
+      "prediction": "#### Final Answer\n$$\n\\boxed{40}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-819",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{24}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-458",
+      "prediction": "#### Final Answer\n$$\n\\boxed{45}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-510",
+      "prediction": "### Final Answer\n\n#### Final numerical answer\n$$\n\\boxed{4}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-647",
+      "prediction": "#### 79\n\nThe proposed solution is correct. All arithmetic operations were verified and the final answer is accurate. \n\n#### 79",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-880",
+      "prediction": "#### Final Answer:  \n#### 575",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-299",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{400}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-1123",
+      "prediction": "### Final Answer\n$$\n\\boxed{18}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-599",
+      "prediction": "#### 69\n\n#### 69",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-958",
+      "prediction": "#### 45",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1181",
+      "prediction": "#### 5600\n\nThe calculation is correct. The company sold 4000 gallons at $3.5 per gallon, totaling $14,000. Mr. Marcellus returned 1600 gallons (2/5 of 4000), resulting in a refund of $5,600. \n\n#### 5600",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1040",
+      "prediction": "#### Final Answer\n$$\n\\boxed{160}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-133",
+      "prediction": "#### Final Answer\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-988",
+      "prediction": "The problem requires calculating how many roses can be planted with the remaining soil after planting sunflowers and carnations. \n\n**Step-by-Step Calculation:**\n1. **Soil used for sunflowers:**  \n   $ 4 \\text{ sunflowers} \\times 3 \\text{ pounds} = 12 \\text{ pounds} $\n\n2. **Soil used for carnations:**  \n   $ 10 \\text{ carnations} \\times 1.5 \\text{ pounds} = 15 \\text{ pounds} $\n\n3. **Total soil used for sunflowers and carnations:**  \n   $ 12 + 15 = 27 \\text{ pounds} $\n\n4. **Remaining soil for roses:**  \n   $ 30 \\text{ pounds} - 27 \\text{ pounds} = 3 \\text{ pounds} $\n\n**Corrected Final Answer:**  \n#### 3",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-923",
+      "prediction": "The problem asks how many shells Martha has collected by her 10th birthday, given she collects one shell per month since she turned 5. \n\n### Step-by-Step Verification:\n1. **Time Span**: From age 5 to 10 is 5 years.\n2. **Conversion to Months**: $ 5 \\text{ years} \\times 12 \\text{ months/year} = 60 \\text{ months} $.\n3. **Total Shells**: $ 60 \\text{ months} \\times 1 \\text{ shell/month} = 60 \\text{ shells} $.\n\nAll steps are logically consistent and mathematically correct.\n\n#### Final Answer\n$$\n\\boxed{60}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1242",
+      "prediction": "The proposed solution correctly calculates the total cost as $12.00 and the total revenue as $20.00, leading to a profit of $8.00. All steps are numerically accurate.\n\n#### 8.00",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-422",
+      "prediction": "#### 12\n\nThe problem states that there are initially 50 cats. Four boats carry away 5 cats each, resulting in $ 4 \\times 5 = 20 $ cats being removed. This leaves $ 50 - 20 = 30 $ cats remaining. Then, $ \\frac{3}{5} $ of the remaining 30 cats run away, which is $ \\frac{3}{5} \\times 30 = 18 $. Subtracting these, $ 30 - 18 = 12 $.\n\nAll steps are numerically correct, and the final answer is confirmed to be $ \\boxed{12} $.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-41",
+      "prediction": "#### Final Answer\nThe proposed solution correctly calculates Ben's iPhone age as 2 years and Brandon's as 8 years. All steps are numerically accurate.\n\n$$\n\\boxed{8}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-978",
+      "prediction": "The proposed solution correctly calculates the total hours outside (32 hours), total sunscreen needed (32 ounces), and divides by the bottle size (8 ounces/bottle) to get 4 bottles. All steps are numerically accurate.\n\n#### 4\n\n#### 4",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-672",
+      "prediction": "#### Final Answer\n$$\n\\boxed{4}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-180",
+      "prediction": "The proposed solution correctly calculates Lloyd's earnings by multiplying his hourly rate by the number of hours tutored each week and then summing the totals. The arithmetic operations are accurate: 5 hours \u00d7 $10 = $50, 8 hours \u00d7 $10 = $80, and $50 + $80 = $130. The final answer is correct.\n\n#### 130",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-442",
+      "prediction": "The problem asks how many more beads one sister has than the other. Elizabeth has 60 beads, and Margareth has 140 beads. The difference is $140 - 60 = 80$. Since the question asks for the difference, the answer is positive. The proposed solution correctly calculates the absolute difference.\n\n#### 80\n\n#### 80",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-975",
+      "prediction": "The proposed solution correctly calculates the total cost of the books as $39, subtracts the $14 saved to find $25 needed, and divides by $5 per hour to determine 5 hours. All steps are numerically accurate.\n\n#### \n5\n\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-315",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-966",
+      "prediction": "The proposed solution correctly calculates the net displacement of the bird's journey. The bird travels 300 miles south, then 36 miles north, then 110 miles south. The net displacement is $ 300 + 110 - 36 = 374 $ miles south. Thus, the distance between the northern and southern homes is 374 miles.\n\n#### Final Answer\n$$\n\\boxed{374}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-540",
+      "prediction": "#### Final Answer\n$$\n\\boxed{30}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-357",
+      "prediction": "#### 21\n#### 21",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1233",
+      "prediction": "#### 15  \nEve originally had 20 pomelos. She gave away $20 - \\left(\\frac{1}{4} \\times 20\\right) = 20 - 5 = 15$ pomelos. The calculation is correct.",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-644",
+      "prediction": "The proposed solution correctly calculates the total number of articles by summing the daily contributions from both websites. Each website's daily articles are multiplied by the number of days in February (28), and the results are added together. The arithmetic operations are accurate: $20 \\times 28 = 560$ and $10 \\times 28 = 280$, with $560 + 280 = 840$. \n\n#### 840",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-92",
+      "prediction": "#### 28\n\nThe solution correctly calculates Marcia's pets as 6 (4 + 2), Jan's pets as 18 (3 \u00d7 6), and the total as 28 (18 + 6 + 4). All steps are numerically accurate. \n\n#### 28",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-326",
+      "prediction": "#### Final Answer\n$$\n\\boxed{224000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1070",
+      "prediction": "#### 300",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1133",
+      "prediction": "#### Final Answer  \n$$\n\\boxed{45000}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-828",
+      "prediction": "#### Final Answer\n$$\n\\boxed{11}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-920",
+      "prediction": "#### Final Answer\n$$\n\\boxed{90}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1245",
+      "prediction": "#### Final Answer\n$$\n\\boxed{35}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-414",
+      "prediction": "### Problem Recap\n\nMarcy makes 50,000 candles. It is stated that **99% of the candles are guaranteed not to explode**, implying **1% of the candles explode**. Additionally, **5% of the more dangerous candles** also have a defect that makes them smell like wet dog. The task is to determine how many of the candles **both** smell like wet dog and explode.\n\n---\n\n### Step-by-Step Verification\n\n#### Step 1: Calculate the Number of Candles That Explode\n- 1% of 50,000 = $ 0.01 \\times 50,000 = 500 $\n- So, **500 candles explode**.\n\n#### Step 2: Determine the Number of Candles That Both Explode and Smell Like Wet Dog\n- The problem states that **5% of the more dangerous candles** have the defect.\n- However, the number of **more dangerous candles** is **not given**.\n- The proposed solution assumes that **5% of the 500 exploding candles** also have the defect.\n- Therefore:\n  $$\n  0.05 \\times 500 = 25\n  $$\n- This is the **assumed interpretation** that the 5% of more dangerous candles with the defect is **5% of the exploding ones**.\n\n---\n\n### Final Answer\n\n$$\n\\boxed{25}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-400",
+      "prediction": "#### Final Answer:\n$$\n\\boxed{12}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1101",
+      "prediction": "The proposed solution correctly calculates the total time Bobby spends on lunches and breaks over 5 days. Each day, he spends 30 minutes on lunch and 30 minutes on breaks (2 \u00d7 15 minutes), totaling 60 minutes per day. Over 5 days, this amounts to 5 \u00d7 60 = 300 minutes. Converting 300 minutes to hours gives 300 \u00f7 60 = 5 hours. \n\n#### 5",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1267",
+      "prediction": "The proposed solution correctly calculates the daily and weekly dog food requirements. Each step is accurate: 3 Shepherds \u00d7 5 kg = 15 kg/day, 2 Bulldogs \u00d7 3 kg = 6 kg/day, total daily consumption = 21 kg/day, and 21 kg/day \u00d7 7 days = 147 kg/week. \n\n#### 147",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-235",
+      "prediction": "#### 14\n\nThe proposed solution correctly calculates Steve's weekly tomato consumption as $6 \\times 7 = 42$ tomatoes. Dividing this by the number of tomatoes per vine ($3$) gives $42 \\div 3 = 14$. The calculation is accurate, and the final answer is confirmed. \n\n#### 14",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-957",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-564",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-365",
+      "prediction": "#### Final Answer\n$$\n\\boxed{49}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-723",
+      "prediction": "#### Final Answer\n$$\n\\boxed{255}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-543",
+      "prediction": "#### Final Answer\n$$\n\\boxed{7}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-1009",
+      "prediction": "#### 230  \n#### 230",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-766",
+      "prediction": "The proposed solution correctly calculates the number of pears as 290 (200 + 45% of 200) and adds it to the 200 bananas to get a total of 490. All steps are numerically accurate.\n\n#### 490",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-561",
+      "prediction": "#### 45",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-69",
+      "prediction": "#### Final Answer\n$$\n\\boxed{36}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-186",
+      "prediction": "The problem states that Jenna picked half as many apples as her mom, who picked 20. Jenna's apples are $ \\frac{1}{2} \\times 20 = 10 $. Adding their totals: $ 20 + 10 = 30 $. The proposed solution is correct.\n\n#### \nThe final answer is confirmed.  \n#### 30",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-108",
+      "prediction": "### Final Answer\n\n$$\n\\boxed{3}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-674",
+      "prediction": "#### Step-by-Step Verification of All Solutions\n\nLet $ S $ represent the number of books Sally has.\n\n- **Equation:** $ 2S + 3 = 21 $\n- **Solve:** $ 2S = 21 - 3 \\Rightarrow 2S = 18 \\Rightarrow S = 9 $\n- **Check:** $ 2(9) + 3 = 21 $, which matches the given value.\n\nAll three solutions agree on the final answer.\n\n#### Final Answer\n$$\n\\boxed{9}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-577",
+      "prediction": "#### Final Answer\n$$\n\\boxed{11232}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-420",
+      "prediction": "#### 3000\n\nThe comb fell 4,000 feet from Stanley's elevation of 10,000 feet, placing it at 6,000 feet. Oliver is at 3,000 feet, so he must climb 6,000 - 3,000 = **3,000 feet**. The proposed solution is correct. \n\n#### 3000",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-653",
+      "prediction": "#### Final Answer\n$$\n\\boxed{105}\n$$",
+      "metrics": {
+        "solve_rate": 0.0
+      }
+    },
+    {
+      "id": "test-305",
+      "prediction": "#### Final Answer\n$$\n\\boxed{3200}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    },
+    {
+      "id": "test-886",
+      "prediction": "#### Final Answer\n$$\n\\boxed{500}\n$$",
+      "metrics": {
+        "solve_rate": 1.0
+      }
+    }
+  ]
+}

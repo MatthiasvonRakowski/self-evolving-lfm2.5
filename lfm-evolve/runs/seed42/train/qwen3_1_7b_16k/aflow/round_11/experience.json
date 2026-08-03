@@ -1,0 +1,7 @@
+{
+    "father node": 10,
+    "modification": "Add a third custom step (final synthesis) that consolidates the original solution and review to produce a more reliable final answer, catching cases where the reviewer might introduce new errors or miss issues.",
+    "before": 0.96,
+    "after": 0.95,
+    "succeed": false
+}

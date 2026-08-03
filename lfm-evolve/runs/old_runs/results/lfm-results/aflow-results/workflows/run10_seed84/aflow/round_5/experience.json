@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a problem reformulation step: first Custom call extracts key information and restates the problem in clean mathematical terms, then second Custom call solves this clarified version. This is a decomposition strategy, not verification.",
+    "before": 0.7613636363636364,
+    "after": 0.7386363636363636,
+    "succeed": false
+}

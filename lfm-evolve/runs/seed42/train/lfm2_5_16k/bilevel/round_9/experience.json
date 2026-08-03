@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify VERIFY_MATH_PROMPT to instruct the checker to first solve the problem independently (without looking at the proposed solution), then compare with the proposed solution, taking the correct answer from either.",
+    "before": 0.9,
+    "after": 0.9,
+    "succeed": false
+}

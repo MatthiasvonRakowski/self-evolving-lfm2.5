@@ -1,0 +1,40 @@
+{
+    "0": {
+        "score": 0.5533333333333333,
+        "success": {
+            "5": {
+                "modification": "Add a second Custom call that acts as a pure answer formatter/extractor. The first call solves the problem with detailed reasoning, then the second call extracts the final numerical answer and formats it correctly with \"#### \" prefix. This differs from the failed \"self-review\" pattern because the second call does NOT verify or correct - it only extracts and formats the answer.",
+                "score": 0.58
+            }
+        },
+        "failure": {
+            "2": {
+                "modification": "Add a second Custom call that reviews the initial solution and verifies/corrects the final answer, implementing a self-review pattern",
+                "score": 0.36
+            },
+            "3": {
+                "modification": "Modify the SOLVE_MATH_PROMPT to be more detailed and structured, guiding the model to think more carefully through each step, verify arithmetic within the single response, and format the answer correctly. This is a prompt-only change.",
+                "score": 0.31
+            },
+            "4": {
+                "modification": "Added two parallel Custom calls (SOLVE_MATH_PROMPT_A and SOLVE_MATH_PROMPT_B) with different solving styles (arithmetic-focused vs equation-setup-focused), then added a third Custom call (ENSEMBLE_PROMPT) that evaluates both solutions, checks arithmetic correctness, and outputs the best answer. This replaces the single-pass approach with an ensemble pattern using two diverse solving strategies.",
+                "score": 0.28
+            }
+        }
+    },
+    "5": {
+        "score": 0.58,
+        "success": {
+            "7": {
+                "modification": "Added a second solving step using a new SOLVE_MATH_PROMPT_ALT with a different reasoning approach (break into sub-problems, verify each step). The FORMAT_ANSWER_PROMPT was updated to accept two solutions and select the correct answer by comparing them \u2014 implementing a simple two-sample ensemble/voting mechanism to improve accuracy on cases where a single pass makes arithmetic errors.",
+                "score": 0.61
+            }
+        },
+        "failure": {
+            "6": {
+                "modification": "Add a verification step between solving and formatting: after getting the initial solution, a review prompt rechecks the work and confirms or corrects the answer before final formatting.",
+                "score": 0.38
+            }
+        }
+    }
+}

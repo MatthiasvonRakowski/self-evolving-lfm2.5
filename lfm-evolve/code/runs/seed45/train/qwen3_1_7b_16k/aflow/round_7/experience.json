@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use a self-ask decomposition approach where the model explicitly breaks down the problem into sub-questions, answers each one, then synthesizes the final answer. This is fundamentally different from the previous approach (which was just \"step by step\") by introducing structured sub-question decomposition within a single prompt.",
+    "before": 0.9033333333333333,
+    "after": 0.92,
+    "succeed": true
+}

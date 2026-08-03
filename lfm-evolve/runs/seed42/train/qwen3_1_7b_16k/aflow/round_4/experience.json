@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a more authoritative \"expert mathematician\" persona instead of \"math tutor\", and to explicitly instruct labeling of each intermediate result with its meaning/unit, which helps prevent quantity confusion errors. This is a single prompt text change only.",
+    "before": 0.96,
+    "after": 0.84,
+    "succeed": false
+}

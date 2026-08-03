@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify ENSEMBLE_PROMPT to include an explicit instruction to re-derive the final answer by tracing the key calculation steps from the best solution, rather than just selecting between them. This ensures the ensemble step actively validates arithmetic rather than passively comparing.",
+    "before": 0.9,
+    "after": 0.82,
+    "succeed": false
+}

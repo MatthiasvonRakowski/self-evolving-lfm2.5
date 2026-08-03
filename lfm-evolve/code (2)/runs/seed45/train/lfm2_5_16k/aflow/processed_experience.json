@@ -1,0 +1,71 @@
+{
+    "0": {
+        "score": 0.89,
+        "success": {},
+        "failure": {
+            "1": {
+                "modification": "Add a self-review step after the initial solution: the LLM reviews its own answer and, if it finds issues, produces a corrected answer. This adds one new prompt (REVIEW_MATH_PROMPT) and a conditional revision loop in the graph.",
+                "score": 0.84
+            },
+            "2": {
+                "modification": "Add a second custom call for answer extraction/formatting after the initial solution, using a new EXTRACT_ANSWER_PROMPT that focuses on correctly identifying and formatting the final numerical answer from the solution.",
+                "score": 0.79
+            },
+            "3": {
+                "modification": "Modify SOLVE_MATH_PROMPT to use a more structured problem-solving approach that explicitly asks the model to first identify knowns/unknowns, then solve systematically with careful arithmetic verification at each step.",
+                "score": 0.78
+            },
+            "4": {
+                "modification": "Modify SOLVE_MATH_PROMPT to emphasize careful step-by-step arithmetic with explicit intermediate calculations, and to restate the question before solving to ensure the model focuses on what's being asked. This differs from the original by adding instruction to restate the question and verify each calculation inline.",
+                "score": 0.88
+            },
+            "5": {
+                "modification": "Modify SOLVE_MATH_PROMPT to encourage careful arithmetic and explicit verification of the answer against the question within the single prompt, while keeping the format clean. The change adds instruction to check that the final number directly answers what was asked.",
+                "score": 0.82
+            },
+            "11": {
+                "modification": "Add a second custom call with a different solving angle (direct arithmetic focus), then combine both solutions and use a third custom call to select/verify the most consistent final answer - implementing a mini-ensemble approach.",
+                "score": 0.75
+            }
+        }
+    },
+    "1": {
+        "score": 0.84,
+        "success": {
+            "7": {
+                "modification": "Added a second independent solution generation step (SOLVE_MATH_PROMPT_ALT) and an answer-extraction/comparison ensemble mechanism. If both independent solutions agree on the numerical answer, the result is returned immediately without the costly review+revise steps. If they disagree, the review prompt now receives both solutions for cross-validation, and the revise prompt includes both solutions as context. This replaces the single-path solve\u2192review\u2192revise with a dual-solve\u2192ensemble-check\u2192conditional-review\u2192revise flow.",
+                "score": 0.87
+            }
+        },
+        "failure": {}
+    },
+    "7": {
+        "score": 0.87,
+        "success": {
+            "8": {
+                "modification": "Modify REVISE_MATH_PROMPT to add stronger format enforcement and explicit instruction to verify the final numerical answer before outputting it, ensuring the `#### ` prefix is never omitted even when the LLM is focused on correcting errors.",
+                "score": 0.88
+            }
+        },
+        "failure": {
+            "12": {
+                "modification": "Modified the return logic after review: instead of always returning `answer1` when review says CORRECT, now parse the review text to determine if solution B was preferred and return `answer2` in that case. Also improved REVIEW_MATH_PROMPT to explicitly state \"PREFER A\" or \"PREFER B\" to make parsing reliable.",
+                "score": 0.85
+            }
+        }
+    },
+    "8": {
+        "score": 0.88,
+        "success": {},
+        "failure": {
+            "10": {
+                "modification": "Add a third independent solution generation with majority voting when the first two solutions disagree. If 2 out of 3 solutions agree on an answer, return that answer without needing the review/revise step. This reduces reliance on the review step which can sometimes introduce errors.",
+                "score": 0.83
+            },
+            "13": {
+                "modification": "Modified the REVIEW_MATH_PROMPT to explicitly instruct the reviewer to write \"SOLUTION A IS CORRECT\" or \"SOLUTION B IS CORRECT\" as a structured marker. Then updated the graph's Step 5 logic to reliably detect which solution the review prefers using these explicit markers, rather than the previous heuristic approach. Also changed the condition from checking \"CORRECT\" not in review to checking \"INCORRECT\" in review, making it more robust. This ensures when the review identifies a correct solution, we return the actually-preferred solution rather than always defaulting to answer1.",
+                "score": 0.86
+            }
+        }
+    }
+}

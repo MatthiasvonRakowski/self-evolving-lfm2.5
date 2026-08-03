@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use a more structured expert reasoning framework that asks the model to define variables, set up equations, compute carefully, and do a quick sanity check - all within a single call. This is fundamentally different from previous attempts as it changes the cognitive framework rather than adding steps or extraction.",
+    "before": 0.38888888888888884,
+    "after": 0.1553030303030303,
+    "succeed": false
+}

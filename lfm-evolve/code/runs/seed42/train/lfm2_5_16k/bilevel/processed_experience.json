@@ -1,0 +1,65 @@
+{
+    "0": {
+        "score": 0.8766666666666666,
+        "success": {
+            "5": {
+                "modification": "Add a two-step solve-then-verify approach: first solve the problem, then review the solution for errors and output a corrected final answer if needed.",
+                "score": 0.9
+            }
+        },
+        "failure": {}
+    },
+    "5": {
+        "score": 0.9,
+        "success": {
+            "11": {
+                "modification": "Add a new first step with DECOMPOSE_MATH_PROMPT that breaks the problem into explicit sub-questions and identifies key quantities. This decomposed structure is then fed into the solver, giving it a clearer roadmap. The verifier then checks the structured solution.",
+                "score": 0.92
+            }
+        },
+        "failure": {
+            "6": {
+                "modification": "Add a third step with a new EXTRACT_ANSWER_PROMPT that consolidates the verified solution into a clean final answer, ensuring the #### format is always present and unambiguous. This adds one new prompt and one new custom call in the graph.",
+                "score": 0.85
+            },
+            "7": {
+                "modification": "Modify VERIFY_MATH_PROMPT to add explicit instruction to independently recompute each arithmetic step from scratch (not just check the shown work), and to flag if the answer should be a whole number vs decimal, making the verification more robust against arithmetic errors.",
+                "score": 0.86
+            },
+            "8": {
+                "modification": "Add a second independent solution using a different solving strategy (working backwards / equation setup), then pass both solutions alongside the original to the verifier for consensus-based final answer selection.",
+                "score": 0.89
+            },
+            "9": {
+                "modification": "Modify VERIFY_MATH_PROMPT to instruct the checker to first solve the problem independently (without looking at the proposed solution), then compare with the proposed solution, taking the correct answer from either.",
+                "score": 0.9
+            },
+            "10": {
+                "modification": "Add a second solution using a \"unit-tracking\" focused prompt, then pass both solutions to the verifier to pick the best/consensus answer.",
+                "score": 0.84
+            }
+        }
+    },
+    "11": {
+        "score": 0.92,
+        "success": {},
+        "failure": {
+            "12": {
+                "modification": "Modify VERIFY_MATH_PROMPT to instruct the verifier to independently re-solve the problem from scratch (not just check the proposed solution), then compare results. If they match, output that answer; if they differ, determine which is correct and output the correct one.",
+                "score": 0.9
+            },
+            "13": {
+                "modification": "Modify VERIFY_MATH_PROMPT to add explicit arithmetic re-checking instructions that walk through each numerical operation, and add a new REFINE_MATH_PROMPT for a final refinement step after verification to catch any remaining format issues and confirm the answer.",
+                "score": 0.89
+            },
+            "14": {
+                "modification": "Modify SOLVE_MATH_PROMPT to explicitly require labeling intermediate values with variable names and doing a brief self-consistency check (re-reading the question and confirming the final answer matches what was asked) before outputting the result.",
+                "score": 0.86
+            },
+            "15": {
+                "modification": "Add a new step between decomposition and solving: a \"reformulation\" step that rewrites the problem with explicit warnings about common pitfalls (e.g., which group is being asked about, direction of operations). This gives the solver better-guided input, reducing initial errors before verification.",
+                "score": 0.85
+            }
+        }
+    }
+}

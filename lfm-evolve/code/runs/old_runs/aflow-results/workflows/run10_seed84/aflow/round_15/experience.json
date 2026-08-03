@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Changed from a single Custom call to an ensemble of two independent Custom calls (SOLVE_MATH_PROMPT_A and SOLVE_MATH_PROMPT_B) run in parallel via asyncio.gather, followed by a third Custom call (AGGREGATE_PROMPT) that compares both solutions and selects the most consistent/correct final answer. This is a self-consistency ensemble approach, fundamentally different from the prohibited verification/reformulation strategies.",
+    "before": 0.7613636363636364,
+    "after": 0.7878787878787878,
+    "succeed": true
+}

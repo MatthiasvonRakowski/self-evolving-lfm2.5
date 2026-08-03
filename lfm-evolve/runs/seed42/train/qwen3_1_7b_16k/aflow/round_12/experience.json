@@ -1,0 +1,7 @@
+{
+    "father node": 10,
+    "modification": "Modified SOLVE_MATH_PROMPT to add a RECOMPUTE substep that independently re-calculates key arithmetic before finalizing, reducing errors entering the review phase.",
+    "before": 0.96,
+    "after": 0.96,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use an explicit \"scratchpad arithmetic\" style that forces the model to write out every single arithmetic operation on its own line with the format \"a op b = c\", and to re-read the problem statement before answering. This is a fundamentally different prompting strategy from the previous structured sections approach.",
+    "before": 0.9133333333333334,
+    "after": 0.91,
+    "succeed": false
+}

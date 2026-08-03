@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use a more mathematically precise framing that asks the model to carefully track quantities, units, and arithmetic through natural language guidance, rather than structured steps. This encourages careful computation without adding extra graph nodes or reformulation/verification steps.",
+    "before": 0.7613636363636364,
+    "after": 0.7727272727272727,
+    "succeed": true
+}

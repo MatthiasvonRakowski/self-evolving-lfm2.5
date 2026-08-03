@@ -1,0 +1,58 @@
+[
+    {
+        "round": 0,
+        "score": 0.92,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 17:13:10"
+    },
+    {
+        "round": 0,
+        "score": 0.88,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 17:35:59"
+    },
+    {
+        "round": 0,
+        "score": 0.94,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 17:51:36"
+    },
+    {
+        "round": 3,
+        "score": 0.93,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-21 19:49:48"
+    },
+    {
+        "round": 0,
+        "score": 0.9,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-22 00:37:06"
+    },
+    {
+        "round": 1,
+        "score": 0.9,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-22 01:52:53"
+    },
+    {
+        "round": 2,
+        "score": 0.95,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-22 04:19:11"
+    },
+    {
+        "round": 3,
+        "score": 0.91,
+        "avg_cost": 0.0,
+        "total_cost": 0.0,
+        "time": "2026-07-22 08:20:11"
+    }
+]

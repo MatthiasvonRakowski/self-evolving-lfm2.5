@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify the workflow to add an intermediate \"expectation\" step where the LLM briefly analyzes the problem to estimate what a reasonable answer range/type should be, then provide this expectation context to the reviewer alongside the problem and proposed solution, helping the reviewer catch unreasonable answers.",
+    "before": 0.92,
+    "after": 0.92,
+    "succeed": false
+}

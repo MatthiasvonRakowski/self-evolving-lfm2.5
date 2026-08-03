@@ -1,0 +1,7 @@
+{
+    "father node": 10,
+    "modification": "Replace SOLVE_MATH_PROMPT for sol3 with a new SOLVE_MATH_PROMPT_VERIFY that approaches the problem by explicitly defining variables and setting up equations before solving, increasing solution diversity among the three attempts.",
+    "before": 0.3371212121212121,
+    "after": 0.19318181818181818,
+    "succeed": false
+}

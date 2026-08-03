@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify TIEBREAK_PROMPT to be more directive: explicitly ask the model to verify each solution's arithmetic step by step, identify the error, and output the confirmed correct answer - reducing the chance of introducing a new mistake by over-relying on re-solving from scratch.",
+    "before": 0.96,
+    "after": 0.9,
+    "succeed": false
+}

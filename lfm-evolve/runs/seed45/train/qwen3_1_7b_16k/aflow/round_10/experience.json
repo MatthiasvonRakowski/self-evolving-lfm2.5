@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use an \"analogical reasoning\" approach: the model first identifies the problem type, recalls a similar simpler problem of the same type, then applies that solution pattern to the actual problem. This is fundamentally different from all prohibited approaches (no second verification step, no quantity labeling, no ensemble, no sub-question decomposition, no emphasis on step-by-step arithmetic checking). The graph structure remains the same single-pass Custom call.",
+    "before": 0.9033333333333333,
+    "after": 0.94,
+    "succeed": true
+}

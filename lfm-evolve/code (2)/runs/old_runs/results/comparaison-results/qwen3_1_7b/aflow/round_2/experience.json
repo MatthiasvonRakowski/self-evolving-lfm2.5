@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a review/verification step after the initial solution to catch errors and confirm the answer",
+    "before": 0.8888888888888888,
+    "after": 0.8863636363636364,
+    "succeed": false
+}

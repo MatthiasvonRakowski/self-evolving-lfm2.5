@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a self-review step after the initial solution: the LLM reviews its own answer and, if it finds issues, produces a corrected answer. This adds one new prompt (REVIEW_MATH_PROMPT) and a conditional revision loop in the graph.",
+    "before": 0.89,
+    "after": 0.84,
+    "succeed": false
+}

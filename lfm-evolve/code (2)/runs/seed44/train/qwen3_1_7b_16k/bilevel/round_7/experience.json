@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use a \"variable register\" style where the model must explicitly maintain and update a named variable table after each step, writing each variable assignment as \"VAR[name] = value\" before performing the next operation. This forces the model to track intermediate values in a structured register format, which is fundamentally different from all previous approaches (structured sections, scratchpad arithmetic, ensemble voting).",
+    "before": 0.9133333333333334,
+    "after": 0.94,
+    "succeed": true
+}

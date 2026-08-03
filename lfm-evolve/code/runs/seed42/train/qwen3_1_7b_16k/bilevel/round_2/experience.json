@@ -1,0 +1,7 @@
+{
+    "father node": 3,
+    "modification": "Modify TIEBREAK_PROMPT to instruct the model to first solve independently, then cross-check with both solutions by identifying specific calculation errors in each, and explicitly confirm which solution is correct before stating the final answer. This adds a verification layer that helps pinpoint discrepancies more accurately.",
+    "before": 0.96,
+    "after": 0.92,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to include more explicit instructions for careful arithmetic, identifying key quantities, and verifying the final numerical computation before outputting it. No graph structure changes.",
+    "before": 0.9133333333333334,
+    "after": 0.88,
+    "succeed": false
+}

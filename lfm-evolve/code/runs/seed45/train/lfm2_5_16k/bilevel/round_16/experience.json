@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify SOLVE_MATH_PROMPT_A to use a \"concrete simulation / story-tracing\" approach where the solver narrates through the problem as if acting it out step by step (like a story), tracking physical objects and quantities concretely. This creates maximum complementarity with Solution B's abstract equation approach, making disagreements between solutions more detectable by the ensemble.",
+    "before": 0.9,
+    "after": 0.77,
+    "succeed": false
+}

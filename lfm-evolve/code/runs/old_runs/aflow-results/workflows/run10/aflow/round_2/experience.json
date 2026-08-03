@@ -1,0 +1,7 @@
+{
+    "father node": 1,
+    "modification": "Added a second custom call (REVIEW_MATH_PROMPT) that takes the original problem and the initial solution as input, re-checks the arithmetic, and outputs a corrected final answer. This review step catches arithmetic errors that the first pass might have made.",
+    "before": 0.7716666666666667,
+    "after": 0.8,
+    "succeed": true
+}

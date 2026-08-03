@@ -1,0 +1,175 @@
+{
+  "_meta": {
+    "models": [
+      "ollama_chat/lfm2.5-16k",
+      "ollama_chat/qwen3-1.7b-16k"
+    ],
+    "methods": [
+      "aflow",
+      "textgrad",
+      "mipro",
+      "bilevel"
+    ],
+    "seed": 42,
+    "rounds": 20,
+    "last_launch": "2026-07-20T22:32:27"
+  },
+  "lfm2_5_16k": {
+    "aflow": {
+      "status": "success",
+      "started_at": "2026-07-18T01:01:16",
+      "elapsed_sec": 11376.0,
+      "executor_model": "ollama_chat/lfm2.5-16k",
+      "log": "runs/seed42/train/lfm2_5_16k/logs/aflow.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 3643,
+          "prompt_tokens": 1135719,
+          "completion_tokens": 1766272,
+          "cost_usd": 0.3524130000000001
+        }
+      }
+    },
+    "textgrad": {
+      "status": "failed",
+      "started_at": "2026-07-20T22:32:27",
+      "elapsed_sec": 798.1,
+      "executor_model": "ollama_chat/lfm2.5-16k",
+      "error": "22",
+      "traceback": "Traceback (most recent call last):\n  File \"/workspace/EvoAgentX/evoagentx/utils/async_utils.py\", line 17, in run_coroutine_sync\n    asyncio.get_running_loop()\nRuntimeError: no running event loop\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/workspace/self-evolving-lfm2.5/lfm-evolve/main.py\", line 196, in main\n    opt.run()\n  File \"/workspace/self-evolving-lfm2.5/lfm-evolve/src/TextGradOptimiser.py\", line 109, in run\n    optimizer.optimize(dataset=benchmark, use_answers=use_answers)\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 268, in optimize\n    self.step(inputs, labels, dataset, use_answers)\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 326, in step\n    output = self.forward(input)\n             ^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 361, in forward\n    output = self._compute_node(end_node, input_variables)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 532, in _compute_node\n    output_variable = node.textgrad_agent(input_variables)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 154, in __call__\n    output_variable = self.forward(forward_inputs, self.output_description)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/textgrad/autograd/function.py\", line 17, in __call__\n    return self.forward(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/.venv/lib/python3.12/site-packages/textgrad/autograd/string_based_ops.py\", line 70, in forward\n    response_string = self.fn(**inputs)\n                      ^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/optimizers/textgrad_optimizer.py\", line 101, in __call__\n    outputs = self.agent.execute(action_name=action.name, action_input_data=agent_inputs).content\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/agents/agent.py\", line 263, in execute\n    execution_results = action.execute(\n                        ^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/actions/customize_action.py\", line 325, in execute\n    return run_coroutine_sync(coro)\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/utils/async_utils.py\", line 19, in run_coroutine_sync\n    return asyncio.run(coro)\n           ^^^^^^^^^^^^^^^^^\n  File \"/.uv/python_install/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/.uv/python_install/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/.uv/python_install/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/workspace/EvoAgentX/evoagentx/actions/customize_action.py\", line 398, in async_execute\n    raise NoAnswerError(no_answer)\nevoagentx.core.exception.NoAnswerError: 22\n",
+      "log": "runs/seed42/train/lfm2_5_16k/logs/textgrad.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 91,
+          "prompt_tokens": 31871,
+          "completion_tokens": 50059,
+          "cost_usd": 0.0
+        }
+      }
+    },
+    "mipro": {
+      "status": "success",
+      "started_at": "2026-07-18T04:23:57",
+      "elapsed_sec": 4010.2,
+      "executor_model": "ollama_chat/lfm2.5-16k",
+      "log": "runs/seed42/train/lfm2_5_16k/logs/mipro.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        }
+      }
+    },
+    "bilevel": {
+      "status": "success",
+      "started_at": "2026-07-18T05:30:47",
+      "elapsed_sec": 55077.6,
+      "executor_model": "ollama_chat/lfm2.5-16k",
+      "log": "runs/seed42/train/lfm2_5_16k/logs/bilevel.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 19859,
+          "prompt_tokens": 11014695,
+          "completion_tokens": 7496461,
+          "cost_usd": 0.7702260000000003
+        }
+      }
+    }
+  },
+  "qwen3_1_7b_16k": {
+    "aflow": {
+      "status": "success",
+      "started_at": "2026-07-18T20:48:45",
+      "elapsed_sec": 51476.2,
+      "executor_model": "ollama_chat/qwen3-1.7b-16k",
+      "log": "runs/seed42/train/qwen3_1_7b_16k/logs/aflow.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 6240,
+          "prompt_tokens": 1743575,
+          "completion_tokens": 5753654,
+          "cost_usd": 0.48880199999999996
+        }
+      }
+    },
+    "textgrad": {
+      "status": "success",
+      "started_at": "2026-07-19T11:06:41",
+      "elapsed_sec": 41418.6,
+      "executor_model": "ollama_chat/qwen3-1.7b-16k",
+      "log": "runs/seed42/train/qwen3_1_7b_16k/logs/textgrad.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 5862,
+          "prompt_tokens": 8299035,
+          "completion_tokens": 3237622,
+          "cost_usd": 0.0
+        }
+      }
+    },
+    "mipro": {
+      "status": "success",
+      "started_at": "2026-07-19T22:37:00",
+      "elapsed_sec": 14129.5,
+      "executor_model": "ollama_chat/qwen3-1.7b-16k",
+      "log": "runs/seed42/train/qwen3_1_7b_16k/logs/mipro.log",
+      "usage": {
+        "anthropic": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        },
+        "local": {
+          "calls": 0,
+          "prompt_tokens": 0,
+          "completion_tokens": 0,
+          "cost_usd": 0.0
+        }
+      }
+    },
+    "bilevel": {
+      "status": "running",
+      "started_at": "2026-07-20T22:45:45",
+      "executor_model": "ollama_chat/qwen3-1.7b-16k"
+    }
+  }
+}

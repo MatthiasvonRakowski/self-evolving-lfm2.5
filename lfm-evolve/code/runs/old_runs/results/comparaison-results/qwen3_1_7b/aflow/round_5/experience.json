@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify VERIFY_MATH_PROMPT to emphasize independent recomputation first, then comparison, reducing the risk of both solutions sharing the same error going undetected.",
+    "before": 0.9053030303030303,
+    "after": 0.9053030303030303,
+    "succeed": false
+}

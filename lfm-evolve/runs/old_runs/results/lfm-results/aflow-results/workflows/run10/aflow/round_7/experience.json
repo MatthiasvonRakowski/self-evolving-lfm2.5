@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify DECOMPOSE_PROMPT to generate a detailed calculation plan (with explicit arithmetic setup for each step) rather than just extracting facts. This gives the solver a clearer roadmap and reduces intermediate arithmetic errors, without adding new nodes.",
+    "before": 0.815,
+    "after": 0.7666666666666667,
+    "succeed": false
+}

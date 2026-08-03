@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify SOLVE_MATH_PROMPT to add explicit instruction to recheck each arithmetic step and clearly box/state the final answer, improving accuracy on intermediate calculation errors without adding extra graph nodes.",
+    "before": 0.85,
+    "after": 0.7933333333333333,
+    "succeed": false
+}

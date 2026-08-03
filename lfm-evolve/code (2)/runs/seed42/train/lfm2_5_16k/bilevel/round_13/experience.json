@@ -1,0 +1,7 @@
+{
+    "father node": 11,
+    "modification": "Modify VERIFY_MATH_PROMPT to add explicit arithmetic re-checking instructions that walk through each numerical operation, and add a new REFINE_MATH_PROMPT for a final refinement step after verification to catch any remaining format issues and confirm the answer.",
+    "before": 0.92,
+    "after": 0.89,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 12,
+    "modification": "Add a second independent solve (solution2) before the verify step, passing both solutions to VERIFY_MATH_PROMPT so the verifier can compare two independent attempts and pick the correct one.",
+    "before": 0.93,
+    "after": 0.8,
+    "succeed": false
+}

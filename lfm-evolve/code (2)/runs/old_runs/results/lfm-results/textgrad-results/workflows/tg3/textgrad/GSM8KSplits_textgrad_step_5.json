@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Answer generation for math problems.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The math problem to solve.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated answer.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the following math problem using a direct, concise arithmetic walkthrough. Do NOT begin with a list of given values or an introductory paragraph \u2014 start computing immediately.\n\nFollow these guidelines:\n- Organize your steps to mirror the sequential logic of the problem's narrative, grouping related sub-calculations before combining them into broader totals.\n- Show each calculation inline with a brief annotation using the format `<<expression=result>>` (e.g., `<<3*60=180>>`).\n- When multiple items contribute to a subtotal, compute that subtotal as its own explicit step before combining it with other quantities.\n- When a result from an earlier step is reused, reference it by name or label to maintain a clear logical chain.\n- Use precise, context-appropriate terminology that reflects the real-world scenario described in the problem.\n- Avoid lengthy prose, bullet-point summaries of given information, or heavy formatting like headers and LaTeX blocks.\n\nEnd with the final numerical answer on its own line in the format:\n#### [number]\n\nProblem: <input>{Problem}</input>"
+            },
+            "system_prompt": "You are a helpful and highly intelligent assistant.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "parse_title": null,
+            "tool_names": null
+        }
+    ]
+}

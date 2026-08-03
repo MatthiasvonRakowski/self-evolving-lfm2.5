@@ -1,0 +1,7 @@
+{
+    "father node": 9,
+    "modification": "Modify SYNTHESIZE_MATH_PROMPT to instruct the model to independently re-solve the problem first, then compare with the three solutions, rather than just comparing them - this adds an implicit 4th solution and improves the synthesis quality",
+    "before": 0.803030303030303,
+    "after": 0.8295454545454546,
+    "succeed": true
+}

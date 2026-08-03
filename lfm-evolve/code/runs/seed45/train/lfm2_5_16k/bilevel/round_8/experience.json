@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Add a third solution approach (SOLVE_MATH_PROMPT_C) using a \"working backwards / sanity check\" method, then feed all three solutions into the ensemble for a more robust majority-vote style selection. This replaces the 2-solution ensemble with a 3-solution ensemble to reduce the chance of two wrong solutions overriding one correct solution.",
+    "before": 0.9,
+    "after": 0.83,
+    "succeed": false
+}

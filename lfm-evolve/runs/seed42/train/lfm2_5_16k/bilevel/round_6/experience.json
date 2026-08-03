@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Add a third step with a new EXTRACT_ANSWER_PROMPT that consolidates the verified solution into a clean final answer, ensuring the #### format is always present and unambiguous. This adds one new prompt and one new custom call in the graph.",
+    "before": 0.9,
+    "after": 0.85,
+    "succeed": false
+}

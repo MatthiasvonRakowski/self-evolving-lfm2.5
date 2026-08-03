@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to be more explicit about careful step-by-step calculation, emphasizing verification of arithmetic and ensuring the final answer format is strictly followed with \"#### \" prefix on its own line.",
+    "before": 0.9033333333333333,
+    "after": 0.9,
+    "succeed": false
+}

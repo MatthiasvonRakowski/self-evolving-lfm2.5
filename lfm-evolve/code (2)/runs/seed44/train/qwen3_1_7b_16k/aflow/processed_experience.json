@@ -1,0 +1,117 @@
+{
+    "0": {
+        "score": 0.89,
+        "success": {
+            "2": {
+                "modification": "Modified the SOLVE_MATH_PROMPT to include a structured problem decomposition approach that identifies given quantities, unknown quantities, and equations before solving - fundamentally different from simple step-by-step solving, improving accuracy through better problem representation rather than review.",
+                "score": 0.9
+            },
+            "3": {
+                "modification": "Modified SOLVE_MATH_PROMPT to include explicit unit/label tracking for each intermediate calculation step, helping the model avoid confusion about what quantities represent. This is fundamentally different from decomposition (identifying unknowns) or review (checking after solving) - it's about maintaining semantic clarity during the solve process itself.",
+                "score": 0.91
+            },
+            "6": {
+                "modification": "Added an ensemble approach: generate two independent solutions using different prompting strategies (one analytical, one arithmetic-focused), then use a third Custom call to select/synthesize the best answer. This is fundamentally different from review (which checks one answer) - it generates two independent solutions from different angles and selects the most consistent one.",
+                "score": 0.9
+            },
+            "7": {
+                "modification": "Added a two-step approach: first classify the math problem type (rates, percentages, geometry, etc.), then solve using the classification as context to apply the most appropriate solving strategy. This differs from decomposition (which identifies unknowns/equations) - it's about selecting the right problem-solving template/strategy based on problem category.",
+                "score": 0.94
+            },
+            "10": {
+                "modification": "Added a two-pass \"scratchpad then solve\" approach: first generate a rough calculation scratchpad, then use that scratchpad as additional context to produce the final clean answer. This differs from review (checking one answer) - the scratchpad serves as a numerical anchor/context that grounds the final solution, reducing arithmetic drift in multi-step problems.",
+                "score": 0.9
+            },
+            "19": {
+                "modification": "Modified SOLVE_MATH_PROMPT to include a worked example (few-shot anchoring) that demonstrates the exact reasoning style and output format expected. This primes the model via pattern matching to follow a clear arithmetic chain, distinct from all prohibited approaches (no review, no decomposition, no classification, no scratchpad, no ensemble).",
+                "score": 0.92
+            }
+        },
+        "failure": {
+            "1": {
+                "modification": "Add a review/verification step after the initial solution to catch arithmetic errors and logical mistakes, improving accuracy on grade-school math problems.",
+                "score": 0.89
+            },
+            "18": {
+                "modification": "Changed from a single-pass solve to a two-step approach: \n1. First step extracts key mathematical relationships and constraints between quantities (not decomposition into unknowns/equations, but semantic relationships like \"X is Y times Z\")\n2. Second step uses those extracted relationships as explicit context to guide the solve process\n\nThis is fundamentally different from all prohibited approaches - it leverages relationship mapping as a semantic bridge before solving, rather than reviewing after, decomposing into unknowns, tracking units, using ensemble, classifying problem type, or using a scratchpad.",
+                "score": 0.88
+            }
+        }
+    },
+    "2": {
+        "score": 0.9,
+        "success": {
+            "4": {
+                "modification": "Add a verification stage (Stage 3) after solving, where the model checks the arithmetic of the solution and confirms or corrects the final answer. This adds one new prompt (VERIFY_PROMPT) and one additional custom call in the graph.",
+                "score": 0.92
+            }
+        },
+        "failure": {}
+    },
+    "4": {
+        "score": 0.92,
+        "success": {
+            "13": {
+                "modification": "Modified DECOMPOSE_PROMPT to additionally extract the ordered sequence of calculation steps needed (not just facts), giving the solver a clearer computational roadmap to follow, which should reduce arithmetic errors in the solve stage.",
+                "score": 0.96
+            }
+        },
+        "failure": {
+            "5": {
+                "modification": "Add a second independent solve attempt (alternative solution) and pass both solutions to the verifier for cross-checking, implementing a simple ensemble/consistency approach.",
+                "score": 0.92
+            },
+            "9": {
+                "modification": "Modified the VERIFY_PROMPT to instruct the model to independently re-solve the problem from scratch before comparing with the proposed solution, reducing anchoring bias. This changes the verification strategy from \"check the steps\" to \"solve independently then compare\", which should catch more arithmetic errors.",
+                "score": 0.92
+            }
+        }
+    },
+    "5": {
+        "score": 0.92,
+        "success": {
+            "11": {
+                "modification": "Add a Stage 4: a final answer extraction step that takes the verified response and ensures clean numerical output with proper \"#### \" formatting, reducing cases where the format is malformed.",
+                "score": 0.93
+            }
+        },
+        "failure": {
+            "8": {
+                "modification": "Modify VERIFY_PROMPT to add more explicit step-by-step re-verification instructions when solutions disagree, and strengthen the output format requirement to ensure \"#### \" prefix is always present.",
+                "score": 0.91
+            }
+        }
+    },
+    "11": {
+        "score": 0.93,
+        "success": {},
+        "failure": {
+            "12": {
+                "modification": "Modify ALT_SOLVE_PROMPT to use a \"unit tracking / systematic equation setup\" approach instead of just \"different order of operations\", making it more genuinely different from Solution A to improve error detection in the verification stage.",
+                "score": 0.74
+            },
+            "15": {
+                "modification": "Add a recheck stage between verify and extract that independently validates the arithmetic of the verified answer by recomputing the key calculation steps, providing one additional error-catching layer.",
+                "score": 0.93
+            },
+            "16": {
+                "modification": "Modify VERIFY_PROMPT to always independently recompute the answer from scratch as the primary verification step, treating Solution A and B as cross-checks rather than the primary authority. This ensures the verifier catches cases where both solutions make the same error.",
+                "score": 0.93
+            }
+        }
+    },
+    "7": {
+        "score": 0.94,
+        "success": {},
+        "failure": {
+            "14": {
+                "modification": "Add a third step: a verification/self-review step that re-examines the solution for arithmetic mistakes and provides a corrected answer if needed. This adds one new custom call and one new prompt (VERIFY_SOLUTION_PROMPT).",
+                "score": 0.91
+            },
+            "17": {
+                "modification": "Modify SOLVE_WITH_STRATEGY_PROMPT to add explicit instruction for the model to restate key numbers from the problem before solving, reducing misreading errors. This is a single prompt modification.",
+                "score": 0.94
+            }
+        }
+    }
+}

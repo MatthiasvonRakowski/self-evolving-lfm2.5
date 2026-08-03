@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to re-verify each specific numerical computation in the proposed solution (checking that each arithmetic operation produces the claimed result), rather than just checking for error types or re-solving from scratch. This targets arithmetic verification at the computation level.",
+    "before": 0.92,
+    "after": 0.82,
+    "succeed": false
+}

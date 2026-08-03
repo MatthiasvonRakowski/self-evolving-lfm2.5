@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added a two-step decomposition-then-solve pattern: a first Custom call decomposes the problem into explicit key quantities and relationships, and a second Custom call uses that structured decomposition as additional context to solve the problem. This is fundamentally different from all previous single-pass approaches and the prohibited review/reformat patterns - it uses problem decomposition as a preprocessing step to reduce arithmetic errors by forcing explicit variable identification before computation.",
+    "before": 0.7689393939393939,
+    "after": 0.7916666666666666,
+    "succeed": true
+}

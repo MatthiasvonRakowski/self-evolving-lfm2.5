@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Add a verification step after the initial solution: the LLM reviews its own work and confirms or corrects the final answer, improving accuracy on math problems.",
+    "before": 0.8566666666666666,
+    "after": 0.85,
+    "succeed": false
+}

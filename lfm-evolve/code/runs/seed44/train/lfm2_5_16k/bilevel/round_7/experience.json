@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Add a third custom step (VERIFY_FINAL_PROMPT) that takes the reviewed solution and re-examines only the final answer computation, providing a clean final output with guaranteed \"#### \" formatting.",
+    "before": 0.92,
+    "after": 0.92,
+    "succeed": false
+}

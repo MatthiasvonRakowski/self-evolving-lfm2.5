@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to add explicit instructions in the UNDERSTAND section requiring the model to (1) underline/state the exact question being asked, and (2) list every quantity with name, value, and unit in a structured sub-list. Also added a requirement in the ANSWER section to confirm the answer's unit matches what was asked. This targets quantity-confusion at the problem-reading stage while keeping the proven checklist structure intact.",
+    "before": 0.96,
+    "after": 0.94,
+    "succeed": false
+}

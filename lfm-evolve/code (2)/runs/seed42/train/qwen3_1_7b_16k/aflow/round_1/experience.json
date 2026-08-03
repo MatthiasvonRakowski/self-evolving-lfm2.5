@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added a second Custom call (REVIEW_MATH_PROMPT) that reviews the initial solution for arithmetic and logic errors, then outputs a verified final answer. This adds a self-review step after the initial solve, which helps catch mistakes without changing the single-solve prompt.",
+    "before": 0.96,
+    "after": 0.94,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify SOLVE_MATH_PROMPT_A to use a \"Given/Find/Solve\" structured framework that explicitly separates problem comprehension (listing all given facts and what is being asked) from the calculation phase. This is distinct from the \"information table\" approach (which was tabular) - this is a three-phase protocol: state givens, state goal, then compute step by step. This makes Solution A more careful about problem interpretation before arithmetic begins.",
+    "before": 0.9,
+    "after": 0.87,
+    "succeed": false
+}

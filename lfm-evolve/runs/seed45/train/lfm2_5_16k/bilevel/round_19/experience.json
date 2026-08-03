@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify SOLVE_MATH_PROMPT_B to use a \"concrete example substitution / plug-and-check\" approach where the solver proposes a candidate answer, verifies it satisfies all conditions in the problem, and adjusts if not. This creates a verification-based solution that is maximally complementary to Solution A's forward arithmetic approach.",
+    "before": 0.9,
+    "after": 0.83,
+    "succeed": false
+}

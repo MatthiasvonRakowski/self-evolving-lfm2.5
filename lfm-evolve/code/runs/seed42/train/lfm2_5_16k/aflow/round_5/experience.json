@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modified SOLVE_MATH_PROMPT to add explicit unit/label tracking for each quantity and emphasize labeling intermediate results, helping reduce errors where the model confuses what different numbers represent. No graph structure changes.",
+    "before": 0.94,
+    "after": 0.81,
+    "succeed": false
+}

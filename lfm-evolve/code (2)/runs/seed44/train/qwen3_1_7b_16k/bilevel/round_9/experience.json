@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Modify the SOLVE_MATH_PROMPT to add an explicit instruction to verify each arithmetic calculation inline before proceeding, and to restate the question being answered before giving the final answer. This helps catch errors in single-pass solving.",
+    "before": 0.94,
+    "after": 0.88,
+    "succeed": false
+}

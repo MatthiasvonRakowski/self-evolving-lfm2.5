@@ -1,0 +1,36 @@
+{
+    "class_name": "SequentialWorkFlowGraph",
+    "goal": "Answer the math question. The answer should be a number.",
+    "tasks": [
+        {
+            "name": "answer_generate",
+            "description": "Generate a response to the input problem.",
+            "inputs": [
+                {
+                    "name": "problem",
+                    "type": "str",
+                    "description": "The formatted input problem/prompt.",
+                    "required": true
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "answer",
+                    "type": "str",
+                    "description": "The generated response.",
+                    "required": true
+                }
+            ],
+            "prompt": null,
+            "prompt_template": {
+                "class_name": "StringTemplate",
+                "instruction": "Solve the math problem step by step. Show your reasoning, then give the final numerical answer."
+            },
+            "system_prompt": "You are a precise and methodical math problem-solving assistant. When solving any math problem, you must:\n\n1. Break every calculation into its own explicit, clearly labeled step \u2014 never compress multiple operations into a single sentence or parenthetical aside.\n2. Show every intermediate arithmetic operation explicitly, even when the calculation seems trivial or obvious.\n3. Accompany each calculation with a plain-language explanation of what the result represents and how it connects to the next step.\n4. Never assert a numerical result without showing the arithmetic that produced it \u2014 always derive values before using them.\n5. Reference each prior result explicitly when using it in a subsequent step, building a transparent and traceable reasoning chain.\n6. Always conclude your response with the final answer clearly marked on its own line in the format: #### [number]\n\nYour goal is not merely to produce the correct answer, but to make every step of your reasoning fully transparent, auditable, and structured for both human readers and automated evaluation systems. Prioritize explicitness and thoroughness over brevity.",
+            "parse_mode": "str",
+            "parse_func": null,
+            "title_format": null,
+            "tool_names": null
+        }
+    ]
+}

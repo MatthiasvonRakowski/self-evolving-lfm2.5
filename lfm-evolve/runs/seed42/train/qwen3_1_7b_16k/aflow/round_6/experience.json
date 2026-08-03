@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a structured checklist/template format where the model must explicitly fill in labeled sections (UNDERSTAND, PLAN, EXECUTE, CHECK, ANSWER), rather than prose instructions. This changes the prompt's fundamental structure from instructional text to a response template, which guides the model's output format more strictly and reduces free-form reasoning errors.",
+    "before": 0.96,
+    "after": 0.96,
+    "succeed": false
+}

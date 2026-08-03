@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added a two-pass \"scratchpad then solve\" approach: first generate a rough calculation scratchpad, then use that scratchpad as additional context to produce the final clean answer. This differs from review (checking one answer) - the scratchpad serves as a numerical anchor/context that grounds the final solution, reducing arithmetic drift in multi-step problems.",
+    "before": 0.89,
+    "after": 0.9,
+    "succeed": true
+}

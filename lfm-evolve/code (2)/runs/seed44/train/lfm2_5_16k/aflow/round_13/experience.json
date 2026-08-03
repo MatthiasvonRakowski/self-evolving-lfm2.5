@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify VERIFY_MATH_PROMPT to have the verifier independently solve the problem first before checking the proposed solution, reducing confirmation bias in the verification step.",
+    "before": 0.9,
+    "after": 0.86,
+    "succeed": false
+}

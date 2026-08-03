@@ -1,0 +1,7 @@
+{
+    "father node": 2,
+    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit PATTERN step before planning, where the model identifies the core mathematical relationship/formula governing the problem (e.g., \"total = rate \u00d7 time\", \"remaining = start - used\"), writes it symbolically, then substitutes values. This schema-mapping approach is fundamentally different from decomposition, unit tracking, verification, substitution check, or quantity extraction.",
+    "before": 0.94,
+    "after": 0.8,
+    "succeed": false
+}

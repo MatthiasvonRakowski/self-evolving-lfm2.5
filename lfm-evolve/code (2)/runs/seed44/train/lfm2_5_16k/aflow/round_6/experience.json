@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Add conditional logic: extract answers from solution and verification steps, and if they disagree, call a third arbiter prompt to resolve the conflict. This adds ~5 lines of code and a new ARBITER_MATH_PROMPT.",
+    "before": 0.9,
+    "after": 0.86,
+    "succeed": false
+}

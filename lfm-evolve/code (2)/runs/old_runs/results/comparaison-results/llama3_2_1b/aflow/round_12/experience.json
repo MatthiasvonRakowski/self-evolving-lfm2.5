@@ -1,0 +1,7 @@
+{
+    "father node": 10,
+    "modification": "Replace sol3's instruction from SOLVE_MATH_PROMPT to a new SOLVE_MATH_PROMPT_COT that decomposes the problem into sub-steps before solving, increasing diversity among the three solutions.",
+    "before": 0.3371212121212121,
+    "after": 0.19696969696969696,
+    "succeed": false
+}

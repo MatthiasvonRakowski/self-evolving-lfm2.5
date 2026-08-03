@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to include explicit structured instructions: numbered steps requirement, explicit arithmetic expression writing, a re-reading/sanity-check step built into the single call, and clearer final answer formatting. This changes the prompt from a simple \"show reasoning\" style to a more rigorous structured approach with self-verification embedded naturally within one call.",
+    "before": 0.7613636363636364,
+    "after": 0.7651515151515151,
+    "succeed": true
+}

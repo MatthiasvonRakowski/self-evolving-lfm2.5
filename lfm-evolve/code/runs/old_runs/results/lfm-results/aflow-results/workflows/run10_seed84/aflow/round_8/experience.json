@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified the SOLVE_MATH_PROMPT to use an \"expert mathematician\" persona that emphasizes: (1) identifying given quantities and what is being asked before solving, (2) natural precise arithmetic, (3) a built-in double-check of the final answer against the question, and (4) cleaner answer format instruction. This is a single prompt change with no new graph nodes added.",
+    "before": 0.7613636363636364,
+    "after": 0.7878787878787878,
+    "succeed": true
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Modify VERIFY_MATH_PROMPT to instruct the model to first solve the problem independently from scratch, then compare with the proposed solution, identify any discrepancies, and provide the correct final answer. This blind re-solve + comparison approach is stronger than just reviewing the existing solution.",
+    "before": 0.96,
+    "after": 0.97,
+    "succeed": true
+}

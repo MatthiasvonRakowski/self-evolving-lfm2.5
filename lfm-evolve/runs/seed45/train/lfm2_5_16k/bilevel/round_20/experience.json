@@ -1,0 +1,7 @@
+{
+    "father node": 7,
+    "modification": "Add a problem pre-processing step that extracts key quantities and relationships from the problem before the two solvers run. Both solvers receive the original problem plus this structured extraction, reducing misinterpretation errors.",
+    "before": 0.9,
+    "after": 0.79,
+    "succeed": false
+}

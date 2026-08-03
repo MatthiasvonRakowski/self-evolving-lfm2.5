@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Add a verification step between solving and formatting: after getting the initial solution, a review prompt rechecks the work and confirms or corrects the answer before final formatting.",
+    "before": 0.58,
+    "after": 0.38,
+    "succeed": false
+}

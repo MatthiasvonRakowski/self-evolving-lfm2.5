@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Added a two-step approach: first classify the math problem type (rates, percentages, geometry, etc.), then solve using the classification as context to apply the most appropriate solving strategy. This differs from decomposition (which identifies unknowns/equations) - it's about selecting the right problem-solving template/strategy based on problem category.",
+    "before": 0.89,
+    "after": 0.94,
+    "succeed": true
+}

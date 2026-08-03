@@ -1,0 +1,7 @@
+{
+    "father node": 0,
+    "modification": "Modified SOLVE_MATH_PROMPT to use a \"state transition\" approach: the model explicitly identifies the initial state, each event that changes quantities, and the final state, treating the problem as a sequence of state changes. This differs from all prohibited approaches by framing arithmetic as state machine transitions rather than equations, sub-questions, unit tracking, or other prohibited methods.",
+    "before": 0.9033333333333333,
+    "after": 0.93,
+    "succeed": true
+}

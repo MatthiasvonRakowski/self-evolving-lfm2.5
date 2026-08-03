@@ -1,0 +1,7 @@
+{
+    "father node": 4,
+    "modification": "Modify SOLVE_MATH_PROMPT to add an explicit estimation/sanity-check step where the solver first estimates the expected answer range, then solves, then confirms the answer falls within the estimated range. This helps catch arithmetic errors in the first pass itself.",
+    "before": 0.9,
+    "after": 0.83,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 11,
+    "modification": "Add a recheck stage between verify and extract that independently validates the arithmetic of the verified answer by recomputing the key calculation steps, providing one additional error-catching layer.",
+    "before": 0.93,
+    "after": 0.93,
+    "succeed": false
+}

@@ -1,0 +1,7 @@
+{
+    "father node": 5,
+    "modification": "Add a 4th custom step (FORMAT step) after verification to cleanly extract and format the final numerical answer, ensuring the \"#### \" prefix is always present and correct.",
+    "before": 0.9053030303030303,
+    "after": 0.9015151515151515,
+    "succeed": false
+}
