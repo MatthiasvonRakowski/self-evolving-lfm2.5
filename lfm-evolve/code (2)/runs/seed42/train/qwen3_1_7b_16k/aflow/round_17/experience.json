@@ -1,7 +1,0 @@
-{
-    "father node": 10,
-    "modification": "Modify REVIEW_MATH_PROMPT to add a targeted \"RECOMPUTE\" substep that independently recalculates only the final arithmetic steps (not full re-solve), helping catch arithmetic errors in the last steps without anchoring bias.",
-    "before": 0.96,
-    "after": 0.96,
-    "succeed": false
-}

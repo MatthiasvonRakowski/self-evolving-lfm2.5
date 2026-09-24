@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Add a problem decomposition step (DECOMPOSE_MATH_PROMPT) before solving, which identifies key quantities, given information, and what needs to be found. This structured analysis is then passed to the solver as context, helping it set up the solution correctly from the start. This is fundamentally different from all prohibited approaches - it improves the solve step's INPUT quality rather than modifying verification logic, adding checkers, or changing the review approach.",
-    "before": 0.92,
-    "after": 0.88,
-    "succeed": false
-}

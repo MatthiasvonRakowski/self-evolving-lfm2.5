@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a review/verification step after the initial solution to catch arithmetic errors and logical mistakes, improving accuracy on grade-school math problems.",
-    "before": 0.89,
-    "after": 0.89,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modify SOLVE_MATH_PROMPT to encourage careful arithmetic and explicit verification of the answer against the question within the single prompt, while keeping the format clean. The change adds instruction to check that the final number directly answers what was asked.",
-    "before": 0.89,
-    "after": 0.82,
-    "succeed": false
-}

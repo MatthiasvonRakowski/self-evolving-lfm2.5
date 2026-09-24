@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit instruction to re-read the original problem statement after reaching an answer to confirm the answer addresses exactly what was asked (not a sub-quantity or wrong variable). This targets a different error type than arithmetic verification.",
-    "before": 0.96,
-    "after": 0.92,
-    "succeed": false
-}

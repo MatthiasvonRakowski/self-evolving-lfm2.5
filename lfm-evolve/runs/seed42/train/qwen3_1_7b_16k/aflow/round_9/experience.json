@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit \"LABEL\" section before EXECUTE that requires assigning a distinct variable name and unit to each quantity mentioned in the problem. This forces the model to disambiguate quantities before computing, targeting variable-confusion errors which are different from arithmetic errors. The checklist structure is preserved.",
-    "before": 0.96,
-    "after": 0.93,
-    "succeed": false
-}

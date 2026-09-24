@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Modified SOLVE_MATH_PROMPT to strengthen the CHECK step by explicitly instructing the model to recompute every arithmetic result a second time and confirm the final number answers the exact question asked, while making the #### format instruction more prominent and explicit.",
-    "before": 0.94,
-    "after": 0.88,
-    "succeed": false
-}

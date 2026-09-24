@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Changed from a single-pass solve to a two-solution ensemble approach:\n1. Added SOLVE_MATH_PROMPT_A: arithmetic/step-by-step focused prompt\n2. Added SOLVE_MATH_PROMPT_B: equation/logical-chain focused prompt  \n3. Added ENSEMBLE_PROMPT: synthesizes both solutions, picks the correct one or resolves disagreements\n4. Modified the graph to call custom three times: two independent solves with different strategies, then one ensemble call that compares results and outputs the final answer\nThis is fundamentally different from the failed verification approach - instead of reviewing one answer, we generate two independent answers from different angles and select/reconcile them.",
-    "before": 0.8566666666666666,
-    "after": 0.9,
-    "succeed": true
-}

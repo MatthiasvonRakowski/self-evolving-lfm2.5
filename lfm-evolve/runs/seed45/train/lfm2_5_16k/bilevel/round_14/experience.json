@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modify ENSEMBLE_PROMPT to instruct the model to explicitly re-execute the arithmetic of the chosen/agreed solution step by step, recalculating each number from scratch, before stating the final answer. This adds an active arithmetic re-verification inside the ensemble step itself, catching cases where both solutions made the same computational error.",
-    "before": 0.9,
-    "after": 0.8,
-    "succeed": false
-}

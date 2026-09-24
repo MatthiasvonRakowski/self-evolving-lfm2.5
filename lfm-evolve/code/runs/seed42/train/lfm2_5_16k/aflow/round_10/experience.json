@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Modified SOLVE_MATH_PROMPT to add a SUBSTITUTE step where the model plugs the final answer back into the original problem scenario and confirms the story/situation checks out (e.g., \"If the answer is 42, then re-reading: person had X, did Y, result should be 42 \u2014 confirmed\"), which is a narrative consistency check rather than arithmetic recomputation or unit tracking.",
-    "before": 0.94,
-    "after": 0.89,
-    "succeed": false
-}

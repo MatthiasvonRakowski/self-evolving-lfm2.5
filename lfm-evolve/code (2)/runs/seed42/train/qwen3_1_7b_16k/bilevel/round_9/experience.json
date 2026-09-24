@@ -1,7 +1,0 @@
-{
-    "father node": 6,
-    "modification": "Modify SOLVE_MATH_PROMPT to include a self-check instruction asking the model to verify its arithmetic after solving, so the initial answer fed to VERIFY_MATH_PROMPT is of higher quality.",
-    "before": 0.97,
-    "after": 0.96,
-    "succeed": false
-}

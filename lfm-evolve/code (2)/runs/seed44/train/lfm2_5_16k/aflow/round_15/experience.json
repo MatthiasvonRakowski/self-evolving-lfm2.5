@@ -1,7 +1,0 @@
-{
-    "father node": 4,
-    "modification": "Added a new decomposition step before solving: a DECOMPOSE_MATH_PROMPT that analyzes the problem by extracting key facts, given values, unknowns, and relationships without solving it. The decomposed structure is then passed as additional context to the SOLVE_MATH_PROMPT, helping the solver organize information better and reduce errors. This adds one new custom call and a new prompt, changing 5 lines in the graph.",
-    "before": 0.9,
-    "after": 0.82,
-    "succeed": false
-}

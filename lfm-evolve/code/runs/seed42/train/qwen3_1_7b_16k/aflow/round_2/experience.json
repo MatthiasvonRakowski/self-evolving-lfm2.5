@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified the SOLVE_MATH_PROMPT to include explicit instructions for: (1) identifying given information, (2) breaking into numbered steps, (3) verifying arithmetic after solving, and (4) a clearer output format requirement. This keeps the single-call structure (avoiding the penalized two-call approach) while improving reasoning quality through better prompt guidance.",
-    "before": 0.96,
-    "after": 0.95,
-    "succeed": false
-}

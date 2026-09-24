@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to use a more concise, direct chain-of-thought style that emphasizes careful arithmetic at each step, and explicitly instructs to write out each calculation. This is a single prompt change - no graph structure changes.",
-    "before": 0.49333333333333335,
-    "after": 0.42,
-    "succeed": false
-}

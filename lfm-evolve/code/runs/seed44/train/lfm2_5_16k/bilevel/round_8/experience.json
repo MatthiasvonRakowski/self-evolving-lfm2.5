@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify REVIEW_MATH_PROMPT to add explicit checklist of common error types (arithmetic, sign errors, misreading problem conditions) to guide the reviewer more precisely, making verification more thorough and targeted.",
-    "before": 0.92,
-    "after": 0.87,
-    "succeed": false
-}

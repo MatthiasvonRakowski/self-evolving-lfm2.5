@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Add a second independent solution step using a different problem-solving approach (working backwards / verification-first), then pass all three solutions to the final arbiter for majority-vote style arbitration.",
-    "before": 0.95,
-    "after": 0.91,
-    "succeed": false
-}

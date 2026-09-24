@@ -1,7 +1,0 @@
-{
-    "father node": 11,
-    "modification": "Modify VERIFY_MATH_PROMPT to include explicit error-checking categories (arithmetic, setup/interpretation, units) so the verifier is more thorough in catching the remaining errors. Only the prompt text changes, not the graph structure.",
-    "before": 0.92,
-    "after": 0.89,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified the CHECK section of SOLVE_MATH_PROMPT to explicitly require recomputing every arithmetic operation independently from scratch (rather than just a general verification), targeting arithmetic errors as the primary failure mode. This adds a more rigorous and specific arithmetic re-verification instruction within the existing proven checklist structure, while keeping the single-call graph unchanged.",
-    "before": 0.96,
-    "after": 0.94,
-    "succeed": false
-}

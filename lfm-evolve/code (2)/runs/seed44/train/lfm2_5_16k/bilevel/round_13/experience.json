@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify SOLVE_MATH_PROMPT to instruct the solver to first briefly restate what the problem is asking (what quantity to find) before solving, reducing problem misinterpretation errors. This is fundamentally different from previous attempts which focused on arithmetic checking or step formatting.",
-    "before": 0.92,
-    "after": 0.88,
-    "succeed": false
-}

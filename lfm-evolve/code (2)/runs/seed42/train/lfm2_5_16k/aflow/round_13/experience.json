@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit step 0 \"DECOMPOSE\" that asks the model to break the problem into a sequence of smaller, independent sub-questions before reading/planning/solving. This is fundamentally different from unit tracking, verification, substitution, CHECK strengthening, or quantity extraction \u2014 it structures the problem hierarchically upfront, guiding the solver through a dependency chain of sub-problems rather than a flat list of arithmetic steps.",
-    "before": 0.94,
-    "after": 0.84,
-    "succeed": false
-}

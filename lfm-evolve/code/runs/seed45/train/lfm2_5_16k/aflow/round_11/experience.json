@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a second custom call with a different solving angle (direct arithmetic focus), then combine both solutions and use a third custom call to select/verify the most consistent final answer - implementing a mini-ensemble approach.",
-    "before": 0.89,
-    "after": 0.75,
-    "succeed": false
-}

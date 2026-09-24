@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Replace the linear solve\u2192review workflow with a self-consistency ensemble approach: generate 3 independent solutions using the same solve prompt, then use a consensus/voting step to identify the most common answer and output it. This replaces the review step with an ensemble voting step.",
-    "before": 0.92,
-    "after": 0.9,
-    "succeed": false
-}

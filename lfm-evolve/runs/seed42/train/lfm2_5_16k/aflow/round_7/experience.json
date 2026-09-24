@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit VERIFY step after solving that asks the model to re-read the original question and confirm the final answer directly addresses what was asked, checking answer reasonableness (magnitude/sign/units) without full re-computation.",
-    "before": 0.94,
-    "after": 0.87,
-    "succeed": false
-}

@@ -4,7 +4,7 @@ import copy
 import threading
 from dataclasses import dataclass
 from types import ModuleType
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Tuple
 
 import numpy as np
 
@@ -16,8 +16,10 @@ class InnerBudget:
     mipro_candidates: int = 4
     mipro_steps: int = 4
     tg_steps: int = 2
-    dev_eval_k: int = 40
+    dev_eval_k: int = 100
     seed: int = 42
+    select_frac: float = 0.5
+    max_error_rate: float = 0.05
 
 def list_prompt_fields(prompt_module: ModuleType) -> List[str]:
     return sorted(
@@ -33,42 +35,96 @@ def apply_snapshot(prompt_module: ModuleType, snap: Dict[str, str]) -> None:
         setattr(prompt_module, name, value)
 
 def persist_prompt_module(directory: str, snap: Dict[str, str]) -> None:
+    import ast
     import os
+
+    path = os.path.join(directory, "prompt.py")
+    if os.path.exists(path):
+        try:
+            with open(path, encoding="utf-8") as f:
+                existing = f.read()
+            tree = ast.parse(existing)
+            non_string_nodes = [
+                node for node in tree.body
+                if not (
+                    isinstance(node, ast.Assign)
+                    and isinstance(getattr(node, "value", None), ast.Constant)
+                    and isinstance(node.value.value, str)
+                )
+            ]
+            if non_string_nodes:
+                from evoagentx.core.logging import logger
+                logger.warning(
+                    f"[bilevel] {path} holds more than string constants "
+                    f"({len(non_string_nodes)} other top-level statement(s)); "
+                    "leaving it untouched rather than overwriting it."
+                )
+                return
+        except SyntaxError:
+            pass
+
     lines = [f"{name} = {value!r}\n" for name, value in snap.items()]
-    with open(os.path.join(directory, "prompt.py"), "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
-def capped_view(benchmark: Benchmark, k: int, seed: int) -> Benchmark:
-    view = copy.copy(benchmark)
-    rng = np.random.default_rng(seed)
-    train = benchmark._train_data or []
+def _subsample(items: List[dict], k: int, rng) -> List[dict]:
+    if not items:
+        return []
+    idx = rng.permutation(len(items))[:min(k, len(items))]
+    return [items[i] for i in idx]
+
+def dev_split(benchmark: Benchmark, budget: "InnerBudget", round_index: int = 0):
+    rng = np.random.default_rng([budget.seed, round_index])
     dev = benchmark._dev_data or benchmark._test_data or []
+    drawn = _subsample(dev, budget.dev_eval_k, rng)
+    if len(drawn) < 2:
+        return drawn, drawn
+    n_select = max(1, int(round(len(drawn) * budget.select_frac)))
+    return drawn[n_select:], drawn[:n_select]
+
+def capped_view(benchmark: Benchmark, items: List[dict], budget: "InnerBudget",
+                 round_index: int = 0) -> Benchmark:
+    view = copy.copy(benchmark)
+    rng = np.random.default_rng([budget.seed, round_index, 1])
+    train = benchmark._train_data or []
     if train:
-        idx = rng.permutation(len(train))[:min(k, len(train))]
-        view._train_data = [train[i] for i in idx]
-    if dev:
-        idx = rng.permutation(len(dev))[:min(k, len(dev))]
-        view._dev_data = [dev[i] for i in idx]
+        view._train_data = _subsample(train, budget.dev_eval_k, rng)
+    view._dev_data = list(items)
     view._test_data = view._dev_data
     return view
 
-async def eval_dev_subsample(workflow: Callable, benchmark: Benchmark, k: int,
-                              seed: int, max_concurrent: int = 6) -> float:
-    view = capped_view(benchmark, k, seed)
-    data = view._dev_data
-    if not data:
-        return 0.0
+async def eval_items(workflow: Callable, benchmark: Benchmark, items: List[dict],
+                      max_concurrent: int = 6) -> Tuple[float, float]:
+    if not items:
+        return 0.0, 0.0
     semaphore = asyncio.Semaphore(max_concurrent)
+    scores: List[float] = [0.0] * len(items)
+    errors: List[int] = [0] * len(items)
 
-    async def run_one(example):
+    async def run_one(i, example):
         async with semaphore:
             try:
-                return await benchmark.async_evaluate(workflow, example)
-            except Exception:
-                return 0.0
+                scores[i] = float(await benchmark.async_evaluate(workflow, example))
+            except Exception as e:
+                errors[i] = 1
+                _record_error(e)
 
-    scores = await asyncio.gather(*(run_one(ex) for ex in data))
-    return float(np.mean(scores)) if scores else 0.0
+    await asyncio.gather(*(run_one(i, ex) for i, ex in enumerate(items)))
+    return float(np.mean(scores)), sum(errors) / len(items)
+
+_seen_errors: Dict[str, int] = {}
+
+def _record_error(exc: Exception) -> None:
+    key = f"{type(exc).__name__}: {exc}"[:200]
+    _seen_errors[key] = _seen_errors.get(key, 0) + 1
+    if _seen_errors[key] == 1:
+        from evoagentx.core.logging import logger
+        logger.warning(f"[bilevel] workflow execution error (first occurrence): {key}")
+
+def format_error_summary() -> str:
+    if not _seen_errors:
+        return "none"
+    return "; ".join(f"{k} (x{v})" for k, v in sorted(_seen_errors.items(), key=lambda kv: -kv[1])[:3])
 
 class _BackgroundLoop:
 

@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modify SOLVE_MATH_PROMPT_B to use a \"reverse/backwards reasoning\" approach: start from what the question asks, identify what information is needed to answer it, work backwards through the problem gathering each piece, then verify by confirming the answer satisfies the original conditions. This is maximally complementary to Solution A's forward step-by-step arithmetic, increasing the chance the ensemble can detect and resolve disagreements.",
-    "before": 0.9,
-    "after": 0.8,
-    "succeed": false
-}

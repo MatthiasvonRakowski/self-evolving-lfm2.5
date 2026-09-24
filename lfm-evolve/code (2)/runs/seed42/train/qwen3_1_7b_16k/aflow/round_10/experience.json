@@ -1,7 +1,0 @@
-{
-    "father node": 3,
-    "modification": "Add a second custom review step that takes the problem and initial solution, verifies the reasoning and arithmetic, and outputs a final corrected answer if needed.",
-    "before": 0.95,
-    "after": 0.96,
-    "succeed": true
-}

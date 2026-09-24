@@ -3,6 +3,7 @@ from typing import Tuple
 import json
 
 from src.Optimiser import Optimiser
+from src.common import PromptPlaceholderError, fill_prompt_template
 from evoagentx.optimizers import MiproOptimizer
 from evoagentx.models import LiteLLMConfig, LiteLLM
 from evoagentx.core.callbacks import suppress_logger_info
@@ -34,6 +35,7 @@ class PromptSolverProgram:
     def __init__(self, model: LiteLLM, seed_prompt: str):
         self.model = model
         self.prompt = seed_prompt
+        self.placeholder_failures = 0
 
     def save(self, path: str):
         with open(path, "w") as f:
@@ -47,7 +49,11 @@ class PromptSolverProgram:
     def __call__(self, problem: str = None, **kwargs) -> Tuple[str, dict]:
         if problem is None:
             problem = kwargs.get("problem")
-        prompt = self.prompt.format(problem=problem)
+        try:
+            prompt = fill_prompt_template(self.prompt, problem)
+        except PromptPlaceholderError as e:
+            self.placeholder_failures += 1
+            raise
         response = self.model.generate(prompt=prompt)
         solution = response.content
         return solution, {"problem": problem, "solution": solution}
@@ -100,14 +106,30 @@ class MiproOptimiser(Optimiser):
         print("Evaluating after optimization...")
         with suppress_logger_info():
             results_after = optimizer.evaluate(dataset=benchmark, eval_mode="test")
-        print(f"After optimization: {results_after}")
+        print(f"After optimization (MIPRO-internal metric, not comparable to "
+              f"evaluate.py scores): {results_after}")
+
+        if program.placeholder_failures:
+            print(f"!!! {program.placeholder_failures} call(s) had no usable problem "
+                  f"placeholder in the prompt -- the optimiser was scoring prompts "
+                  f"that never contained the question")
+
+        try:
+            fill_prompt_template(program.prompt, "probe")
+            placeholder_ok = True
+        except PromptPlaceholderError as e:
+            placeholder_ok = False
+            print(f"!!! final MIPRO prompt is unusable: {e}")
 
         results_path = Path(self.output_dir) / "mipro_results.json"
         with open(results_path, "w") as f:
             json.dump({
-                "after": results_after,
+                "mipro_internal_metric": results_after,
                 "seed": self.seed,
-                "optimized_prompt": program.prompt,
+                "benchmark": self.benchmark_name,
+                "final_prompt": program.prompt,
+                "placeholder_ok": placeholder_ok,
+                "placeholder_failures": program.placeholder_failures,
             }, f, indent=2, default=str)
 
         print(f"Results saved to {results_path}")

@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Add a third step: a verification/self-review step that re-examines the solution for arithmetic mistakes and provides a corrected answer if needed. This adds one new custom call and one new prompt (VERIFY_SOLUTION_PROMPT).",
-    "before": 0.94,
-    "after": 0.91,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Added two parallel Custom calls (SOLVE_MATH_PROMPT_A and SOLVE_MATH_PROMPT_B) with different solving styles (arithmetic-focused vs equation-setup-focused), then added a third Custom call (ENSEMBLE_PROMPT) that evaluates both solutions, checks arithmetic correctness, and outputs the best answer. This replaces the single-pass approach with an ensemble pattern using two diverse solving strategies.",
-    "before": 0.5533333333333333,
-    "after": 0.28,
-    "succeed": false
-}

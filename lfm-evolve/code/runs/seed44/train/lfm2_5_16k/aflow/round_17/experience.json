@@ -1,7 +1,0 @@
-{
-    "father node": 4,
-    "modification": "Added a third step: an EXTRACT_MATH_PROMPT custom call that takes the problem and verified solution, then performs a focused final answer extraction and validation. This ensures the answer directly corresponds to what the problem asks, catches any mismatch between the verified solution's reasoning and its stated final answer, and guarantees clean numerical formatting. This differs from the original 2-step solve\u2192verify by adding a dedicated extraction/cross-check pass as a third step.",
-    "before": 0.9,
-    "after": 0.89,
-    "succeed": false
-}

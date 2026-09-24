@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modify SOLVE_MATH_PROMPT to use a more structured problem-solving approach that explicitly asks the model to first identify knowns/unknowns, then solve systematically with careful arithmetic verification at each step.",
-    "before": 0.89,
-    "after": 0.78,
-    "succeed": false
-}

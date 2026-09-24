@@ -1,7 +1,0 @@
-{
-    "father node": 1,
-    "modification": "Modify VERIFY_MATH_PROMPT to instruct the model to re-solve independently first, then compare with the previous solution and reconcile any differences, providing a more robust verification",
-    "before": 0.88,
-    "after": 0.92,
-    "succeed": true
-}

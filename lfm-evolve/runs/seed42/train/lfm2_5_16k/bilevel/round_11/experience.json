@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Add a new first step with DECOMPOSE_MATH_PROMPT that breaks the problem into explicit sub-questions and identifies key quantities. This decomposed structure is then fed into the solver, giving it a clearer roadmap. The verifier then checks the structured solution.",
-    "before": 0.9,
-    "after": 0.92,
-    "succeed": true
-}

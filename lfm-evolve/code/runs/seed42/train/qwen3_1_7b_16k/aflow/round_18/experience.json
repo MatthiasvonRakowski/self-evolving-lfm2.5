@@ -1,7 +1,0 @@
-{
-    "father node": 10,
-    "modification": "Modify REVIEW_MATH_PROMPT to add a \"GOAL\" step as the very first step, requiring the reviewer to explicitly state what value/quantity the problem is asking to find, before checking the solution. This catches cases where the solver computed the right numbers but answered the wrong question.",
-    "before": 0.96,
-    "after": 0.96,
-    "succeed": false
-}

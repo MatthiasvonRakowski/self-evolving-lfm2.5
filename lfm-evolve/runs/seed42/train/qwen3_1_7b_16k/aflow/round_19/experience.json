@@ -1,7 +1,0 @@
-{
-    "father node": 10,
-    "modification": "Add a second independent solver before the review step, so the reviewer sees two independent solutions and can identify which is correct or reconcile them - this is an ensemble approach fundamentally different from just modifying prompts.",
-    "before": 0.96,
-    "after": 0.97,
-    "succeed": true
-}

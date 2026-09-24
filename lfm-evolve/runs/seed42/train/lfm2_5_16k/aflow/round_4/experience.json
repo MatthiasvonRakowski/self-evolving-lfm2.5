@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Added a second Custom call using REVIEW_MATH_PROMPT that takes the original problem and proposed solution as input, verifies each arithmetic step, corrects any errors, and returns the reviewed answer. The workflow now returns the reviewed response instead of the original solution response.",
-    "before": 0.94,
-    "after": 0.87,
-    "succeed": false
-}

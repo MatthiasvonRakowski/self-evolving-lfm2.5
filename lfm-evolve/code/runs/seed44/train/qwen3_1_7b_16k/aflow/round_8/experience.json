@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify VERIFY_PROMPT to add more explicit step-by-step re-verification instructions when solutions disagree, and strengthen the output format requirement to ensure \"#### \" prefix is always present.",
-    "before": 0.92,
-    "after": 0.91,
-    "succeed": false
-}

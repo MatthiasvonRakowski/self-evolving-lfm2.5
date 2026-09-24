@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a second custom call for answer extraction/formatting after the initial solution, using a new EXTRACT_ANSWER_PROMPT that focuses on correctly identifying and formatting the final numerical answer from the solution.",
-    "before": 0.89,
-    "after": 0.79,
-    "succeed": false
-}

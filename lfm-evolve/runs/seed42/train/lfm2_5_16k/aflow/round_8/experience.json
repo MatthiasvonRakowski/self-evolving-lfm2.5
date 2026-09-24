@@ -1,7 +1,0 @@
-{
-    "father node": 2,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit step 0 where the model extracts and lists all named quantities from the problem as key-value pairs before planning, ensuring no quantity is confused or lost during multi-step reasoning. This is a different approach from unit tracking or verification steps.",
-    "before": 0.94,
-    "after": 0.77,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify REVIEW_MATH_PROMPT to instruct the reviewer to focus specifically on verifying the final calculation step independently (recomputing the last arithmetic operation from scratch) and checking unit consistency throughout, before confirming or correcting the answer. This targets the most error-prone part (final computation) with a fresh recomputation rather than general step checking.",
-    "before": 0.92,
-    "after": 0.87,
-    "succeed": false
-}

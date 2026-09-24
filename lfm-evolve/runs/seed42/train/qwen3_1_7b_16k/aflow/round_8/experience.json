@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to use a few-shot example approach instead of the checklist/template format. Added one concrete worked example demonstrating the expected reasoning style and \"#### \" output format. This is fundamentally different from all previous instruction-based or checklist-based prompts - it shows rather than tells, leveraging in-context learning to guide both reasoning quality and output format.",
-    "before": 0.96,
-    "after": 0.92,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modify the SOLVE_MATH_PROMPT to be more detailed and structured, guiding the model to think more carefully through each step, verify arithmetic within the single response, and format the answer correctly. This is a prompt-only change.",
-    "before": 0.5533333333333333,
-    "after": 0.31,
-    "succeed": false
-}

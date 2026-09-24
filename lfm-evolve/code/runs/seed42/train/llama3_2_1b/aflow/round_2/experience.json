@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a second custom call to verify/review the initial solution, implementing a review pattern to catch errors. This adds one new prompt and one additional custom call in the graph.",
-    "before": 0.49333333333333335,
-    "after": 0.34,
-    "succeed": false
-}

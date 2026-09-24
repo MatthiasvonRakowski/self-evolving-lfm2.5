@@ -1,7 +1,0 @@
-{
-    "father node": 10,
-    "modification": "Modify REVIEW_MATH_PROMPT to require independent re-solving before comparison, making the review process more robust by not anchoring to the original solution's reasoning path.",
-    "before": 0.96,
-    "after": 0.83,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a second custom call that reviews the initial solution and verifies/corrects the answer, implementing a simple self-review chain.",
-    "before": 0.8766666666666666,
-    "after": 0.92,
-    "succeed": true
-}

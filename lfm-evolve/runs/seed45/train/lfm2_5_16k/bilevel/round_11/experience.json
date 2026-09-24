@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modify SOLVE_MATH_PROMPT_A to add an explicit self-check step where the solver verifies their answer makes sense in context (sanity/reasonableness check) before finalizing. This improves the quality of Solution 1 going into the ensemble without adding new nodes or changing graph structure.",
-    "before": 0.9,
-    "after": 0.83,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 11,
-    "modification": "Modify SOLVE_MATH_PROMPT to explicitly require labeling intermediate values with variable names and doing a brief self-consistency check (re-reading the question and confirming the final answer matches what was asked) before outputting the result.",
-    "before": 0.92,
-    "after": 0.86,
-    "succeed": false
-}

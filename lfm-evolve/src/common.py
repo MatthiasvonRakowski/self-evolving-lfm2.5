@@ -28,6 +28,10 @@ _ANTHROPIC_FALLBACK_PRICE_PER_TOKEN = {
     "output": 15.0 / 1_000_000,
 }
 
+def is_anthropic_model(model) -> bool:
+    name = str(model or "").lower()
+    return name.startswith("anthropic/") or "claude" in name
+
 def _usage_callback(kwargs, response_obj, start_time, end_time):
     try:
         log_path = os.environ.get("LLM_USAGE_LOG")
@@ -39,7 +43,7 @@ def _usage_callback(kwargs, response_obj, start_time, end_time):
         completion_tokens = getattr(usage, "completion_tokens", 0) or 0
 
         cost_usd = kwargs.get("response_cost")
-        if not cost_usd and model.startswith("anthropic/"):
+        if not cost_usd and is_anthropic_model(model):
             cost_usd = (
                 prompt_tokens * _ANTHROPIC_FALLBACK_PRICE_PER_TOKEN["input"]
                 + completion_tokens * _ANTHROPIC_FALLBACK_PRICE_PER_TOKEN["output"]
@@ -83,7 +87,7 @@ def summarize_usage(jsonl_path):
             record = json.loads(line)
         except Exception:
             continue
-        provider = "anthropic" if str(record.get("model", "")).startswith("anthropic/") else "local"
+        provider = "anthropic" if is_anthropic_model(record.get("model", "")) else "local"
         bucket = summary[provider]
         bucket["calls"] += 1
         bucket["prompt_tokens"] += record.get("prompt_tokens", 0) or 0
@@ -154,6 +158,23 @@ def claude_config():
     return LiteLLMConfig(
         model="anthropic/claude-sonnet-4-6",
         anthropic_key=os.environ["ANTHROPIC_API_KEY"],
+    )
+
+PROBLEM_PLACEHOLDERS = ("{{problem}}", "{problem}")
+
+class PromptPlaceholderError(ValueError):
+    pass
+
+def fill_prompt_template(template: str, problem: str) -> str:
+    if not isinstance(template, str):
+        raise PromptPlaceholderError(f"prompt template is {type(template).__name__}, not str")
+    for placeholder in PROBLEM_PLACEHOLDERS:
+        if placeholder in template:
+            return template.replace(placeholder, problem)
+    raise PromptPlaceholderError(
+        "prompt template contains no {problem} or {{problem}} placeholder, so the "
+        "problem text would never reach the model. Template starts: "
+        f"{template[:120]!r}"
     )
 
 def hf_load_dataset(*args, timeouts=(30, 60, 120), **kwargs):

@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Add a third custom step (EXTRACT_ANSWER_PROMPT) after verification that focuses solely on extracting and formatting the final numerical answer from the verified solution, ensuring the #### format is always correctly output.",
-    "before": 0.9,
-    "after": 0.93,
-    "succeed": true
-}

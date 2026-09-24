@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to include explicit unit/label tracking for each intermediate calculation step, helping the model avoid confusion about what quantities represent. This is fundamentally different from decomposition (identifying unknowns) or review (checking after solving) - it's about maintaining semantic clarity during the solve process itself.",
-    "before": 0.89,
-    "after": 0.91,
-    "succeed": true
-}

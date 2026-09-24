@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified the SOLVE_MATH_PROMPT to include more structured, explicit reasoning steps (identify info, define variables, show arithmetic, double-check calculations) while keeping the single-call architecture. This encourages more careful computation and reduces arithmetic errors without adding a second verification step.",
-    "before": 0.91,
-    "after": 0.9,
-    "succeed": false
-}

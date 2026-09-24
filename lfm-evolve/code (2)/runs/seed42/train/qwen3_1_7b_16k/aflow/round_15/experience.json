@@ -1,7 +1,0 @@
-{
-    "father node": 12,
-    "modification": "Add a third Custom step that compares initial and review answers and resolves discrepancies by doing an independent re-solve",
-    "before": 0.96,
-    "after": 0.97,
-    "succeed": true
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modified SOLVE_MATH_PROMPT to add an explicit \"RECOMPUTE FINAL\" step that forces the model to re-derive the last two steps independently before stating the answer. This catches the most common error type (final combination step) without adding a second operator call or restructuring the graph.",
-    "before": 0.94,
-    "after": 0.9,
-    "succeed": false
-}

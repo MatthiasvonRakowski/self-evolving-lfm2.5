@@ -1,7 +1,0 @@
-{
-    "father node": 4,
-    "modification": "Modified DECOMPOSE_PROMPT to additionally extract the ordered sequence of calculation steps needed (not just facts), giving the solver a clearer computational roadmap to follow, which should reduce arithmetic errors in the solve stage.",
-    "before": 0.92,
-    "after": 0.96,
-    "succeed": true
-}

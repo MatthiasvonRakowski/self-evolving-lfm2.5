@@ -47,6 +47,7 @@ def collect(base_dir):
     seeds = discover_seeds(base_dir)
     eval_rows = []
     train_rows = []
+    invalid_rows = []
 
     for seed in seeds:
         seed_dir = os.path.join(base_dir, f"seed{seed}")
@@ -58,7 +59,18 @@ def collect(base_dir):
                 continue
             for label, by_artifact in by_model.items():
                 for artifact, cell in by_artifact.items():
-                    if cell.get("status") != "success":
+                    status = cell.get("status")
+                    if status != "success":
+                        if status == "invalid":
+                            invalid_rows.append({
+                                "seed": seed,
+                                "benchmark": benchmark_name,
+                                "model": label,
+                                "artifact": artifact,
+                                "reported_score": cell.get("mean_score"),
+                                "error_rate": cell.get("error_rate"),
+                                "reason": cell.get("invalid_reason", ""),
+                            })
                         continue
                     eval_rows.append({
                         "seed": seed,
@@ -67,33 +79,71 @@ def collect(base_dir):
                         "artifact": artifact,
                         "score": cell.get("mean_score"),
                         "n": cell.get("n"),
+                        "error_rate": cell.get("error_rate", 0.0),
+                        "trained_on": cell.get("trained_on", benchmark_name),
+                        "transfer": bool(cell.get("transfer", False)),
                     })
 
-        for label, by_method in train_summary.items():
-            if label == "_meta":
-                continue
-            for method, cell in by_method.items():
-                if cell.get("status") != "success":
+        for train_benchmark, by_label in _iter_train_benchmarks(train_summary):
+            for label, by_method in by_label.items():
+                if label == "_meta":
                     continue
-                anthropic = (cell.get("usage") or {}).get("anthropic", {})
-                train_rows.append({
-                    "seed": seed,
-                    "model": label,
-                    "method": method,
-                    "elapsed_sec": cell.get("elapsed_sec", 0) or 0,
-                    "claude_cost_usd": anthropic.get("cost_usd", 0) or 0,
-                    "claude_prompt_tokens": anthropic.get("prompt_tokens", 0) or 0,
-                    "claude_completion_tokens": anthropic.get("completion_tokens", 0) or 0,
-                })
+                for method, cell in by_method.items():
+                    if not isinstance(cell, dict) or cell.get("status") != "success":
+                        continue
+                    anthropic = (cell.get("usage") or {}).get("anthropic", {})
+                    train_rows.append({
+                        "seed": seed,
+                        "benchmark": train_benchmark,
+                        "model": label,
+                        "method": method,
+                        "elapsed_sec": cell.get("elapsed_sec", 0) or 0,
+                        "claude_cost_usd": anthropic.get("cost_usd", 0) or 0,
+                        "claude_prompt_tokens": anthropic.get("prompt_tokens", 0) or 0,
+                        "claude_completion_tokens": anthropic.get("completion_tokens", 0) or 0,
+                    })
 
-    return seeds, eval_rows, train_rows
+    return seeds, eval_rows, train_rows, invalid_rows
 
-def write_final_results_md(path, seeds, eval_rows, train_rows):
+def _iter_train_benchmarks(train_summary):
+    for key, value in train_summary.items():
+        if key == "_meta" or not isinstance(value, dict):
+            continue
+        nested = [v for v in value.values() if isinstance(v, dict)]
+        is_benchmark_level = bool(nested) and all(
+            all(isinstance(inner, dict) for inner in v.values()) and "status" not in v
+            for v in nested
+        )
+        if is_benchmark_level:
+            yield key, value
+        else:
+            yield None, {key: value}
+
+def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=()):
     score_groups = defaultdict(list)
     for row in eval_rows:
         score_groups[(row["benchmark"], row["model"], row["artifact"])].append((row["seed"], row["score"]))
 
     lines = ["# Final Results", "", f"Seeds discovered: {seeds}", ""]
+    if invalid_rows:
+        lines.append(f"{len(invalid_rows)} cell(s) were excluded as invalid "
+                     f"(too many execution errors to be a usable score):")
+        lines.append("")
+        lines.append("| seed | benchmark | model | artifact | reported | reason |")
+        lines.append("|---|---|---|---|---|---|")
+        for r in sorted(invalid_rows, key=lambda r: -(r.get("error_rate") or 0)):
+            reported = r.get("reported_score")
+            reported = f"{reported:.4f}" if isinstance(reported, (int, float)) else "-"
+            lines.append(f"| {r['seed']} | {r['benchmark']} | {r['model']} | {r['artifact']} "
+                         f"| {reported} | {r.get('reason','')} |")
+        lines.append("")
+
+    transfer_rows = [r for r in eval_rows if r.get("transfer")]
+    if transfer_rows:
+        pairs = sorted({(r["trained_on"], r["benchmark"]) for r in transfer_rows})
+        lines.append("Cross-task transfer cells present (artifact not optimised on the benchmark "
+                     "it is scored on): " + ", ".join(f"{a} -> {b}" for a, b in pairs))
+        lines.append("")
 
     benchmarks = sorted({b for (b, _, _) in score_groups})
     for benchmark in benchmarks:
@@ -162,19 +212,31 @@ def write_final_results_md(path, seeds, eval_rows, train_rows):
     with open(path, "w") as f:
         f.write("\n".join(lines))
 
-def write_json_csv(base_dir, seeds, eval_rows, train_rows):
-    train_index = {(r["seed"], r["model"], r["method"]): r for r in train_rows}
+def write_json_csv(base_dir, seeds, eval_rows, train_rows, invalid_rows=()):
+    train_index = {}
+    for r in train_rows:
+        train_index[(r["seed"], r.get("benchmark"), r["model"], r["method"])] = r
+        train_index.setdefault((r["seed"], None, r["model"], r["method"]), r)
+
     csv_rows = []
     for row in eval_rows:
         method = row["artifact"] if row["artifact"] != "baseline" else None
-        train_info = train_index.get((row["seed"], row["model"], method), {}) if method else {}
+        trained_on = row.get("trained_on", row["benchmark"])
+        train_info = {}
+        if method:
+            train_info = (train_index.get((row["seed"], trained_on, row["model"], method))
+                          or train_index.get((row["seed"], None, row["model"], method))
+                          or {})
         csv_rows.append({
             "seed": row["seed"],
             "benchmark": row["benchmark"],
+            "trained_on": trained_on,
+            "transfer": row.get("transfer", False),
             "model": row["model"],
             "artifact": row["artifact"],
             "score": row["score"],
             "n": row.get("n"),
+            "error_rate": row.get("error_rate", 0.0),
             "train_elapsed_sec": train_info.get("elapsed_sec"),
             "claude_cost_usd": train_info.get("claude_cost_usd"),
             "claude_prompt_tokens": train_info.get("claude_prompt_tokens"),
@@ -185,10 +247,12 @@ def write_json_csv(base_dir, seeds, eval_rows, train_rows):
         "seeds": seeds,
         "eval_rows": eval_rows,
         "train_rows": train_rows,
+        "invalid_rows": list(invalid_rows),
         "csv_rows": csv_rows,
     })
 
-    fieldnames = ["seed", "benchmark", "model", "artifact", "score", "n",
+    fieldnames = ["seed", "benchmark", "trained_on", "transfer", "model", "artifact",
+                  "score", "n", "error_rate",
                   "train_elapsed_sec", "claude_cost_usd",
                   "claude_prompt_tokens", "claude_completion_tokens"]
     with open(os.path.join(base_dir, "final_results.csv"), "w", newline="") as f:
@@ -201,14 +265,17 @@ def main():
     parser.add_argument("--base-dir", type=str, default="runs", dest="base_dir")
     args = parser.parse_args()
 
-    seeds, eval_rows, train_rows = collect(args.base_dir)
+    seeds, eval_rows, train_rows, invalid_rows = collect(args.base_dir)
     if not seeds:
         print(f"No seed* directories found under {args.base_dir}; nothing to aggregate.")
         return
 
-    write_final_results_md(os.path.join(args.base_dir, "FINAL_RESULTS.md"), seeds, eval_rows, train_rows)
-    write_json_csv(args.base_dir, seeds, eval_rows, train_rows)
+    write_final_results_md(os.path.join(args.base_dir, "FINAL_RESULTS.md"), seeds,
+                           eval_rows, train_rows, invalid_rows)
+    write_json_csv(args.base_dir, seeds, eval_rows, train_rows, invalid_rows)
 
+    if invalid_rows:
+        print(f"  !! {len(invalid_rows)} cell(s) excluded as invalid (execution errors)")
     print(f"Aggregated {len(seeds)} seed(s): {seeds}")
     print(f"  {os.path.join(args.base_dir, 'FINAL_RESULTS.md')}")
     print(f"  {os.path.join(args.base_dir, 'final_results.json')}")

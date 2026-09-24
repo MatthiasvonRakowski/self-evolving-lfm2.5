@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify VERIFY_MATH_PROMPT to add explicit instruction to independently recompute each arithmetic step from scratch (not just check the shown work), and to flag if the answer should be a whole number vs decimal, making the verification more robust against arithmetic errors.",
-    "before": 0.9,
-    "after": 0.86,
-    "succeed": false
-}

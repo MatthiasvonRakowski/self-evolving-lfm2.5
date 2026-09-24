@@ -11,8 +11,9 @@ LETTERS = "ABCDEFGHIJ"
 
 ANSWER_PATTERNS = [
     re.compile(r"answer is \(?([A-J])\)?", re.IGNORECASE),
-    re.compile(r"[Aa]nswer:?\s*\(?([A-J])\)?"),
-    re.compile(r"\b([A-J])\b"),
+    re.compile(r"[Aa]nswer:?\s*\**\(?([A-J])\)?"),
+    re.compile(r"\(([A-J])\)\s*\.?\s*$"),
+    re.compile(r"^\s*\**\(?([A-J])\)?\**\s*\.?\s*$", re.MULTILINE),
 ]
 
 class MMLUPro(Benchmark):
@@ -96,7 +97,10 @@ class MMLUPro(Benchmark):
 
     def evaluate(self, prediction: Any, label: Any) -> dict:
         predicted = self.extract_answer(prediction)
-        return {"acc": 1.0 if predicted == str(label).upper() else 0.0}
+        return {
+            "acc": 1.0 if predicted == str(label).upper() else 0.0,
+            "parse_failed": 1.0 if predicted is None else 0.0,
+        }
 
     async def async_evaluate(self, graph: Callable, example: Any) -> float:
         output = await graph(example["problem"])

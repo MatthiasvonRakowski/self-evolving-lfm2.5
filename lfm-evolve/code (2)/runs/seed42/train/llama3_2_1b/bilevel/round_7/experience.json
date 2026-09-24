@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Added a second solving step using a new SOLVE_MATH_PROMPT_ALT with a different reasoning approach (break into sub-problems, verify each step). The FORMAT_ANSWER_PROMPT was updated to accept two solutions and select the correct answer by comparing them \u2014 implementing a simple two-sample ensemble/voting mechanism to improve accuracy on cases where a single pass makes arithmetic errors.",
-    "before": 0.58,
-    "after": 0.61,
-    "succeed": true
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Add a second custom call (verification step) that reviews the initial solution and either confirms or corrects it, improving accuracy on arithmetic-heavy problems.",
-    "before": 0.955,
-    "after": 0.96,
-    "succeed": true
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify SOLVE_MATH_PROMPT to add explicit self-checking instruction before finalizing the answer, asking the solver to verify each arithmetic operation as it goes and double-check the final computation before writing the \"#### \" answer.",
-    "before": 0.92,
-    "after": 0.84,
-    "succeed": false
-}

@@ -1,7 +1,0 @@
-{
-    "father node": 5,
-    "modification": "Modify SOLVE_MATH_PROMPT to instruct the solver to explicitly identify the unit/type of the final answer as the very first line before solving, helping both the solver and reviewer stay anchored on what quantity is being computed.",
-    "before": 0.92,
-    "after": 0.84,
-    "succeed": false
-}

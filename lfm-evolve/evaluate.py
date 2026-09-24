@@ -1,4 +1,10 @@
-from src.common import resolve_model_id, executor_config, model_label
+from src.common import (
+    PromptPlaceholderError,
+    executor_config,
+    fill_prompt_template,
+    model_label,
+    resolve_model_id,
+)
 
 import argparse
 import asyncio
@@ -23,7 +29,11 @@ from src.benchmarks import BENCHMARK_NAMES, get_benchmark
 
 ARTIFACT_NAMES = ["baseline", "aflow", "textgrad", "mipro", "bilevel"]
 
-ARTIFACT_PATHS = {
+ERROR_PREFIX = "<error:"
+
+DEFAULT_MAX_ERROR_RATE = 0.02
+
+LEGACY_ARTIFACT_PATHS = {
     "lfm2_5_16k": {
         "aflow": "results/lfm-results/aflow-results/workflows/good_run/aflow/round_22",
         "textgrad": "results/lfm-results/textgrad-results/workflows/tg_all/textgrad/GSM8KSplits_textgrad_best.json",
@@ -93,12 +103,19 @@ async def run_workflow_class(workflow_cls: Callable, benchmark, executor_llm: Li
 
     async def run_one(i, example):
         async with semaphore:
+            failed = False
             try:
                 prediction = await workflow(example["problem"])
             except Exception as e:
-                prediction = f"<error: {e}>"
+                prediction = f"{ERROR_PREFIX} {e}>"
+                failed = True
             metrics = benchmark.evaluate(prediction, benchmark.get_label(example))
-            records[i] = {"id": benchmark.get_id(example), "prediction": prediction, "metrics": metrics}
+            records[i] = {
+                "id": benchmark.get_id(example),
+                "prediction": prediction,
+                "metrics": metrics,
+                "execution_error": failed,
+            }
 
     await asyncio.gather(*(run_one(i, ex) for i, ex in enumerate(data)))
     return records
@@ -112,17 +129,21 @@ async def run_mipro_predictor(prompt_template: str, benchmark, executor_llm: Lit
     async def run_one(i, example):
         async with semaphore:
             problem = example["problem"]
-            if "{{problem}}" in prompt_template:
-                filled = prompt_template.replace("{{problem}}", problem)
-            else:
-                filled = prompt_template.replace("{problem}", problem)
+            failed = False
             try:
+                filled = fill_prompt_template(prompt_template, problem)
                 response = await executor_llm.async_generate(prompt=filled, parse_mode="str")
                 prediction = response.content
             except Exception as e:
-                prediction = f"<error: {e}>"
+                prediction = f"{ERROR_PREFIX} {e}>"
+                failed = True
             metrics = benchmark.evaluate(prediction, benchmark.get_label(example))
-            records[i] = {"id": benchmark.get_id(example), "prediction": prediction, "metrics": metrics}
+            records[i] = {
+                "id": benchmark.get_id(example),
+                "prediction": prediction,
+                "metrics": metrics,
+                "execution_error": failed,
+            }
 
     await asyncio.gather(*(run_one(i, ex) for i, ex in enumerate(data)))
     return records
@@ -144,15 +165,24 @@ def run_textgrad_predictor(path: str, benchmark, executor_llm: LiteLLM, concurre
         for example_id, rec in evaluator._evaluation_records.items()
     ]
 
+def training_benchmark(benchmark_name: str, args) -> str:
+    return getattr(args, "trained_on", None) or benchmark_name
+
+def artifact_base_dir(artifact: str, benchmark_name: str, label: str, args) -> Path:
+    root = Path(args.optimizer_output_dir)
+    trained_on = training_benchmark(benchmark_name, args)
+    per_benchmark = root / trained_on / label / artifact
+    if per_benchmark.exists():
+        return per_benchmark
+    return root / label / artifact
+
 def resolve_artifact_source(artifact: str, benchmark_name: str, label: str, args) -> Optional[str]:
     if artifact == "baseline":
-        return "src.aflow_workflow." + benchmark_name
-    if artifact == "bilevel":
-        round_dir = resolve_round_dir(Path(args.optimizer_output_dir) / label / "bilevel")
-        return str(round_dir) if round_dir else None
-    if getattr(args, "artifacts_from_output", False):
-        base = Path(args.optimizer_output_dir) / label / artifact
-        if artifact == "aflow":
+        return "src.aflow_workflow." + training_benchmark(benchmark_name, args)
+
+    base = artifact_base_dir(artifact, benchmark_name, label, args)
+    if artifact in ("aflow", "bilevel") or getattr(args, "artifacts_from_output", True):
+        if artifact in ("aflow", "bilevel"):
             round_dir = resolve_round_dir(base)
             return str(round_dir) if round_dir else None
         if artifact == "textgrad":
@@ -163,7 +193,7 @@ def resolve_artifact_source(artifact: str, benchmark_name: str, label: str, args
         if artifact == "mipro":
             path = base / "best_program.json"
             return str(path) if path.exists() else None
-    return ARTIFACT_PATHS.get(label, {}).get(artifact)
+    return LEGACY_ARTIFACT_PATHS.get(label, {}).get(artifact)
 
 async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Optional[dict]:
     label = model_label(model)
@@ -174,9 +204,10 @@ async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Opti
 
     benchmark = get_benchmark(benchmark_name, seed=args.seed, n_test=args.n_test)
     executor_llm = LiteLLM(config=executor_config(model))
+    trained_on = training_benchmark(benchmark_name, args)
 
     if artifact == "baseline":
-        workflow_cls = load_baseline_workflow_class(benchmark_name)
+        workflow_cls = load_baseline_workflow_class(trained_on)
         records = await run_workflow_class(workflow_cls, benchmark, executor_llm, args.concurrency)
     elif artifact in ("aflow", "bilevel"):
         workflow_cls = load_aflow_artifact(source)
@@ -194,8 +225,15 @@ async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Opti
     scores = [r["metrics"].get(main_metric, 0.0) for r in records if r] if main_metric else []
     mean_score = sum(scores) / len(scores) if scores else 0.0
 
+    present = [r for r in records if r]
+    n_errors = sum(1 for r in present if _is_error_record(r))
+    error_rate = n_errors / len(present) if present else 1.0
+    parse_failures = sum(1 for r in present if r["metrics"].get("parse_failed"))
+
     return {
         "benchmark": benchmark_name,
+        "trained_on": trained_on,
+        "transfer": trained_on != benchmark_name,
         "model": resolve_model_id(model),
         "model_label": label,
         "artifact": artifact,
@@ -203,8 +241,17 @@ async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Opti
         "n": len(records),
         "main_metric": main_metric,
         "mean_score": mean_score,
+        "n_errors": n_errors,
+        "error_rate": error_rate,
+        "parse_failures": parse_failures,
         "records": records,
     }
+
+def _is_error_record(record: dict) -> bool:
+    if record.get("execution_error"):
+        return True
+    prediction = record.get("prediction")
+    return isinstance(prediction, str) and prediction.startswith(ERROR_PREFIX)
 
 def save_json_atomic(path, payload):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
@@ -215,12 +262,28 @@ def save_json_atomic(path, payload):
 
 def write_summary_md(summary: dict, path: str):
     lines = ["# Evaluation summary", ""]
+    notes = []
     for benchmark_name, by_model in summary.items():
         if benchmark_name == "_meta":
             continue
-        lines.append(f"## {benchmark_name}")
         model_labels = sorted(by_model.keys())
         artifacts = sorted({a for m in by_model.values() for a in m.keys()})
+
+        transfer_from = sorted({
+            cell.get("trained_on")
+            for m in by_model.values() for cell in m.values()
+            if cell.get("transfer") and cell.get("trained_on")
+        })
+        header = f"## {benchmark_name}"
+        if transfer_from:
+            header += f"  (TRANSFER: artifacts trained on {', '.join(transfer_from)})"
+        lines.append(header)
+        if transfer_from:
+            lines.append("")
+            lines.append(f"> Artifacts here were not optimised on {benchmark_name}. These are "
+                         f"cross-task transfer numbers and are not a like-for-like comparison of "
+                         f"optimisers on {benchmark_name}.")
+        lines.append("")
         lines.append("| artifact | " + " | ".join(model_labels) + " |")
         lines.append("|---" * (len(model_labels) + 1) + "|")
         for artifact in artifacts:
@@ -230,10 +293,22 @@ def write_summary_md(summary: dict, path: str):
                 if cell is None:
                     row.append("-")
                 elif cell.get("status") == "success":
-                    row.append(f"{cell['mean_score']:.4f}")
+                    text = f"{cell['mean_score']:.4f}"
+                    if cell.get("error_rate"):
+                        text += f" ({cell['error_rate']:.0%} err)"
+                    row.append(text)
+                elif cell.get("status") == "invalid":
+                    row.append(f"INVALID ({cell.get('error_rate', 0):.0%} err)")
+                    notes.append(f"- `{benchmark_name}/{label}/{artifact}`: "
+                                 f"{cell.get('invalid_reason', '')}")
                 else:
                     row.append(cell.get("status", "?"))
             lines.append("| " + " | ".join(row) + " |")
+        lines.append("")
+    if notes:
+        lines.append("## Invalid cells")
+        lines.append("")
+        lines.extend(notes)
         lines.append("")
     with open(path, "w") as f:
         f.write("\n".join(lines))
@@ -250,13 +325,27 @@ def main():
                          help="Max concurrent local-model calls (keep local to avoid overwhelming Ollama).")
     parser.add_argument("--output_dir", type=str, default="eval-results")
     parser.add_argument("--optimizer_output_dir", type=str, default="output",
-                         help="Where main.py wrote optimizer runs, used to resolve the 'bilevel' artifact "
-                              "(<optimizer_output_dir>/<model_label>/bilevel/) and, with "
-                              "--artifacts_from_output, aflow/textgrad/mipro too.")
-    parser.add_argument("--artifacts_from_output", action="store_true",
-                         help="Resolve aflow/textgrad/mipro artifacts fresh from --optimizer_output_dir "
-                              "instead of the hardcoded ARTIFACT_PATHS (old pre-trained artifacts). "
-                              "baseline is unaffected.")
+                         help="Where main.py wrote optimizer runs. Artifacts are resolved from "
+                              "<optimizer_output_dir>/<benchmark>/<model_label>/<artifact>/, falling "
+                              "back to the older <optimizer_output_dir>/<model_label>/<artifact>/ layout.")
+    parser.add_argument("--trained-on", type=str, default=None, dest="trained_on",
+                         choices=BENCHMARK_NAMES,
+                         help="Benchmark the artifacts were trained on, when it differs from the one "
+                              "being evaluated. Marks those cells as transfer and scores 'baseline' "
+                              "with the same benchmark's seed workflow, so the comparison stays fair.")
+    parser.add_argument("--max-error-rate", type=float, default=DEFAULT_MAX_ERROR_RATE,
+                         dest="max_error_rate",
+                         help="Cells where more than this fraction of examples raised an execution "
+                              "error are marked 'invalid' instead of 'success'.")
+    parser.add_argument("--artifacts_from_output", action="store_true", default=True,
+                         dest="artifacts_from_output",
+                         help="Accepted for compatibility; resolving artifacts from "
+                              "--optimizer_output_dir is now the default.")
+    parser.add_argument("--legacy_artifact_paths", action="store_false",
+                         dest="artifacts_from_output",
+                         help="Fall back to the hardcoded LEGACY_ARTIFACT_PATHS (artifacts from a "
+                              "different, older experiment) when nothing is found in "
+                              "--optimizer_output_dir.")
     parser.add_argument("--resume", action="store_true", help="Skip cells already marked 'success'.")
     args = parser.parse_args()
 
@@ -308,18 +397,36 @@ def main():
                     continue
 
                 save_json_atomic(cell_path, result)
-                summary[benchmark_name][label][artifact] = {
-                    "status": "success",
+                invalid = result["error_rate"] > args.max_error_rate
+                cell = {
+                    "status": "invalid" if invalid else "success",
                     "mean_score": result["mean_score"],
                     "main_metric": result["main_metric"],
                     "n": result["n"],
+                    "n_errors": result["n_errors"],
+                    "error_rate": result["error_rate"],
+                    "parse_failures": result["parse_failures"],
+                    "trained_on": result["trained_on"],
+                    "transfer": result["transfer"],
                     "artifact_source": result["artifact_source"],
                     "path": cell_path,
                     "started_at": started_at,
                     "elapsed_sec": round(time.time() - t0, 1),
                 }
+                if invalid:
+                    cell["invalid_reason"] = (
+                        f"{result['n_errors']}/{result['n']} examples "
+                        f"({result['error_rate']:.1%}) failed to execute; "
+                        f"threshold is {args.max_error_rate:.1%}"
+                    )
+                summary[benchmark_name][label][artifact] = cell
                 save_json_atomic(summary_path, summary)
-                print(f"  -> mean {result['main_metric']}: {result['mean_score']:.4f}  (n={result['n']})")
+                if invalid:
+                    print(f"  !! INVALID: {cell['invalid_reason']} "
+                          f"(raw mean {result['mean_score']:.4f} is not a usable score)")
+                else:
+                    print(f"  -> mean {result['main_metric']}: {result['mean_score']:.4f}  "
+                          f"(n={result['n']}, errors {result['error_rate']:.1%})")
 
     write_summary_md(summary, os.path.join(args.output_dir, "summary.md"))
     print(f"\nDone. Summary: {summary_path}")

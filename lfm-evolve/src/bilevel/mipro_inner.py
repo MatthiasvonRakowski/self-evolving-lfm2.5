@@ -13,6 +13,9 @@ from evoagentx.utils.mipro_utils.register_utils import MiproRegistry
 
 from src.bilevel.inner_base import InnerBudget, capped_view, list_prompt_fields, run_async, snapshot
 
+class InnerMiproError(RuntimeError):
+    pass
+
 class WorkflowPromptProgram:
 
     def __init__(self, workflow: Callable, prompt_module: ModuleType, field_names: list):
@@ -40,7 +43,8 @@ class WorkflowPromptProgram:
 
 def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Benchmark,
                      budget: InnerBudget, optimiser_llm: LiteLLM, has_gold_answers: bool,
-                     tmp_dir: str) -> Dict[str, str]:
+                     tmp_dir: str, tune_items: list = None,
+                     round_index: int = 0) -> Dict[str, str]:
     field_names = list_prompt_fields(prompt_module)
     if not field_names:
         return {}
@@ -54,7 +58,7 @@ def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Be
             setter=lambda value, n=name: setattr(prompt_module, n, value),
         ))
 
-    inner_benchmark = capped_view(benchmark, budget.dev_eval_k, budget.seed)
+    inner_benchmark = capped_view(benchmark, tune_items or [], budget, round_index)
     os.makedirs(tmp_dir, exist_ok=True)
 
     try:
@@ -75,6 +79,19 @@ def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Be
         with suppress_logger_info():
             optimizer.optimize(dataset=inner_benchmark)
     except Exception as e:
-        logger.warning(f"Inner MIPRO search failed, keeping current prompt state: {e}")
+        logger.warning(
+            f"Inner MIPRO search failed, keeping current prompt state: "
+            f"{type(e).__name__}: {e}",
+            exc_info=True,
+        )
+        _MIPRO_FAILURES.append(f"round {round_index}: {type(e).__name__}: {e}")
 
     return snapshot(prompt_module, field_names)
+
+_MIPRO_FAILURES: list = []
+
+def mipro_failure_count() -> int:
+    return len(_MIPRO_FAILURES)
+
+def mipro_failures() -> list:
+    return list(_MIPRO_FAILURES)

@@ -1,7 +1,0 @@
-{
-    "father node": 11,
-    "modification": "Modify VERIFY_MATH_PROMPT to instruct the verifier to independently re-solve the problem from scratch (not just check the proposed solution), then compare results. If they match, output that answer; if they differ, determine which is correct and output the correct one.",
-    "before": 0.92,
-    "after": 0.9,
-    "succeed": false
-}

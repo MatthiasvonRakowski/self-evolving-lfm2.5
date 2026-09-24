@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to include a worked example (few-shot anchoring) that demonstrates the exact reasoning style and output format expected. This primes the model via pattern matching to follow a clear arithmetic chain, distinct from all prohibited approaches (no review, no decomposition, no classification, no scratchpad, no ensemble).",
-    "before": 0.89,
-    "after": 0.92,
-    "succeed": true
-}

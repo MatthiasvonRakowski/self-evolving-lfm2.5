@@ -1,4 +1,3 @@
-import json
 import os
 import sys
 from pathlib import Path
@@ -6,14 +5,15 @@ from typing import Any
 
 from evoagentx.core.logging import logger
 from evoagentx.models import LiteLLMConfig, LiteLLM
-from evoagentx.optimizers import AFlowOptimizer
 
 from src.Optimiser import Optimiser
+from src.aflow_base import TestIsolatedAFlowOptimizer, write_best_round
 from src.benchmarks import get_benchmark, QUESTION_TYPE, HAS_GOLD_ANSWERS
-from src.bilevel import run_inner_optimization
+from src.bilevel import BrokenWorkflowError, run_inner_optimization
 from src.bilevel.inner_base import InnerBudget, persist_prompt_module
+from src.bilevel.mipro_inner import mipro_failure_count
 
-class BilevelAFlowOptimizer(AFlowOptimizer):
+class BilevelAFlowOptimizer(TestIsolatedAFlowOptimizer):
     bilevel_inner_mode: str = "mipro+textgrad"
     bilevel_budget: Any = None
     bilevel_has_gold_answers: bool = True
@@ -28,16 +28,23 @@ class BilevelAFlowOptimizer(AFlowOptimizer):
         workflow = self.graph(name=self.benchmark.name, llm_config=self.executor_llm.config, benchmark=self.benchmark)
 
         budget = self.bilevel_budget or InnerBudget()
-        best_snapshot, inner_score = await run_inner_optimization(
-            workflow=workflow,
-            prompt_module=prompt_module,
-            benchmark=self.benchmark,
-            inner_mode=self.bilevel_inner_mode,
-            budget=budget,
-            optimiser_llm=self.optimizer_llm,
-            has_gold_answers=self.bilevel_has_gold_answers,
-            tmp_dir=os.path.join(directory, "_inner_mipro_tmp"),
-        )
+        try:
+            best_snapshot, inner_score = await run_inner_optimization(
+                workflow=workflow,
+                prompt_module=prompt_module,
+                benchmark=self.benchmark,
+                inner_mode=self.bilevel_inner_mode,
+                budget=budget,
+                optimiser_llm=self.optimizer_llm,
+                has_gold_answers=self.bilevel_has_gold_answers,
+                tmp_dir=os.path.join(directory, "_inner_mipro_tmp"),
+                round_index=self.round + 1,
+            )
+        except BrokenWorkflowError as e:
+            logger.error(f"[bilevel] round {self.round + 1} candidate graph is not executable: {e}")
+            self.experience_utils.update_experience(directory, experience, 0.0)
+            return 0.0
+
         if best_snapshot:
             persist_prompt_module(directory, best_snapshot)
         logger.info(f"[bilevel] round {self.round + 1} inner-optimized dev-subsample score: {inner_score:.4f}")
@@ -50,12 +57,14 @@ class BilevelOptimiser(Optimiser):
     def __init__(self, seed: int, rounds: int, output_dir: Path,
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
                  graph_path: str = None, benchmark: str = "gsm8k",
-                 inner: str = "mipro+textgrad", inner_budget: InnerBudget = None):
+                 inner: str = "mipro+textgrad", inner_budget: InnerBudget = None,
+                 validation_rounds: int = 3):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.benchmark_name = benchmark
         self.graph_path = graph_path or f"src/aflow_workflow/{benchmark}"
         self.inner = inner
         self.inner_budget = inner_budget or InnerBudget(seed=seed if seed is not None else 42)
+        self.validation_rounds = validation_rounds
 
     def run(self):
         print(f"Running Bilevel Optimiser on {self.benchmark_name} (inner={self.inner}) ...")
@@ -70,7 +79,7 @@ class BilevelOptimiser(Optimiser):
             optimized_path=str(self.output_dir),
             optimizer_llm=optimiser_llm,
             executor_llm=executor_llm,
-            validation_rounds=1,
+            validation_rounds=self.validation_rounds,
             max_rounds=self.rounds,
             question_type=QUESTION_TYPE[self.benchmark_name],
             operators=["Custom"],
@@ -80,8 +89,12 @@ class BilevelOptimiser(Optimiser):
         )
         optimizer.optimize(benchmark)
 
-        best_round_path = Path(self.output_dir) / "best_round.json"
-        with open(best_round_path, "w") as f:
-            json.dump({"best_round": optimizer._load_best_round()}, f, indent=2)
+        best_round = write_best_round(self.output_dir, optimizer)
+        print(f"Best round (validation only): {best_round}")
+
+        failures = mipro_failure_count()
+        if failures:
+            print(f"!!! inner MIPRO search failed on {failures} round(s); "
+                  f"those rounds ran with TextGrad-lite only")
 
         optimizer.test(benchmark)

@@ -125,7 +125,8 @@ def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progr
         print(f"--- seed {seed} / {stage} OK in {elapsed}s ---")
     return returncode == 0
 
-def generate_progress_md(base_dir, seeds, models, methods, driver_started_at):
+def generate_progress_md(base_dir, seeds, models, methods, driver_started_at, benchmarks=None):
+    benchmarks = benchmarks or BENCHMARKS
     driver_state = load_json(os.path.join(base_dir, "driver_state.json"), {})
     current = driver_state.get("current", {})
     labels = [model_label(m) for m in models]
@@ -141,30 +142,32 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at):
 
     lines.append("## Training (status / elapsed / Claude cost)")
     lines.append("")
-    lines.append("| seed | model | " + " | ".join(methods) + " |")
-    lines.append("|---" * (2 + len(methods)) + "|")
+    lines.append("| seed | benchmark | model | " + " | ".join(methods) + " |")
+    lines.append("|---" * (3 + len(methods)) + "|")
     total_train_sec = 0.0
     total_claude_cost = 0.0
     for seed in seeds:
         train_summary = load_json(os.path.join(base_dir, f"seed{seed}", "train", "run_summary.json"), {})
-        for label in labels:
-            row = [str(seed), label]
-            for method in methods:
-                cell = train_summary.get(label, {}).get(method, {})
-                status = cell.get("status", "pending")
-                elapsed = cell.get("elapsed_sec")
-                cost = cell.get("usage", {}).get("anthropic", {}).get("cost_usd")
-                if elapsed:
-                    total_train_sec += elapsed
-                if cost:
-                    total_claude_cost += cost
-                parts = [status]
-                if elapsed is not None:
-                    parts.append(f"{elapsed:.0f}s")
-                if cost:
-                    parts.append(f"${cost:.2f}")
-                row.append(" / ".join(parts))
-            lines.append("| " + " | ".join(row) + " |")
+        for benchmark in benchmarks:
+            by_model = train_summary.get(benchmark, {})
+            for label in labels:
+                row = [str(seed), benchmark, label]
+                for method in methods:
+                    cell = by_model.get(label, {}).get(method, {})
+                    status = cell.get("status", "pending")
+                    elapsed = cell.get("elapsed_sec")
+                    cost = cell.get("usage", {}).get("anthropic", {}).get("cost_usd")
+                    if elapsed:
+                        total_train_sec += elapsed
+                    if cost:
+                        total_claude_cost += cost
+                    parts = [status]
+                    if elapsed is not None:
+                        parts.append(f"{elapsed:.0f}s")
+                    if cost:
+                        parts.append(f"${cost:.2f}")
+                    row.append(" / ".join(parts))
+                lines.append("| " + " | ".join(row) + " |")
     lines.append("")
     lines.append(f"**Totals so far:** training wall time {total_train_sec / 3600:.1f}h, "
                   f"Claude cost ${total_claude_cost:.2f}")
@@ -172,22 +175,25 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at):
 
     lines.append("## Evaluation (cells done / total, failures)")
     lines.append("")
-    lines.append("| seed | done | failed | total |")
-    lines.append("|---|---|---|---|")
-    total_expected = len(BENCHMARKS) * len(models) * len(ARTIFACT_NAMES)
+    lines.append("| seed | done | invalid | failed | total |")
+    lines.append("|---|---|---|---|---|")
+    total_expected = len(benchmarks) * len(models) * len(ARTIFACT_NAMES)
     for seed in seeds:
         eval_summary = load_json(os.path.join(base_dir, f"seed{seed}", "eval", "eval_summary.json"), {})
-        done = failed = 0
+        done = failed = invalid = 0
         for bmk, by_model in eval_summary.items():
             if bmk == "_meta":
                 continue
             for label, by_artifact in by_model.items():
                 for artifact, cell in by_artifact.items():
-                    if cell.get("status") == "success":
+                    status = cell.get("status")
+                    if status == "success":
                         done += 1
-                    elif cell.get("status") == "failed":
+                    elif status == "invalid":
+                        invalid += 1
+                    elif status == "failed":
                         failed += 1
-        lines.append(f"| {seed} | {done} | {failed} | {total_expected} |")
+        lines.append(f"| {seed} | {done} | {invalid} | {failed} | {total_expected} |")
     lines.append("")
 
     os.makedirs(base_dir, exist_ok=True)
@@ -196,13 +202,14 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at):
         f.write("\n".join(lines))
     os.replace(tmp, os.path.join(base_dir, "PROGRESS.md"))
 
-def start_progress_thread(base_dir, seeds, models, methods, driver_started_at, interval=60):
+def start_progress_thread(base_dir, seeds, models, methods, driver_started_at,
+                           benchmarks=None, interval=60):
     stop_event = threading.Event()
 
     def loop():
         while not stop_event.is_set():
             try:
-                generate_progress_md(base_dir, seeds, models, methods, driver_started_at)
+                generate_progress_md(base_dir, seeds, models, methods, driver_started_at, benchmarks)
             except Exception as e:
                 print(f"[progress] update failed: {e}")
             stop_event.wait(interval)
@@ -216,6 +223,14 @@ def main():
     parser.add_argument("--seeds", nargs="+", type=int, default=[42, 43, 44, 45, 46])
     parser.add_argument("--models", nargs="+", default=["lfm2.5-16k", "qwen3-1.7b-16k"])
     parser.add_argument("--methods", nargs="+", default=["aflow", "textgrad", "mipro", "bilevel"])
+    parser.add_argument("--train-benchmarks", nargs="+", choices=BENCHMARKS, default=BENCHMARKS,
+                         dest="train_benchmarks",
+                         help="Benchmarks to train on. Each is trained and evaluated against its own "
+                              "artifact and its own seed-workflow baseline.")
+    parser.add_argument("--validation_rounds", type=int, default=3,
+                         help="Validation passes per round used to rank rounds during training.")
+    parser.add_argument("--max-error-rate", type=float, default=0.02, dest="max_error_rate",
+                         help="Eval cells exceeding this execution-error rate are marked invalid.")
     parser.add_argument("--rounds", type=int, default=20)
     parser.add_argument("--n-test", type=int, default=300, dest="n_test")
     parser.add_argument("--base-dir", type=str, default="runs", dest="base_dir")
@@ -230,6 +245,8 @@ def main():
         args.seeds = [42]
         args.rounds = 2
         args.n_test = 20
+        args.train_benchmarks = args.train_benchmarks[:1]
+        args.validation_rounds = 1
         if args.base_dir == "runs":
             args.base_dir = "runs-smoke"
 
@@ -250,8 +267,10 @@ def main():
 
     stop_event, progress_thread = start_progress_thread(
         base_dir, args.seeds, args.models, args.methods, driver_started_at,
+        benchmarks=args.train_benchmarks,
     )
-    progress_cb = lambda: generate_progress_md(base_dir, args.seeds, args.models, args.methods, driver_started_at)
+    progress_cb = lambda: generate_progress_md(
+        base_dir, args.seeds, args.models, args.methods, driver_started_at, args.train_benchmarks)
 
     try:
         for seed in args.seeds:
@@ -263,7 +282,8 @@ def main():
                 sys.executable, "main.py",
                 "--seed", str(seed),
                 "--rounds", str(args.rounds),
-                "--benchmark", "gsm8k",
+                "--benchmarks", *args.train_benchmarks,
+                "--validation_rounds", str(args.validation_rounds),
                 "--models", *args.models,
                 "--method", *args.methods,
                 "--output_dir", train_dir,
@@ -285,12 +305,12 @@ def main():
                 sys.executable, "evaluate.py",
                 "--seed", str(seed),
                 "--n-test", str(args.n_test),
-                "--benchmarks", *BENCHMARKS,
+                "--benchmarks", *args.train_benchmarks,
                 "--models", *args.models,
                 "--artifacts", *ARTIFACT_NAMES,
+                "--max-error-rate", str(args.max_error_rate),
                 "--optimizer_output_dir", train_dir,
                 "--output_dir", eval_dir,
-                "--artifacts_from_output",
                 "--resume",
             ]
             eval_ok = run_stage(base_dir, seed, "eval", eval_cmd, driver_state, driver_state_path, progress_cb)

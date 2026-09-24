@@ -1,7 +1,0 @@
-{
-    "father node": 1,
-    "modification": "Added a second independent solution generation step (SOLVE_MATH_PROMPT_ALT) and an answer-extraction/comparison ensemble mechanism. If both independent solutions agree on the numerical answer, the result is returned immediately without the costly review+revise steps. If they disagree, the review prompt now receives both solutions for cross-validation, and the revise prompt includes both solutions as context. This replaces the single-path solve\u2192review\u2192revise with a dual-solve\u2192ensemble-check\u2192conditional-review\u2192revise flow.",
-    "before": 0.84,
-    "after": 0.87,
-    "succeed": true
-}

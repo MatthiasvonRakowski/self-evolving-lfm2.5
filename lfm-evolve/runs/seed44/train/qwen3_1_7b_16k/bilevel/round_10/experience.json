@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modified the SOLVE_MATH_PROMPT from a \"variable register\" (VAR[name]) approach to a \"Goal-Given-Plan-Solve-Answer\" structured approach. This fundamentally changes the reasoning pattern by forcing the model to first declare what it's solving for (GOAL), enumerate all knowns (GIVEN), plan the steps before executing (PLAN), then solve step-by-step (SOLVE), reducing errors from jumping into calculations without a clear target.",
-    "before": 0.94,
-    "after": 0.88,
-    "succeed": false
-}

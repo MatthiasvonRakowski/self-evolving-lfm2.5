@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modify SOLVE_MATH_PROMPT to emphasize careful step-by-step arithmetic with explicit intermediate calculations, and to restate the question before solving to ensure the model focuses on what's being asked. This differs from the original by adding instruction to restate the question and verify each calculation inline.",
-    "before": 0.89,
-    "after": 0.88,
-    "succeed": false
-}

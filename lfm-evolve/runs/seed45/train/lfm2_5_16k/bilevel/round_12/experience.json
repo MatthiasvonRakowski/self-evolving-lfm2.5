@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Modified SOLVE_MATH_PROMPT_B from a \"equation/variable decomposition\" approach to a \"unit tracking / dimensional analysis\" approach that explicitly labels the unit (dollars, apples, hours, etc.) at every calculation step and adds a real-world sanity check at the end. This makes Solution 2 more complementary to Solution 1's pure arithmetic approach, increasing the chance that if one solution makes an error, the other will naturally diverge (detectable by the ensemble). Also updated ENSEMBLE_PROMPT to include an explicit 4-step verification process with re-checking of arithmetic when solutions agree, making the ensemble step more actively validating rather than passively selecting.",
-    "before": 0.9,
-    "after": 0.86,
-    "succeed": false
-}

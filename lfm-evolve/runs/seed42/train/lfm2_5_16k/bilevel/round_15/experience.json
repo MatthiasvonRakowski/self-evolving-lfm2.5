@@ -1,7 +1,0 @@
-{
-    "father node": 11,
-    "modification": "Add a new step between decomposition and solving: a \"reformulation\" step that rewrites the problem with explicit warnings about common pitfalls (e.g., which group is being asked about, direction of operations). This gives the solver better-guided input, reducing initial errors before verification.",
-    "before": 0.92,
-    "after": 0.85,
-    "succeed": false
-}

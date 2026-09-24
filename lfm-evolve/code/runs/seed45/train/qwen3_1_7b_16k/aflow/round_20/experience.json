@@ -1,7 +1,0 @@
-{
-    "father node": 0,
-    "modification": "Modified SOLVE_MATH_PROMPT to use a \"first-person actor\" approach where the model adopts the perspective of the main subject in the problem and narrates events in first person with explicit arithmetic. This is fundamentally different from all prohibited approaches (no verification step, no quantity labeling, no ensemble, no sub-questions, no unit tracking, no equation chains, no worked examples, no analogical reasoning, no preprocessing, no state transitions) by grounding abstract math in concrete first-person experiential narration.",
-    "before": 0.9033333333333333,
-    "after": 0.9,
-    "succeed": false
-}

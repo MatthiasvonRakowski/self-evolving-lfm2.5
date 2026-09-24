@@ -1,7 +1,0 @@
-{
-    "father node": 6,
-    "modification": "Add a third custom step (EXTRACT_ANSWER_PROMPT) that consolidates both the initial solution and verified solution to extract the definitive final numerical answer with guaranteed proper \"#### \" formatting.",
-    "before": 0.97,
-    "after": 0.96,
-    "succeed": false
-}

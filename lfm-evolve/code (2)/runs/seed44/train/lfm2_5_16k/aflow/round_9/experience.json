@@ -1,7 +1,0 @@
-{
-    "father node": 7,
-    "modification": "Add a second independent solve step and pass both solutions to the verifier, implementing a 2-solution ensemble before verification to improve accuracy.",
-    "before": 0.9,
-    "after": 0.88,
-    "succeed": false
-}
