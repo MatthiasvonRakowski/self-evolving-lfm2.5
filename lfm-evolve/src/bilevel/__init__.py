@@ -9,9 +9,8 @@ from evoagentx.models import LiteLLM
 from src.bilevel.inner_base import (
     InnerBudget,
     apply_snapshot,
-    dev_split,
     eval_items,
-    format_error_summary,
+    inner_splits,
     list_prompt_fields,
     snapshot,
 )
@@ -29,46 +28,49 @@ async def run_inner_optimization(workflow: Callable, prompt_module: ModuleType,
                                   tmp_dir: str, round_index: int = 0) -> Tuple[dict, float]:
     field_names = list_prompt_fields(prompt_module)
     baseline_snapshot = snapshot(prompt_module, field_names)
-    tune_items, select_items = dev_split(benchmark, budget, round_index)
+    splits = inner_splits(benchmark, budget, round_index)
 
-    base_score, base_errors = await eval_items(workflow, benchmark, select_items)
-    if base_errors > budget.max_error_rate:
+    base = await eval_items(workflow, benchmark, splits.select)
+    if base.code_error_rate > budget.max_code_error_rate:
         raise BrokenWorkflowError(
-            f"workflow failed to execute on {base_errors:.0%} of the selection split "
-            f"(threshold {budget.max_error_rate:.0%}): {format_error_summary()}"
+            f"workflow raised code errors on {base.code_error_rate:.0%} of the selection split "
+            f"(threshold {budget.max_code_error_rate:.0%}): {base.describe()}"
         )
+    if base.infra_error_rate > budget.max_infra_error_rate:
+        logger.warning(f"[bilevel] too many model-server failures to compare prompt candidates "
+                       f"this round; keeping the generated prompts ({base.describe()})")
+        return baseline_snapshot, base.score
 
     if inner_mode == "none" or not field_names:
-        return baseline_snapshot, base_score
+        return baseline_snapshot, base.score
 
-    best_snapshot, best_score = baseline_snapshot, base_score
-    logger.info(f"[bilevel] inner baseline dev score: {best_score:.4f} "
-                f"(select n={len(select_items)}, tune n={len(tune_items)})")
+    best_snapshot, best_score = baseline_snapshot, base.score
+    logger.info(f"[bilevel] inner baseline: {base.describe()} "
+                f"(demo n={len(splits.demo)}, tune n={len(splits.tune)}, select n={len(splits.select)})")
 
     async def consider(name: str, candidate: dict) -> None:
         nonlocal best_snapshot, best_score
         apply_snapshot(prompt_module, candidate)
-        score, errors = await eval_items(workflow, benchmark, select_items)
-        logger.info(f"[bilevel] inner {name} candidate dev score: {score:.4f} "
-                    f"(error rate {errors:.1%})")
-        if errors > budget.max_error_rate:
-            logger.warning(f"[bilevel] rejecting {name} candidate: error rate {errors:.1%}")
-        elif score > best_score:
-            best_snapshot, best_score = candidate, score
+        result = await eval_items(workflow, benchmark, splits.select)
+        logger.info(f"[bilevel] inner {name} candidate: {result.describe()}")
+        if not result.usable(budget):
+            logger.warning(f"[bilevel] rejecting {name} candidate: {result.describe()}")
+        elif result.score > best_score:
+            best_snapshot, best_score = candidate, result.score
         apply_snapshot(prompt_module, best_snapshot)
 
     if "mipro" in inner_mode:
         candidate = run_mipro_inner(
             workflow, prompt_module, benchmark, budget, optimiser_llm,
             has_gold_answers=has_gold_answers, tmp_dir=tmp_dir,
-            tune_items=tune_items, round_index=round_index,
+            splits=splits, round_index=round_index,
         )
         await consider("MIPRO", candidate)
 
     if "textgrad" in inner_mode:
         candidate = await run_textgrad_lite_inner(
             workflow, prompt_module, benchmark, budget, optimiser_llm,
-            tune_items=tune_items, round_index=round_index,
+            splits=splits, round_index=round_index,
         )
         await consider("TextGrad-lite", candidate)
 

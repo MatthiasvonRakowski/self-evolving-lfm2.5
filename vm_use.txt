@@ -1,0 +1,70 @@
+# Zsh (optional)
+apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# python 3.12 -- optional: `uv sync` below downloads 3.12 itself when the VM lacks it (.python-version)
+sudo apt update
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt update
+sudo apt install python3.12 -y
+
+# clone the repository
+git clone https://github.com/MatthiasvonRakowski/self-evolving-lfm2.5.git
+cd self-evolving-lfm2.5
+
+# uv. pyproject.toml + uv.lock declare everything, pinned: EvoAgentX at commit f542ce4, dspy 2.6.27,
+# litellm 1.86.2 (lfm-evolve/src/common.py patches their internals and refuses to start on other
+# versions). No lm-eval (the IFEval checker is vendored in src/benchmarks/ifeval_lib) and no CUDA:
+# torch is only there because EvoAgentX imports sentence-transformers, and it is the CPU build.
+# Result: ~2 GB instead of 6.6 GB. Needs network (PyPI, GitHub, download.pytorch.org).
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.local/bin/env
+UV_PROJECT_ENVIRONMENT=lfm-evolve/.venv uv sync      # keeps the venv where the scripts expect it
+source lfm-evolve/.venv/bin/activate
+cd lfm-evolve
+python -m pytest -q tests                            # offline checks of the patches and the harness
+
+# Only if Claude is the optimiser (--optimiser-model anthropic/claude-...): lfm-evolve/.env with
+#   ANTHROPIC_API_KEY=sk-ant-...
+# The default optimiser is local, so a VM without the key is fine.
+
+# Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+# OLLAMA_MAX_LOADED_MODELS=2 keeps the optimiser and the executor loaded together instead of
+# swapping them on every call. OLLAMA_KEEP_ALIVE=-1 keeps them loaded between calls: the model
+# that loads first takes the VRAM, and a reload mid-run can leave the executor partly on the CPU
+# (8x slower on the 8 GB laptop card; run_experiment.py's preflight warns when that happens).
+# On Ubuntu the installer registers a systemd service that is already running (so `ollama serve`
+# by hand fails with "address already in use"); give the variables to the service:
+sudo mkdir -p /etc/systemd/system/ollama.service.d
+printf '[Service]\nEnvironment="OLLAMA_MAX_LOADED_MODELS=2"\nEnvironment="OLLAMA_KEEP_ALIVE=-1"\n' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+sudo systemctl daemon-reload && sudo systemctl restart ollama
+# (no systemd, e.g. a container:  export OLLAMA_MAX_LOADED_MODELS=2 OLLAMA_KEEP_ALIVE=-1 ; nohup ollama serve > /dev/null 2>&1 & )
+ollama ps                                            # must answer; shows what is loaded and CPU/GPU split
+
+# executors (the Modelfiles raise num_ctx to 16k; Ollama's default would truncate long prompts)
+ollama pull sam860/lfm2.5:1.2b
+ollama create lfm2.5-16k -f Modelfile
+ollama pull qwen3:1.7b
+ollama create qwen3-1.7b-16k -f Modelfile.qwen3-1.7b-16k
+
+# local optimiser (replaces Claude): deepseek-coder-v2 16B with an 8k context.
+ollama pull deepseek-coder-v2:16b
+# The committed Modelfile puts only 15 layers on the GPU so that the executor still fits next to it
+# on the 8 GB laptop card. On a VM GPU with >= 16 GB drop that line: everything on the GPU, same name
+# (so the default --optimiser-model works unchanged).
+grep -v num_gpu Modelfile.deepseek-coder-v2-16b-8k > /tmp/Modelfile.optimiser
+ollama create deepseek-coder-v2-16b-8k -f /tmp/Modelfile.optimiser
+# (8 GB card: ollama create deepseek-coder-v2-16b-8k -f Modelfile.deepseek-coder-v2-16b-8k)
+
+# Start tmux session (the runs take hours; tmux survives the ssh session)
+tmux new -s baseline
+tmux attach -t baseline
+######## Run the command in tmux (from lfm-evolve/, venv active)
+python run_experiment.py --smoke --models lfm2.5-16k                      # sanity run -> runs_smoke/
+python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
+    --methods aflow mipro bilevel --train-benchmarks gsm8k --rounds 16 \
+    --skip-internal-test --base-dir runs
+# follow it from another tmux window:  python tui.py --base-dir runs   (or: cat runs/PROGRESS.md)
+# results: runs/FINAL_RESULTS.md ; re-running the same command resumes finished cells

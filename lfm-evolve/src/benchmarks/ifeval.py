@@ -6,7 +6,7 @@ import numpy as np
 from evoagentx.benchmark.benchmark import Benchmark
 from evoagentx.core.logging import logger
 
-from lm_eval.tasks.ifeval.utils import (
+from src.benchmarks.ifeval_lib.utils import (
     InputExample,
     test_instruction_following_loose,
     test_instruction_following_strict,

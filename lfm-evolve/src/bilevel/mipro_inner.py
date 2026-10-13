@@ -11,7 +11,15 @@ from evoagentx.optimizers import MiproOptimizer
 from evoagentx.optimizers.engine.registry import OptimizableField
 from evoagentx.utils.mipro_utils.register_utils import MiproRegistry
 
-from src.bilevel.inner_base import InnerBudget, capped_view, list_prompt_fields, run_async, snapshot
+from src.bilevel.inner_base import (
+    InnerBudget,
+    InnerSplits,
+    apply_snapshot,
+    capped_view,
+    list_prompt_fields,
+    run_async,
+    snapshot,
+)
 
 class InnerMiproError(RuntimeError):
     pass
@@ -43,11 +51,12 @@ class WorkflowPromptProgram:
 
 def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Benchmark,
                      budget: InnerBudget, optimiser_llm: LiteLLM, has_gold_answers: bool,
-                     tmp_dir: str, tune_items: list = None,
+                     tmp_dir: str, splits: InnerSplits,
                      round_index: int = 0) -> Dict[str, str]:
     field_names = list_prompt_fields(prompt_module)
     if not field_names:
         return {}
+    starting_prompts = snapshot(prompt_module, field_names)
 
     program = WorkflowPromptProgram(workflow, prompt_module, field_names)
     registry = MiproRegistry()
@@ -58,7 +67,7 @@ def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Be
             setter=lambda value, n=name: setattr(prompt_module, n, value),
         ))
 
-    inner_benchmark = capped_view(benchmark, tune_items or [], budget, round_index)
+    inner_benchmark = capped_view(benchmark, splits.demo, splits.tune)
     os.makedirs(tmp_dir, exist_ok=True)
 
     try:
@@ -72,6 +81,7 @@ def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Be
             eval_rounds=1,
             num_candidates=budget.mipro_candidates,
             max_steps=budget.mipro_steps,
+            minibatch_size=min(35, len(splits.tune)),
             auto=None,
             save_path=tmp_dir,
             requires_permission_to_run=False,
@@ -85,6 +95,7 @@ def run_mipro_inner(workflow: Callable, prompt_module: ModuleType, benchmark: Be
             exc_info=True,
         )
         _MIPRO_FAILURES.append(f"round {round_index}: {type(e).__name__}: {e}")
+        apply_snapshot(prompt_module, starting_prompts)
 
     return snapshot(prompt_module, field_names)
 

@@ -1,0 +1,4 @@
+FROM deepseek-coder-v2:16b
+PARAMETER num_ctx 8192
+# Leave ~2 GB of the 8 GB card for the executor (lfm2.5-16k needs 1.5 GB) so both stay loaded.
+PARAMETER num_gpu 15

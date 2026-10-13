@@ -10,8 +10,8 @@ from evoagentx.core.logging import logger
 LETTERS = "ABCDEFGHIJ"
 
 ANSWER_PATTERNS = [
-    re.compile(r"answer is \(?([A-J])\)?", re.IGNORECASE),
-    re.compile(r"[Aa]nswer:?\s*\**\(?([A-J])\)?"),
+    re.compile(r"(?i:answer\s+is):?\s*\**\(?([A-J])\)?(?![A-Za-z])"),
+    re.compile(r"[Aa]nswer:?\s*\**\(?([A-J])\)?(?![A-Za-z])"),
     re.compile(r"\(([A-J])\)\s*\.?\s*$"),
     re.compile(r"^\s*\**\(?([A-J])\)?\**\s*\.?\s*$", re.MULTILINE),
 ]

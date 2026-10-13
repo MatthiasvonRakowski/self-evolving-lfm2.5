@@ -58,13 +58,18 @@ class BilevelOptimiser(Optimiser):
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
                  graph_path: str = None, benchmark: str = "gsm8k",
                  inner: str = "mipro+textgrad", inner_budget: InnerBudget = None,
-                 validation_rounds: int = 3):
+                 validation_rounds: int = 3, check_convergence: bool = True,
+                 internal_test: bool = True):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.benchmark_name = benchmark
         self.graph_path = graph_path or f"src/aflow_workflow/{benchmark}"
         self.inner = inner
         self.inner_budget = inner_budget or InnerBudget(seed=seed if seed is not None else 42)
         self.validation_rounds = validation_rounds
+        # See AFlowOptimiser for both: `rounds` is a maximum unless check_convergence is off, and
+        # the internal test pass duplicates what evaluate.py does on the same split.
+        self.check_convergence = check_convergence
+        self.internal_test = internal_test
 
     def run(self):
         print(f"Running Bilevel Optimiser on {self.benchmark_name} (inner={self.inner}) ...")
@@ -81,6 +86,7 @@ class BilevelOptimiser(Optimiser):
             executor_llm=executor_llm,
             validation_rounds=self.validation_rounds,
             max_rounds=self.rounds,
+            check_convergence=self.check_convergence,
             question_type=QUESTION_TYPE[self.benchmark_name],
             operators=["Custom"],
             bilevel_inner_mode=self.inner,
@@ -97,4 +103,7 @@ class BilevelOptimiser(Optimiser):
             print(f"!!! inner MIPRO search failed on {failures} round(s); "
                   f"those rounds ran with TextGrad-lite only")
 
-        optimizer.test(benchmark)
+        if self.internal_test:
+            optimizer.test(benchmark)
+        else:
+            print("Skipping AFlow's own test pass (evaluate.py scores the selected round).")

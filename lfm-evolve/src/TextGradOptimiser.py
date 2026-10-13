@@ -55,11 +55,15 @@ def collate_func(example: dict) -> dict:
 class TextGradOptimiser(Optimiser):
     def __init__(self, seed: int, rounds: int, output_dir: Path,
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
-                 num_workers: int = 1, batch_size: int = 3, benchmark: str = "gsm8k"):
+                 num_workers: int = 1, batch_size: int = 3, benchmark: str = "gsm8k",
+                 internal_test: bool = True):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.num_workers = num_workers
         self.batch_size = batch_size
         self.benchmark_name = benchmark
+        # The before/after passes over the 300 test questions run single-threaded and only print a
+        # number; evaluate.py scores the saved graph (and the baseline) on the same split.
+        self.internal_test = internal_test
 
     def run(self):
         print(f"Running TextGrad Optimiser on {self.benchmark_name} ...")
@@ -98,10 +102,14 @@ class TextGradOptimiser(Optimiser):
             rollback=True,
             constraints=[],
         )
-        results_before = optimizer.evaluate(dataset=benchmark, eval_mode="test")
-        print(f"Before optimization: {results_before}")
+        if self.internal_test:
+            results_before = optimizer.evaluate(dataset=benchmark, eval_mode="test")
+            print(f"Before optimization: {results_before}")
 
         optimizer.optimize(dataset=benchmark, use_answers=use_answers)
 
-        results_after = optimizer.evaluate(dataset=benchmark, eval_mode="test")
-        print(f"After optimization: {results_after}")
+        if self.internal_test:
+            results_after = optimizer.evaluate(dataset=benchmark, eval_mode="test")
+            print(f"After optimization: {results_after}")
+        else:
+            print("Skipping TextGrad's own test passes (evaluate.py scores the saved graph).")

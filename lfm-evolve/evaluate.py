@@ -1,5 +1,4 @@
 from src.common import (
-    PromptPlaceholderError,
     executor_config,
     fill_prompt_template,
     model_label,
@@ -15,15 +14,15 @@ import os
 import re
 import sys
 import time
+import traceback
 import types
 from collections import defaultdict
 from pathlib import Path
-from typing import Callable, List, Optional
+from typing import Awaitable, Callable, List, Optional
 
 from evoagentx.agents import AgentManager
-from evoagentx.evaluators import Evaluator
 from evoagentx.models import LiteLLM
-from evoagentx.workflow import SequentialWorkFlowGraph
+from evoagentx.workflow import SequentialWorkFlowGraph, WorkFlow, WorkFlowGraph
 
 from src.benchmarks import BENCHMARK_NAMES, get_benchmark
 
@@ -32,19 +31,6 @@ ARTIFACT_NAMES = ["baseline", "aflow", "textgrad", "mipro", "bilevel"]
 ERROR_PREFIX = "<error:"
 
 DEFAULT_MAX_ERROR_RATE = 0.02
-
-LEGACY_ARTIFACT_PATHS = {
-    "lfm2_5_16k": {
-        "aflow": "results/lfm-results/aflow-results/workflows/good_run/aflow/round_22",
-        "textgrad": "results/lfm-results/textgrad-results/workflows/tg_all/textgrad/GSM8KSplits_textgrad_best.json",
-        "mipro": "results/lfm-results/mipro-results/workflows/mipro1/mipro/best_program.json",
-    },
-    "qwen3_1_7b": {
-        "aflow": "results/comparaison-results/qwen3_1_7b/aflow/round_7",
-        "textgrad": "results/comparaison-results/qwen3_1_7b/textgrad/GSM8KSplits_textgrad_best.json",
-        "mipro": "results/comparaison-results/qwen3_1_7b/mipro/best_program.json",
-    },
-}
 
 def load_aflow_artifact(round_dir) -> Callable:
     round_dir = Path(round_dir)
@@ -94,9 +80,11 @@ def resolve_round_dir(base: Path) -> Optional[Path]:
     round_dir = base / f"round_{best_round}"
     return round_dir if round_dir.exists() else None
 
-async def run_workflow_class(workflow_cls: Callable, benchmark, executor_llm: LiteLLM,
-                              concurrency: int) -> List[dict]:
-    workflow = workflow_cls(name=benchmark.name, llm_config=executor_llm.config, benchmark=benchmark)
+# ---------------------------------------------------------------------------------------------
+# Predictors. Each artifact kind becomes an `async predict(problem) -> str`; run_predictions turns
+# every exception into an error record, so a crash can never be scored as an answer.
+
+async def run_predictions(predict: Callable[[str], Awaitable[str]], benchmark, concurrency: int) -> List[dict]:
     data = benchmark.get_test_data()
     semaphore = asyncio.Semaphore(concurrency)
     records = [None] * len(data)
@@ -105,65 +93,65 @@ async def run_workflow_class(workflow_cls: Callable, benchmark, executor_llm: Li
         async with semaphore:
             failed = False
             try:
-                prediction = await workflow(example["problem"])
+                prediction = await predict(example["problem"])
             except Exception as e:
                 prediction = f"{ERROR_PREFIX} {e}>"
                 failed = True
-            metrics = benchmark.evaluate(prediction, benchmark.get_label(example))
             records[i] = {
                 "id": benchmark.get_id(example),
                 "prediction": prediction,
-                "metrics": metrics,
+                "metrics": benchmark.evaluate(prediction, benchmark.get_label(example)),
                 "execution_error": failed,
             }
 
     await asyncio.gather(*(run_one(i, ex) for i, ex in enumerate(data)))
     return records
 
-async def run_mipro_predictor(prompt_template: str, benchmark, executor_llm: LiteLLM,
-                               concurrency: int) -> List[dict]:
-    data = benchmark.get_test_data()
-    semaphore = asyncio.Semaphore(concurrency)
-    records = [None] * len(data)
+def workflow_class_predictor(workflow_cls: Callable, benchmark, executor_llm: LiteLLM):
+    # AFlow-style Workflow instances are `async def __call__(self, problem)`.
+    return workflow_cls(name=benchmark.name, llm_config=executor_llm.config, benchmark=benchmark)
 
-    async def run_one(i, example):
-        async with semaphore:
-            problem = example["problem"]
-            failed = False
-            try:
-                filled = fill_prompt_template(prompt_template, problem)
-                response = await executor_llm.async_generate(prompt=filled, parse_mode="str")
-                prediction = response.content
-            except Exception as e:
-                prediction = f"{ERROR_PREFIX} {e}>"
-                failed = True
-            metrics = benchmark.evaluate(prediction, benchmark.get_label(example))
-            records[i] = {
-                "id": benchmark.get_id(example),
-                "prediction": prediction,
-                "metrics": metrics,
-                "execution_error": failed,
-            }
+def mipro_predictor(prompt_template: str, executor_llm: LiteLLM):
+    async def predict(problem: str) -> str:
+        response = await executor_llm.async_generate(
+            prompt=fill_prompt_template(prompt_template, problem), parse_mode="str")
+        return response.content
+    return predict
 
-    await asyncio.gather(*(run_one(i, ex) for i, ex in enumerate(data)))
-    return records
-
-def run_textgrad_predictor(path: str, benchmark, executor_llm: LiteLLM, concurrency: int) -> List[dict]:
+def textgrad_predictor(path: str, executor_llm: LiteLLM):
+    # Same execution path as EvoAgentX's Evaluator, which TextGrad optimised against: a fresh graph
+    # copy and agent manager per example, so concurrent examples never share node state.
     graph = SequentialWorkFlowGraph.from_file(path)
     agent_manager = AgentManager()
     agent_manager.add_agents_from_workflow(graph, executor_llm.config)
-    evaluator = Evaluator(
-        llm=executor_llm,
-        agent_manager=agent_manager,
-        collate_func=lambda example: {"problem": example["problem"]},
-        num_workers=concurrency,
-        verbose=True,
-    )
-    evaluator.evaluate(graph=graph, benchmark=benchmark, eval_mode="test")
-    return [
-        {"id": example_id, "prediction": rec["prediction"], "metrics": rec["metrics"]}
-        for example_id, rec in evaluator._evaluation_records.items()
-    ]
+
+    async def predict(problem: str) -> str:
+        graph_copy = WorkFlowGraph(goal=graph.goal, graph=graph)
+        graph_copy.reset_graph()
+        local_manager = AgentManager(agents=agent_manager.agents, storage_handler=agent_manager.storage_handler)
+        workflow = WorkFlow(llm=executor_llm, graph=graph_copy, agent_manager=local_manager)
+        return await workflow.async_execute(inputs={"problem": problem})
+    return predict
+
+def is_error_record(record: dict) -> bool:
+    if record.get("execution_error"):
+        return True
+    prediction = record.get("prediction")
+    return isinstance(prediction, str) and prediction.startswith(ERROR_PREFIX)
+
+def summarise_records(records: List[dict], main_metric: Optional[str]) -> dict:
+    present = [r for r in records if r]
+    scores = [r["metrics"].get(main_metric, 0.0) for r in present] if main_metric else []
+    n_errors = sum(1 for r in present if is_error_record(r))
+    return {
+        "mean_score": sum(scores) / len(scores) if scores else 0.0,
+        "n_errors": n_errors,
+        "error_rate": n_errors / len(present) if present else 1.0,
+        "parse_failures": sum(1 for r in present if r["metrics"].get("parse_failed")),
+    }
+
+# ---------------------------------------------------------------------------------------------
+# Artifact resolution.
 
 def training_benchmark(benchmark_name: str, args) -> str:
     return getattr(args, "trained_on", None) or benchmark_name
@@ -181,19 +169,16 @@ def resolve_artifact_source(artifact: str, benchmark_name: str, label: str, args
         return "src.aflow_workflow." + training_benchmark(benchmark_name, args)
 
     base = artifact_base_dir(artifact, benchmark_name, label, args)
-    if artifact in ("aflow", "bilevel") or getattr(args, "artifacts_from_output", True):
-        if artifact in ("aflow", "bilevel"):
-            round_dir = resolve_round_dir(base)
-            return str(round_dir) if round_dir else None
-        if artifact == "textgrad":
-            matches = sorted(base.glob("*_textgrad_best.json"))
-            if not matches:
-                matches = sorted(base.glob("*_textgrad_final.json"))
-            return str(matches[0]) if matches else None
-        if artifact == "mipro":
-            path = base / "best_program.json"
-            return str(path) if path.exists() else None
-    return LEGACY_ARTIFACT_PATHS.get(label, {}).get(artifact)
+    if artifact in ("aflow", "bilevel"):
+        round_dir = resolve_round_dir(base)
+        return str(round_dir) if round_dir else None
+    if artifact == "textgrad":
+        matches = sorted(base.glob("*_textgrad_best.json")) or sorted(base.glob("*_textgrad_final.json"))
+        return str(matches[0]) if matches else None
+    if artifact == "mipro":
+        path = base / "best_program.json"
+        return str(path) if path.exists() else None
+    raise ValueError(f"Unknown artifact: {artifact}")
 
 async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Optional[dict]:
     label = model_label(model)
@@ -207,28 +192,19 @@ async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Opti
     trained_on = training_benchmark(benchmark_name, args)
 
     if artifact == "baseline":
-        workflow_cls = load_baseline_workflow_class(trained_on)
-        records = await run_workflow_class(workflow_cls, benchmark, executor_llm, args.concurrency)
+        predict = workflow_class_predictor(load_baseline_workflow_class(trained_on), benchmark, executor_llm)
     elif artifact in ("aflow", "bilevel"):
-        workflow_cls = load_aflow_artifact(source)
-        records = await run_workflow_class(workflow_cls, benchmark, executor_llm, args.concurrency)
+        predict = workflow_class_predictor(load_aflow_artifact(source), benchmark, executor_llm)
     elif artifact == "mipro":
         with open(source) as f:
-            prompt_template = json.load(f)["prompt"]
-        records = await run_mipro_predictor(prompt_template, benchmark, executor_llm, args.concurrency)
+            predict = mipro_predictor(json.load(f)["prompt"], executor_llm)
     elif artifact == "textgrad":
-        records = run_textgrad_predictor(source, benchmark, executor_llm, args.concurrency)
+        predict = textgrad_predictor(source, executor_llm)
     else:
         raise ValueError(f"Unknown artifact: {artifact}")
 
+    records = await run_predictions(predict, benchmark, args.concurrency)
     main_metric = getattr(benchmark, "MAIN_METRIC", None)
-    scores = [r["metrics"].get(main_metric, 0.0) for r in records if r] if main_metric else []
-    mean_score = sum(scores) / len(scores) if scores else 0.0
-
-    present = [r for r in records if r]
-    n_errors = sum(1 for r in present if _is_error_record(r))
-    error_rate = n_errors / len(present) if present else 1.0
-    parse_failures = sum(1 for r in present if r["metrics"].get("parse_failed"))
 
     return {
         "benchmark": benchmark_name,
@@ -240,18 +216,9 @@ async def run_cell(benchmark_name: str, model: str, artifact: str, args) -> Opti
         "artifact_source": str(source),
         "n": len(records),
         "main_metric": main_metric,
-        "mean_score": mean_score,
-        "n_errors": n_errors,
-        "error_rate": error_rate,
-        "parse_failures": parse_failures,
+        **summarise_records(records, main_metric),
         "records": records,
     }
-
-def _is_error_record(record: dict) -> bool:
-    if record.get("execution_error"):
-        return True
-    prediction = record.get("prediction")
-    return isinstance(prediction, str) and prediction.startswith(ERROR_PREFIX)
 
 def save_json_atomic(path, payload):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
@@ -313,42 +280,7 @@ def write_summary_md(summary: dict, path: str):
     with open(path, "w") as f:
         f.write("\n".join(lines))
 
-def main():
-    parser = argparse.ArgumentParser(description="Cross-benchmark evaluation of optimizer artifacts.")
-    parser.add_argument("--benchmarks", nargs="+", choices=BENCHMARK_NAMES, default=BENCHMARK_NAMES)
-    parser.add_argument("--models", nargs="+", default=[None],
-                         help="Ollama model names, e.g. 'lfm2.5-16k' 'qwen3:1.7b'.")
-    parser.add_argument("--artifacts", nargs="+", choices=ARTIFACT_NAMES, default=ARTIFACT_NAMES)
-    parser.add_argument("--n-test", type=int, default=300, dest="n_test")
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--concurrency", type=int, default=6,
-                         help="Max concurrent local-model calls (keep local to avoid overwhelming Ollama).")
-    parser.add_argument("--output_dir", type=str, default="eval-results")
-    parser.add_argument("--optimizer_output_dir", type=str, default="output",
-                         help="Where main.py wrote optimizer runs. Artifacts are resolved from "
-                              "<optimizer_output_dir>/<benchmark>/<model_label>/<artifact>/, falling "
-                              "back to the older <optimizer_output_dir>/<model_label>/<artifact>/ layout.")
-    parser.add_argument("--trained-on", type=str, default=None, dest="trained_on",
-                         choices=BENCHMARK_NAMES,
-                         help="Benchmark the artifacts were trained on, when it differs from the one "
-                              "being evaluated. Marks those cells as transfer and scores 'baseline' "
-                              "with the same benchmark's seed workflow, so the comparison stays fair.")
-    parser.add_argument("--max-error-rate", type=float, default=DEFAULT_MAX_ERROR_RATE,
-                         dest="max_error_rate",
-                         help="Cells where more than this fraction of examples raised an execution "
-                              "error are marked 'invalid' instead of 'success'.")
-    parser.add_argument("--artifacts_from_output", action="store_true", default=True,
-                         dest="artifacts_from_output",
-                         help="Accepted for compatibility; resolving artifacts from "
-                              "--optimizer_output_dir is now the default.")
-    parser.add_argument("--legacy_artifact_paths", action="store_false",
-                         dest="artifacts_from_output",
-                         help="Fall back to the hardcoded LEGACY_ARTIFACT_PATHS (artifacts from a "
-                              "different, older experiment) when nothing is found in "
-                              "--optimizer_output_dir.")
-    parser.add_argument("--resume", action="store_true", help="Skip cells already marked 'success'.")
-    args = parser.parse_args()
-
+async def evaluate_all(args):
     summary_path = os.path.join(args.output_dir, "eval_summary.json")
     summary = {}
     if os.path.exists(summary_path):
@@ -374,9 +306,8 @@ def main():
                 started_at = datetime.datetime.now().isoformat(timespec="seconds")
                 t0 = time.time()
                 try:
-                    result = asyncio.run(run_cell(benchmark_name, model, artifact, args))
+                    result = await run_cell(benchmark_name, model, artifact, args)
                 except Exception as e:
-                    import traceback
                     print(f"!!! FAILED: {e}")
                     summary[benchmark_name][label][artifact] = {
                         "status": "failed", "error": str(e),
@@ -431,6 +362,37 @@ def main():
     write_summary_md(summary, os.path.join(args.output_dir, "summary.md"))
     print(f"\nDone. Summary: {summary_path}")
     print(f"Table: {os.path.join(args.output_dir, 'summary.md')}")
+
+def main():
+    parser = argparse.ArgumentParser(description="Cross-benchmark evaluation of optimizer artifacts.")
+    parser.add_argument("--benchmarks", nargs="+", choices=BENCHMARK_NAMES, default=BENCHMARK_NAMES)
+    parser.add_argument("--models", nargs="+", default=[None],
+                         help="Ollama model names, e.g. 'lfm2.5-16k' 'qwen3:1.7b'.")
+    parser.add_argument("--artifacts", nargs="+", choices=ARTIFACT_NAMES, default=ARTIFACT_NAMES)
+    parser.add_argument("--n-test", type=int, default=300, dest="n_test")
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--concurrency", type=int, default=6,
+                         help="Max concurrent local-model calls (keep local to avoid overwhelming Ollama).")
+    parser.add_argument("--output_dir", type=str, default="eval-results")
+    parser.add_argument("--optimizer_output_dir", type=str, default="output",
+                         help="Where main.py wrote optimizer runs. Artifacts are resolved from "
+                              "<optimizer_output_dir>/<benchmark>/<model_label>/<artifact>/, falling "
+                              "back to the older <optimizer_output_dir>/<model_label>/<artifact>/ layout.")
+    parser.add_argument("--trained-on", type=str, default=None, dest="trained_on",
+                         choices=BENCHMARK_NAMES,
+                         help="Benchmark the artifacts were trained on, when it differs from the one "
+                              "being evaluated. Marks those cells as transfer and scores 'baseline' "
+                              "with the same benchmark's seed workflow, so the comparison stays fair.")
+    parser.add_argument("--max-error-rate", type=float, default=DEFAULT_MAX_ERROR_RATE,
+                         dest="max_error_rate",
+                         help="Cells where more than this fraction of examples raised an execution "
+                              "error are marked 'invalid' instead of 'success'.")
+    parser.add_argument("--resume", action="store_true", help="Skip cells already marked 'success'.")
+    args = parser.parse_args()
+
+    # One event loop for the whole run: litellm caches its HTTP clients per loop, and a loop per cell
+    # left them to be closed from the wrong loop ("attached to a different loop" noise in the logs).
+    asyncio.run(evaluate_all(args))
 
 if __name__ == "__main__":
     main()

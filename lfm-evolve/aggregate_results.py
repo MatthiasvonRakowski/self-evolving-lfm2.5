@@ -4,10 +4,20 @@ import csv
 import glob
 import json
 import os
+import math
 import statistics
 from collections import defaultdict
 
+import numpy as np
+
 ARTIFACT_ORDER = ["baseline", "aflow", "textgrad", "mipro", "bilevel"]
+
+COMPARISONS = [
+    ("aflow", "baseline"), ("textgrad", "baseline"), ("mipro", "baseline"), ("bilevel", "baseline"),
+    ("bilevel", "aflow"), ("bilevel", "mipro"), ("bilevel", "textgrad"),
+]
+
+N_BOOTSTRAP = 10_000
 
 def load_json(path, default=None):
     if os.path.exists(path):
@@ -42,6 +52,89 @@ def mean_std(values):
     mean = sum(values) / n
     std = statistics.stdev(values) if n > 1 else 0.0
     return mean, std, n
+
+def load_cell_scores(base_dir, seed, benchmark, model, artifact):
+    path = os.path.join(base_dir, f"seed{seed}", "eval", benchmark, model, f"{artifact}.json")
+    data = load_json(path, {})
+    metric = data.get("main_metric")
+    if not metric or not data.get("records"):
+        return {}
+    scores = {}
+    for record in data["records"]:
+        if not record or record.get("execution_error"):
+            continue
+        scores[str(record["id"])] = float(record["metrics"].get(metric, 0.0))
+    return scores
+
+def bootstrap_ci(values, rng):
+    values = np.asarray(values, dtype=float)
+    if len(values) == 0:
+        return None, None
+    idx = rng.integers(0, len(values), size=(N_BOOTSTRAP, len(values)))
+    means = values[idx].mean(axis=1)
+    return float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))
+
+def mcnemar_exact(a, b):
+    only_a = int(np.sum((a == 1) & (b == 0)))
+    only_b = int(np.sum((a == 0) & (b == 1)))
+    n = only_a + only_b
+    if n == 0:
+        return 1.0
+    tail = sum(math.comb(n, i) for i in range(min(only_a, only_b) + 1)) / 2 ** n
+    return min(1.0, 2 * tail)
+
+def sign_flip_test(diff, rng):
+    observed = abs(diff.mean())
+    signs = rng.choice([-1.0, 1.0], size=(N_BOOTSTRAP, len(diff)))
+    flipped = np.abs((signs * diff).mean(axis=1))
+    return float((np.sum(flipped >= observed - 1e-12) + 1) / (N_BOOTSTRAP + 1))
+
+def holm(p_values):
+    order = sorted(range(len(p_values)), key=lambda i: p_values[i])
+    adjusted = [0.0] * len(p_values)
+    running = 0.0
+    for rank, i in enumerate(order):
+        running = max(running, min(1.0, (len(p_values) - rank) * p_values[i]))
+        adjusted[i] = running
+    return adjusted
+
+def paired_statistics(base_dir, eval_rows):
+    rng = np.random.default_rng(0)
+    cells = defaultdict(set)
+    for row in eval_rows:
+        cells[(row["seed"], row["benchmark"], row["model"])].add(row["artifact"])
+
+    cell_cis = {}
+    comparisons = []
+    for (seed, benchmark, model), artifacts in sorted(cells.items()):
+        scores = {a: load_cell_scores(base_dir, seed, benchmark, model, a) for a in artifacts}
+        for artifact, by_id in scores.items():
+            cell_cis[(seed, benchmark, model, artifact)] = bootstrap_ci(list(by_id.values()), rng)
+
+        family = []
+        for method, reference in COMPARISONS:
+            if not scores.get(method) or not scores.get(reference):
+                continue
+            ids = sorted(set(scores[method]) & set(scores[reference]))
+            if not ids:
+                continue
+            a = np.array([scores[method][i] for i in ids])
+            b = np.array([scores[reference][i] for i in ids])
+            diff = a - b
+            binary = set(np.unique(np.concatenate([a, b]))) <= {0.0, 1.0}
+            family.append({
+                "seed": seed, "benchmark": benchmark, "model": model,
+                "method": method, "reference": reference, "n_pairs": len(ids),
+                "method_score": float(a.mean()), "reference_score": float(b.mean()),
+                "diff": float(diff.mean()),
+                "diff_ci": bootstrap_ci(diff, rng),
+                "test": "McNemar exact" if binary else "paired sign-flip",
+                "p_value": mcnemar_exact(a, b) if binary else sign_flip_test(diff, rng),
+            })
+        for row, adjusted in zip(family, holm([r["p_value"] for r in family])):
+            row["p_holm"] = adjusted
+        comparisons.extend(family)
+    return cell_cis, comparisons
 
 def collect(base_dir):
     seeds = discover_seeds(base_dir)
@@ -119,7 +212,9 @@ def _iter_train_benchmarks(train_summary):
         else:
             yield None, {key: value}
 
-def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=()):
+def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=(),
+                           cell_cis=None, comparisons=()):
+    cell_cis = cell_cis or {}
     score_groups = defaultdict(list)
     for row in eval_rows:
         score_groups[(row["benchmark"], row["model"], row["artifact"])].append((row["seed"], row["score"]))
@@ -160,9 +255,32 @@ def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=()):
                 values = score_groups.get((benchmark, model, artifact), [])
                 scores = [s for _, s in values if s is not None]
                 mean, std, k = mean_std(scores)
-                row.append("-" if k == 0 else f"{mean:.4f} ± {std:.4f} (n={k})")
+                if k == 0:
+                    row.append("-")
+                elif k == 1:
+                    low, high = cell_cis.get((values[0][0], benchmark, model, artifact), (None, None))
+                    ci = f" [{low:.3f}, {high:.3f}]" if low is not None else ""
+                    row.append(f"{mean:.4f}{ci}")
+                else:
+                    row.append(f"{mean:.4f} ± {std:.4f} (n={k})")
             lines.append("| " + " | ".join(row) + " |")
         lines.append("")
+
+        bench_comparisons = [c for c in comparisons if c["benchmark"] == benchmark]
+        if bench_comparisons:
+            lines.append("Paired comparisons (same test examples; p-values Holm-corrected within "
+                         "each seed x model):")
+            lines.append("")
+            lines.append("| seed | model | comparison | n pairs | difference [95% CI] | test | p | p (Holm) |")
+            lines.append("|---|---|---|---|---|---|---|---|")
+            for c in bench_comparisons:
+                low, high = c["diff_ci"]
+                marker = " *" if c["p_holm"] < 0.05 else ""
+                lines.append(
+                    f"| {c['seed']} | {c['model']} | {c['method']} vs {c['reference']} "
+                    f"| {c['n_pairs']} | {c['diff']:+.4f} [{low:+.3f}, {high:+.3f}] "
+                    f"| {c['test']} | {c['p_value']:.4f} | {c['p_holm']:.4f}{marker} |")
+            lines.append("")
 
         lines.append("<details><summary>Per-seed values</summary>")
         lines.append("")
@@ -177,14 +295,14 @@ def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=()):
         lines.append("</details>")
         lines.append("")
 
-    lines.append("## Training time & Claude cost (per model x method, across available seeds)")
+    lines.append("## Training time & API cost (per model x method, across available seeds; $0 with a local optimiser)")
     lines.append("")
     train_groups = defaultdict(list)
     for row in train_rows:
         train_groups[(row["model"], row["method"])].append(row)
     models_t = sorted({m for (m, _) in train_groups})
     methods_t = sorted({meth for (_, meth) in train_groups})
-    lines.append("| model | method | seeds (k) | mean elapsed | total elapsed | mean claude cost | total claude cost |")
+    lines.append("| model | method | seeds (k) | mean elapsed | total elapsed | mean API cost | total API cost |")
     lines.append("|---|---|---|---|---|---|---|")
     grand_elapsed = 0.0
     grand_cost = 0.0
@@ -206,13 +324,13 @@ def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=()):
             )
     lines.append("")
     lines.append(f"**Grand totals:** training wall time {grand_elapsed / 3600:.2f} h, "
-                  f"Claude cost ${grand_cost:.2f}")
+                  f"API cost ${grand_cost:.2f}")
     lines.append("")
 
     with open(path, "w") as f:
         f.write("\n".join(lines))
 
-def write_json_csv(base_dir, seeds, eval_rows, train_rows, invalid_rows=()):
+def write_json_csv(base_dir, seeds, eval_rows, train_rows, invalid_rows=(), comparisons=()):
     train_index = {}
     for r in train_rows:
         train_index[(r["seed"], r.get("benchmark"), r["model"], r["method"])] = r
@@ -248,6 +366,7 @@ def write_json_csv(base_dir, seeds, eval_rows, train_rows, invalid_rows=()):
         "eval_rows": eval_rows,
         "train_rows": train_rows,
         "invalid_rows": list(invalid_rows),
+        "paired_comparisons": list(comparisons),
         "csv_rows": csv_rows,
     })
 
@@ -270,9 +389,10 @@ def main():
         print(f"No seed* directories found under {args.base_dir}; nothing to aggregate.")
         return
 
+    cell_cis, comparisons = paired_statistics(args.base_dir, eval_rows)
     write_final_results_md(os.path.join(args.base_dir, "FINAL_RESULTS.md"), seeds,
-                           eval_rows, train_rows, invalid_rows)
-    write_json_csv(args.base_dir, seeds, eval_rows, train_rows, invalid_rows)
+                           eval_rows, train_rows, invalid_rows, cell_cis, comparisons)
+    write_json_csv(args.base_dir, seeds, eval_rows, train_rows, invalid_rows, comparisons)
 
     if invalid_rows:
         print(f"  !! {len(invalid_rows)} cell(s) excluded as invalid (execution errors)")

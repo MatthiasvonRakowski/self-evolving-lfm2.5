@@ -2,7 +2,8 @@ from src.common import (
     resolve_model_id,
     executor_config,
     model_label,
-    claude_config,
+    optimiser_config,
+    DEFAULT_OPTIMISER_MODEL,
     tee_to_file,
     summarize_usage,
 )
@@ -27,10 +28,12 @@ def build_method(method, args, model, out_dir, benchmark):
             rounds=args.rounds,
             output_dir=os.path.join(out_dir, "aflow"),
             executor_config=exec_cfg,
-            optimiser_config=claude_config(),
+            optimiser_config=optimiser_config(args.optimiser_model),
             graph_path=args.graph_path,
             benchmark=benchmark,
             validation_rounds=args.validation_rounds,
+            check_convergence=not args.fixed_rounds,
+            internal_test=not args.skip_internal_test,
         )
     if method == "textgrad":
         return TextGradOptimiser(
@@ -38,8 +41,9 @@ def build_method(method, args, model, out_dir, benchmark):
             rounds=args.rounds,
             output_dir=os.path.join(out_dir, "textgrad"),
             executor_config=exec_cfg,
-            optimiser_config=claude_config(),
+            optimiser_config=optimiser_config(args.optimiser_model),
             benchmark=benchmark,
+            internal_test=not args.skip_internal_test,
         )
     if method == "mipro":
         return MiproOptimiser(
@@ -47,8 +51,9 @@ def build_method(method, args, model, out_dir, benchmark):
             rounds=args.rounds,
             output_dir=os.path.join(out_dir, "mipro"),
             executor_config=exec_cfg,
-            optimiser_config=claude_config(),
+            optimiser_config=optimiser_config(args.optimiser_model),
             benchmark=benchmark,
+            internal_test=not args.skip_internal_test,
         )
     if method == "bilevel":
         return BilevelOptimiser(
@@ -56,16 +61,19 @@ def build_method(method, args, model, out_dir, benchmark):
             rounds=args.rounds,
             output_dir=os.path.join(out_dir, "bilevel"),
             executor_config=exec_cfg,
-            optimiser_config=claude_config(),
+            optimiser_config=optimiser_config(args.optimiser_model),
             graph_path=args.graph_path,
             benchmark=benchmark,
             inner=args.inner,
             validation_rounds=args.validation_rounds,
+            check_convergence=not args.fixed_rounds,
+            internal_test=not args.skip_internal_test,
             inner_budget=InnerBudget(
                 mipro_candidates=args.inner_mipro_candidates,
                 mipro_steps=args.inner_mipro_steps,
                 tg_steps=args.inner_tg_steps,
-                dev_eval_k=args.dev_eval_k,
+                tune_k=args.inner_tune_k,
+                select_k=args.inner_select_k,
                 seed=args.seed if args.seed is not None else 42,
             ),
         )
@@ -80,6 +88,18 @@ def load_summary(path):
             pass
     return {}
 
+def mark_interrupted(summary):
+    """A cell still 'running' when main.py starts belonged to a process that died; record that."""
+    for benchmark, by_label in summary.items():
+        if benchmark == "_meta" or not isinstance(by_label, dict):
+            continue
+        for cells in by_label.values():
+            if not isinstance(cells, dict):
+                continue
+            for cell in cells.values():
+                if isinstance(cell, dict) and cell.get("status") == "running":
+                    cell["status"] = "interrupted"
+
 def save_summary(path, summary):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     tmp = path + ".tmp"
@@ -90,7 +110,11 @@ def save_summary(path, summary):
 def main():
     argparser = argparse.ArgumentParser(description="Run optimisers on benchmarks.")
     argparser.add_argument("--seed", type=int, default=None, help="Random seed for reproducibility.")
-    argparser.add_argument("--rounds", type=int, default=None, help="Number of optimization rounds to run.")
+    argparser.add_argument(
+        "--rounds", type=int, default=20,
+        help="AFlow/bilevel: maximum number of rounds -- EvoAgentX stops earlier once the validation "
+             "score has converged unless --fixed_rounds is given. TextGrad/MIPRO: number of steps.",
+    )
     argparser.add_argument("--output_dir", type=str, default="output", help="Directory to save optimization results.")
     argparser.add_argument(
         "--graph_path", type=str, default=None,
@@ -107,7 +131,7 @@ def main():
     argparser.add_argument(
         "--method", nargs="+",
         choices=["aflow", "textgrad", "mipro", "bilevel"],
-        default=["aflow", "textgrad", "mipro"],
+        default=["aflow", "textgrad", "mipro", "bilevel"],
         help="Optimiser(s) to run. Can specify multiple.",
     )
     argparser.add_argument(
@@ -123,9 +147,24 @@ def main():
              "is picked from a single noisy dev pass over up to --rounds candidates.",
     )
     argparser.add_argument(
+        "--fixed_rounds", action="store_true",
+        help="[aflow/bilevel] Run exactly --rounds rounds instead of stopping on convergence.",
+    )
+    argparser.add_argument(
+        "--skip_internal_test", action="store_true",
+        help="Skip each optimiser's own pass over the 300 test questions (AFlow/bilevel: eval_rounds "
+             "passes over the selected round; MIPRO: one; TextGrad: before and after). evaluate.py "
+             "scores every artifact on the same split anyway, so these only cost executor time.",
+    )
+    argparser.add_argument(
         "--inner", choices=["mipro", "textgrad", "mipro+textgrad", "none"],
         default="mipro+textgrad",
         help="[bilevel] Inner prompt optimiser(s) run on each candidate workflow.",
+    )
+    argparser.add_argument(
+        "--optimiser_model", type=str, default=DEFAULT_OPTIMISER_MODEL,
+        help="Model that rewrites workflows and prompts. A local Ollama model by default; "
+             "an 'anthropic/...' name uses Claude instead (needs ANTHROPIC_API_KEY).",
     )
     argparser.add_argument("--inner_mipro_candidates", type=int, default=4,
                            help="[bilevel] MIPRO instruction candidates per inner run.")
@@ -133,8 +172,11 @@ def main():
                            help="[bilevel] MIPRO optimisation steps per inner run.")
     argparser.add_argument("--inner_tg_steps", type=int, default=2,
                            help="[bilevel] TextGrad-lite refinement steps per inner run.")
-    argparser.add_argument("--dev_eval_k", type=int, default=40,
-                           help="[bilevel] Dev-subsample size used to score inner candidates.")
+    argparser.add_argument("--inner_tune_k", type=int, default=80,
+                           help="[bilevel] Train examples drawn per round; half supply MIPRO demos and "
+                                "TextGrad critiques, half score candidates during tuning.")
+    argparser.add_argument("--inner_select_k", type=int, default=100,
+                           help="[bilevel] Dev examples used to accept or reject inner candidates.")
     argparser.add_argument(
         "--resume", action="store_true",
         help="Skip model+method combinations already marked 'success' in run_summary.json.",
@@ -148,6 +190,7 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     summary_path = os.path.join(args.output_dir, "run_summary.json")
     summary = load_summary(summary_path)
+    mark_interrupted(summary)
     summary["_meta"] = {
         "models": [resolve_model_id(m) for m in args.models],
         "methods": args.method,
@@ -155,6 +198,7 @@ def main():
         "seed": args.seed,
         "rounds": args.rounds,
         "validation_rounds": args.validation_rounds,
+        "optimiser_model": args.optimiser_model,
         "last_launch": datetime.datetime.now().isoformat(timespec="seconds"),
     }
     save_summary(summary_path, summary)
@@ -162,6 +206,7 @@ def main():
     print(f"\n=== Batch run ===")
     print(f"Models     : {[resolve_model_id(m) for m in args.models]}")
     print(f"Methods    : {args.method}")
+    print(f"Optimiser  : {args.optimiser_model}")
     print(f"Benchmarks : {args.benchmarks}")
     print(f"Output     : {args.output_dir}/<benchmark>/<model>/<method>/")
     print(f"Resume     : {args.resume} | Stop on error: {args.stop_on_error}\n")

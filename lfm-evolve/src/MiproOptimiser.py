@@ -62,9 +62,12 @@ class MiproOptimiser(Optimiser):
 
     def __init__(self, seed: int, rounds: int, output_dir: Path,
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
-                 benchmark: str = "gsm8k"):
+                 benchmark: str = "gsm8k", internal_test: bool = True):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.benchmark_name = benchmark
+        # MIPRO's own pass over the 300 test questions (single-threaded) only feeds the
+        # "not comparable" internal metric; evaluate.py scores best_program.json on the same split.
+        self.internal_test = internal_test
 
     def run(self):
         print(f"Running MIPRO Optimiser on {self.benchmark_name} ...")
@@ -103,11 +106,15 @@ class MiproOptimiser(Optimiser):
         optimizer.optimize(dataset=benchmark)
         optimizer.restore_best_program()
 
-        print("Evaluating after optimization...")
-        with suppress_logger_info():
-            results_after = optimizer.evaluate(dataset=benchmark, eval_mode="test")
-        print(f"After optimization (MIPRO-internal metric, not comparable to "
-              f"evaluate.py scores): {results_after}")
+        results_after = None
+        if self.internal_test:
+            print("Evaluating after optimization...")
+            with suppress_logger_info():
+                results_after = optimizer.evaluate(dataset=benchmark, eval_mode="test")
+            print(f"After optimization (MIPRO-internal metric, not comparable to "
+                  f"evaluate.py scores): {results_after}")
+        else:
+            print("Skipping MIPRO's own test pass (evaluate.py scores best_program.json).")
 
         if program.placeholder_failures:
             print(f"!!! {program.placeholder_failures} call(s) had no usable problem "

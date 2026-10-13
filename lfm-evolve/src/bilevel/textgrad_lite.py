@@ -10,15 +10,14 @@ from evoagentx.benchmark.benchmark import Benchmark
 from evoagentx.core.logging import logger
 from evoagentx.models import LiteLLM
 
-from src.bilevel.inner_base import InnerBudget, eval_items, list_prompt_fields
+from src.bilevel.inner_base import InnerBudget, InnerSplits, eval_items, is_infra_error, list_prompt_fields
 
-def sample_train_batch(benchmark: Benchmark, k: int, seed, round_index: int, step: int) -> List[dict]:
-    train = benchmark._train_data or benchmark._dev_data or []
-    if not train:
+def sample_batch(items: List[dict], k: int, seed, round_index: int, step: int) -> List[dict]:
+    if not items:
         return []
     rng = np.random.default_rng([seed, round_index, step])
-    idx = rng.permutation(len(train))[:min(k, len(train))]
-    return [train[i] for i in idx]
+    idx = rng.permutation(len(items))[:min(k, len(items))]
+    return [items[i] for i in idx]
 
 def _parse_json_object(text: str) -> dict:
     try:
@@ -60,18 +59,17 @@ async def _critique_and_revise(optimiser_llm: LiteLLM, current_prompts: Dict[str
 
 async def run_textgrad_lite_inner(workflow: Callable, prompt_module: ModuleType,
                                    benchmark: Benchmark, budget: InnerBudget,
-                                   optimiser_llm: LiteLLM, tune_items: List[dict] = None,
+                                   optimiser_llm: LiteLLM, splits: InnerSplits,
                                    round_index: int = 0) -> Dict[str, str]:
     field_names = list_prompt_fields(prompt_module)
     if not field_names:
         return {}
     metric_key = getattr(benchmark, "MAIN_METRIC", None)
-    accept_items = tune_items or []
     best = {name: getattr(prompt_module, name) for name in field_names}
-    best_score, _ = await eval_items(workflow, benchmark, accept_items)
+    best_result = await eval_items(workflow, benchmark, splits.tune)
 
     for step in range(budget.tg_steps):
-        batch = sample_train_batch(benchmark, 8, budget.seed, round_index, step)
+        batch = sample_batch(splits.demo, 8, budget.seed, round_index, step)
         if not batch:
             break
 
@@ -85,13 +83,13 @@ async def run_textgrad_lite_inner(workflow: Callable, prompt_module: ModuleType,
                 transcripts.append({"problem": example["problem"], "prediction": prediction, "score": score})
             except Exception as e:
                 crashes += 1
-                logger.warning(f"TextGrad-lite: workflow raised on a training example: {e}")
+                kind = "model-server" if is_infra_error(e) else "code"
+                logger.warning(f"TextGrad-lite: {kind} error on a training example: {e}")
 
         if crashes:
             logger.warning(
-                f"TextGrad-lite: {crashes}/{len(batch)} training examples raised an "
-                "execution error; these are code faults, not prompt faults, and are "
-                "excluded from the critique."
+                f"TextGrad-lite: {crashes}/{len(batch)} training examples raised an error; "
+                "these are not prompt faults and are excluded from the critique."
             )
         if not transcripts:
             break
@@ -110,13 +108,14 @@ async def run_textgrad_lite_inner(workflow: Callable, prompt_module: ModuleType,
 
         for name, value in candidate.items():
             setattr(prompt_module, name, value)
-        score, errors = await eval_items(workflow, benchmark, accept_items)
-        if errors <= budget.max_error_rate and score > best_score:
-            logger.info(f"TextGrad-lite: step {step} accepted ({best_score:.4f} -> {score:.4f})")
-            best, best_score = candidate, score
+        result = await eval_items(workflow, benchmark, splits.tune)
+        if result.usable(budget) and result.score > best_result.score:
+            logger.info(f"TextGrad-lite: step {step} accepted "
+                        f"({best_result.score:.4f} -> {result.score:.4f})")
+            best, best_result = candidate, result
         else:
-            logger.info(f"TextGrad-lite: step {step} rejected ({score:.4f} vs {best_score:.4f}, "
-                        f"error rate {errors:.1%})")
+            logger.info(f"TextGrad-lite: step {step} rejected ({result.describe()}; "
+                        f"best {best_result.score:.4f})")
             for name, value in best.items():
                 setattr(prompt_module, name, value)
 

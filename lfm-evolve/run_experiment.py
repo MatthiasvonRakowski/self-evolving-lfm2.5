@@ -1,11 +1,16 @@
 
-from src.common import model_label, resolve_model_id
+from src.common import (
+    DEFAULT_OPTIMISER_MODEL, OPTIMISER_MODELFILE, executor_config, is_anthropic_model, model_label, ollama_name,
+    optimiser_config,
+)
 
 import argparse
 import datetime
 import json
 import os
+import re
 import shutil
+import signal
 import subprocess
 import sys
 import threading
@@ -31,36 +36,67 @@ def save_json_atomic(path, payload):
         json.dump(payload, f, indent=2, default=str)
     os.replace(tmp, path)
 
-def preflight(models, base_dir):
+def ollama_placement(names):
+    """{name: PROCESSOR column of `ollama ps`} for the loaded models in `names`, e.g. '100% GPU'."""
+    try:
+        out = subprocess.run(["ollama", "ps"], capture_output=True, text=True, timeout=30).stdout
+    except Exception:
+        return {}
+    placement = {}
+    for line in out.splitlines()[1:]:
+        fields = line.split()
+        where = re.search(r"\d+%(?:/\d+%)?\s+(?:CPU/GPU|GPU|CPU)", line)
+        if fields and where and fields[0].split(":")[0] in names:
+            placement[fields[0].split(":")[0]] = where.group(0)
+    return placement
+
+def preflight(models, base_dir, optimiser_model, benchmarks):
     print("\n=== Preflight checks ===")
     ok = True
+    from evoagentx.models import LiteLLM
 
-    try:
-        import litellm
-        resp = litellm.completion(
-            model="anthropic/claude-sonnet-4-6",
-            messages=[{"role": "user", "content": "ping"}],
-            max_tokens=4,
-        )
-        print(f"  [ok] Anthropic API key valid (ping: {resp.choices[0].message.content!r})")
-    except Exception as e:
-        print(f"  [FAIL] Anthropic API ping failed: {e}")
-        ok = False
-
+    # Executors first, on purpose: Ollama gives the VRAM to whichever model loads first. With the
+    # 16B optimiser loaded first on the 8 GB card, the executor got 5 of its 17 layers on the GPU and
+    # ran at 12 tokens/s instead of 146 (2026-10-13: 29 min instead of 3.5 min per 100 dev problems).
+    executors = [ollama_name(m) for m in models]
     for model in models:
-        bare = model.split("/")[-1]
+        bare = ollama_name(model)
         try:
             result = subprocess.run(["ollama", "show", bare], capture_output=True, text=True, timeout=30)
             if result.returncode != 0:
                 print(f"  [FAIL] ollama model not available: {bare}\n{result.stderr.strip()}")
                 ok = False
-            else:
-                print(f"  [ok] ollama model present: {bare}")
+                continue
+            reply = LiteLLM(config=executor_config(model)).generate(
+                prompt="Reply with the single word: ready", parse_mode="str").content
+            print(f"  [ok] executor {bare} answers (reply: {reply.strip()[:40]!r})")
         except Exception as e:
-            print(f"  [FAIL] ollama show {bare} failed: {e}")
+            print(f"  [FAIL] executor {bare} does not answer: {e}")
             ok = False
 
-    for name in BENCHMARKS:
+    try:
+        reply = LiteLLM(config=optimiser_config(optimiser_model)).generate(
+            prompt="Reply with the single word: ready", parse_mode="str").content
+        where = "Anthropic API" if is_anthropic_model(optimiser_model) else "local Ollama"
+        print(f"  [ok] optimiser {optimiser_model} answers via {where} (reply: {reply.strip()[:40]!r})")
+    except Exception as e:
+        hint = ("" if is_anthropic_model(optimiser_model) else
+                f" -- the default optimiser is built with: ollama pull deepseek-coder-v2:16b && "
+                f"ollama create {DEFAULT_OPTIMISER_MODEL} -f {OPTIMISER_MODELFILE}")
+        print(f"  [FAIL] optimiser {optimiser_model} does not answer: {e}{hint}")
+        ok = False
+
+    loaded = executors + ([] if is_anthropic_model(optimiser_model) else [ollama_name(optimiser_model)])
+    for name, where in ollama_placement(loaded).items():
+        if where == "100% GPU" or name not in executors:
+            print(f"  [ok] {name} is loaded {where}")
+        else:
+            print(f"  [WARN] executor {name} is loaded {where}: the optimiser took the VRAM first, expect the "
+                  f"run to be several times slower. Unload both (ollama stop {ollama_name(optimiser_model)}; "
+                  f"ollama stop {name}) and start again so the executor loads first; OLLAMA_KEEP_ALIVE=-1 in "
+                  f"the Ollama service keeps the placement for the whole run.")
+
+    for name in benchmarks:
         try:
             from src.benchmarks import get_benchmark
             get_benchmark(name, seed=42)
@@ -140,7 +176,7 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at, be
         lines.append(f"- Live log: `tail -f {log_path}`")
     lines.append("")
 
-    lines.append("## Training (status / elapsed / Claude cost)")
+    lines.append("## Training (status / elapsed / API cost; $0 with a local optimiser)")
     lines.append("")
     lines.append("| seed | benchmark | model | " + " | ".join(methods) + " |")
     lines.append("|---" * (3 + len(methods)) + "|")
@@ -170,14 +206,16 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at, be
                 lines.append("| " + " | ".join(row) + " |")
     lines.append("")
     lines.append(f"**Totals so far:** training wall time {total_train_sec / 3600:.1f}h, "
-                  f"Claude cost ${total_claude_cost:.2f}")
+                  f"API cost ${total_claude_cost:.2f}")
     lines.append("")
 
     lines.append("## Evaluation (cells done / total, failures)")
     lines.append("")
     lines.append("| seed | done | invalid | failed | total |")
     lines.append("|---|---|---|---|---|")
-    total_expected = len(benchmarks) * len(models) * len(ARTIFACT_NAMES)
+    # evaluate.py is only asked for the baseline plus the requested methods (see eval_cmd below).
+    artifacts = [a for a in ARTIFACT_NAMES if a == "baseline" or a in methods]
+    total_expected = len(benchmarks) * len(models) * len(artifacts)
     for seed in seeds:
         eval_summary = load_json(os.path.join(base_dir, f"seed{seed}", "eval", "eval_summary.json"), {})
         done = failed = invalid = 0
@@ -231,14 +269,34 @@ def main():
                          help="Validation passes per round used to rank rounds during training.")
     parser.add_argument("--max-error-rate", type=float, default=0.02, dest="max_error_rate",
                          help="Eval cells exceeding this execution-error rate are marked invalid.")
-    parser.add_argument("--rounds", type=int, default=20)
+    parser.add_argument("--rounds", type=int, default=20,
+                         help="AFlow/bilevel: maximum rounds (EvoAgentX stops earlier on convergence unless "
+                              "--fixed-rounds). TextGrad/MIPRO: number of steps.")
+    parser.add_argument("--fixed-rounds", action="store_true", dest="fixed_rounds",
+                         help="[aflow/bilevel] Run exactly --rounds rounds; no convergence stop.")
+    parser.add_argument("--skip-internal-test", action="store_true", dest="skip_internal_test",
+                         help="Skip each optimiser's own pass over the test questions; evaluate.py scores "
+                              "every artifact on the same split anyway. Always on for --smoke.")
     parser.add_argument("--n-test", type=int, default=300, dest="n_test")
     parser.add_argument("--base-dir", type=str, default="runs", dest="base_dir")
     parser.add_argument("--smoke", action="store_true",
                          help="Tiny end-to-end sanity run: seed 42 only, --rounds 2, --n-test 20, "
-                              "base-dir runs-smoke, cheap bilevel inner budget.")
+                              "base-dir runs_smoke, cheap bilevel inner budget.")
     parser.add_argument("--skip-preflight", action="store_true", dest="skip_preflight")
     parser.add_argument("--stop-on-error", action="store_true", dest="stop_on_error")
+    parser.add_argument("--optimiser-model", default=DEFAULT_OPTIMISER_MODEL, dest="optimiser_model",
+                         help="Model that rewrites workflows and prompts: a local Ollama model by default, "
+                              "or 'anthropic/...' for Claude.")
+    parser.add_argument("--inner", choices=["mipro", "textgrad", "mipro+textgrad", "none"], default=None,
+                         help="[bilevel] Inner prompt optimiser(s); main.py's default when omitted.")
+    for flag, help_text in [("mipro-candidates", "MIPRO instruction candidates per inner run"),
+                            ("mipro-steps", "MIPRO optimisation steps per inner run"),
+                            ("tg-steps", "TextGrad-lite refinement steps per inner run"),
+                            ("tune-k", "train examples drawn per round for inner tuning"),
+                            ("select-k", "dev examples used to accept or reject inner candidates")]:
+        parser.add_argument(f"--inner-{flag}", type=int, default=None,
+                            dest="inner_" + flag.replace("-", "_"),
+                            help=f"[bilevel] {help_text}; main.py's default when omitted.")
     args = parser.parse_args()
 
     if args.smoke:
@@ -247,22 +305,49 @@ def main():
         args.n_test = 20
         args.train_benchmarks = args.train_benchmarks[:1]
         args.validation_rounds = 1
+        args.skip_internal_test = True
         if args.base_dir == "runs":
-            args.base_dir = "runs-smoke"
+            args.base_dir = "runs_smoke"
 
     base_dir = args.base_dir
     os.makedirs(base_dir, exist_ok=True)
 
-    if not args.skip_preflight:
-        if not preflight(args.models, base_dir):
-            print("Preflight failed -- aborting (pass --skip-preflight to override).")
-            sys.exit(1)
-
+    # pid + state let tui.py follow the run and tell a live run from a dead one.
     driver_state_path = os.path.join(base_dir, "driver_state.json")
     driver_state = load_json(driver_state_path, {})
     driver_started_at = driver_state.get("started_at") or datetime.datetime.now().isoformat(timespec="seconds")
-    driver_state["started_at"] = driver_started_at
-    driver_state["args"] = vars(args)
+    driver_state.update(started_at=driver_started_at, args=vars(args), pid=os.getpid(),
+                        state="preflight", ended_at=None,
+                        launched_at=datetime.datetime.now().isoformat(timespec="seconds"))
+    save_json_atomic(driver_state_path, driver_state)
+    signal.signal(signal.SIGTERM, stop_on_sigterm)
+
+    try:
+        state = run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at)
+    except KeyboardInterrupt:
+        state = "stopped"
+    except BaseException:
+        driver_state.update(state="failed", ended_at=datetime.datetime.now().isoformat(timespec="seconds"))
+        save_json_atomic(driver_state_path, driver_state)
+        raise
+    driver_state.update(state=state, current=None,
+                        ended_at=datetime.datetime.now().isoformat(timespec="seconds"))
+    save_json_atomic(driver_state_path, driver_state)
+    if state == "stopped":
+        sys.exit(130)
+    if state == "preflight_failed":
+        sys.exit(1)
+
+def stop_on_sigterm(signum, frame):
+    # tui.py stops a run with SIGTERM to the process group; unwind so driver_state ends as "stopped".
+    raise KeyboardInterrupt
+
+def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at):
+    if not args.skip_preflight:
+        if not preflight(args.models, base_dir, args.optimiser_model, args.train_benchmarks):
+            print("Preflight failed -- aborting (pass --skip-preflight to override).")
+            return "preflight_failed"
+    driver_state["state"] = "running"
     save_json_atomic(driver_state_path, driver_state)
 
     stop_event, progress_thread = start_progress_thread(
@@ -279,7 +364,8 @@ def main():
             eval_dir = os.path.join(seed_dir, "eval")
 
             train_cmd = [
-                sys.executable, "main.py",
+                # -u: the child writes into a pipe, which Python block-buffers; logs would lag behind the run.
+                sys.executable, "-u", "main.py",
                 "--seed", str(seed),
                 "--rounds", str(args.rounds),
                 "--benchmarks", *args.train_benchmarks,
@@ -287,27 +373,36 @@ def main():
                 "--models", *args.models,
                 "--method", *args.methods,
                 "--output_dir", train_dir,
+                "--optimiser_model", args.optimiser_model,
                 "--resume",
             ]
+            inner_budget = {}
             if args.smoke:
-                train_cmd += [
-                    "--inner_mipro_candidates", "1",
-                    "--inner_mipro_steps", "1",
-                    "--inner_tg_steps", "1",
-                    "--dev_eval_k", "3",
-                ]
+                inner_budget = {"mipro_candidates": 1, "mipro_steps": 1, "tg_steps": 1,
+                                "tune_k": 6, "select_k": 3}
+            for key in ("mipro_candidates", "mipro_steps", "tg_steps", "tune_k", "select_k"):
+                if getattr(args, "inner_" + key) is not None:
+                    inner_budget[key] = getattr(args, "inner_" + key)
+            for key, value in inner_budget.items():
+                train_cmd += [f"--inner_{key}", str(value)]
+            if args.inner:
+                train_cmd += ["--inner", args.inner]
+            if args.fixed_rounds:
+                train_cmd.append("--fixed_rounds")
+            if args.skip_internal_test:
+                train_cmd.append("--skip_internal_test")
             train_ok = run_stage(base_dir, seed, "train", train_cmd, driver_state, driver_state_path, progress_cb)
             if not train_ok and args.stop_on_error:
                 print("--- --stop-on-error set: aborting after train failure ---")
                 break
 
             eval_cmd = [
-                sys.executable, "evaluate.py",
+                sys.executable, "-u", "evaluate.py",
                 "--seed", str(seed),
                 "--n-test", str(args.n_test),
                 "--benchmarks", *args.train_benchmarks,
                 "--models", *args.models,
-                "--artifacts", *ARTIFACT_NAMES,
+                "--artifacts", *[a for a in ARTIFACT_NAMES if a == "baseline" or a in args.methods],
                 "--max-error-rate", str(args.max_error_rate),
                 "--optimizer_output_dir", train_dir,
                 "--output_dir", eval_dir,
@@ -324,6 +419,7 @@ def main():
     print("\n=== All seeds finished; running aggregator ===")
     agg_cmd = [sys.executable, "aggregate_results.py", "--base-dir", base_dir]
     subprocess.run(agg_cmd)
+    return "done"
 
 if __name__ == "__main__":
     main()

@@ -8,11 +8,17 @@ class AFlowOptimiser(Optimiser):
     def __init__(self, seed: int, rounds: int, output_dir: Path,
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
                  graph_path: str = None, benchmark: str = "gsm8k",
-                 validation_rounds: int = 3):
+                 validation_rounds: int = 3, check_convergence: bool = True,
+                 internal_test: bool = True):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.benchmark_name = benchmark
         self.graph_path = graph_path or f"src/aflow_workflow/{benchmark}"
         self.validation_rounds = validation_rounds
+        # EvoAgentX stops early once the validation score has converged; `rounds` is then a maximum.
+        self.check_convergence = check_convergence
+        # AFlow's own test pass scores the selected round on the test split (eval_rounds x 300 calls).
+        # evaluate.py does the same on the same split, so it is optional.
+        self.internal_test = internal_test
 
     def run(self):
         print(f"Running AFlow Optimiser on {self.benchmark_name} ...")
@@ -29,6 +35,7 @@ class AFlowOptimiser(Optimiser):
             executor_llm=executor_llm,
             validation_rounds=self.validation_rounds,
             max_rounds=self.rounds,
+            check_convergence=self.check_convergence,
             question_type=QUESTION_TYPE[self.benchmark_name],
             operators=["Custom"],
         )
@@ -37,4 +44,7 @@ class AFlowOptimiser(Optimiser):
         best_round = write_best_round(self.output_dir, optimizer)
         print(f"Best round (validation only): {best_round}")
 
-        optimizer.test(benchmark)
+        if self.internal_test:
+            optimizer.test(benchmark)
+        else:
+            print("Skipping AFlow's own test pass (evaluate.py scores the selected round).")

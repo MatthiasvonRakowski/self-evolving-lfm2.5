@@ -1,0 +1,68 @@
+[project]
+name = "self-evolving-lfm2-5"
+version = "0.1.0"
+description = "Workflow/prompt optimisers (AFlow, TextGrad, MIPRO, bilevel) on small local LLMs served by Ollama"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # lfm-evolve/src/common.py patches internals of these three and refuses to start on other
+    # versions (check_pinned_internals). EvoAgentX itself is pinned to a commit in [tool.uv.sources].
+    # optimizers = dspy + textgrad; benchmarks = sympy/scipy/nltk, imported by evoagentx.benchmark.
+    "evoagentx[optimizers,benchmarks]",
+    "dspy==2.6.27",
+    "litellm==1.86.2",
+    "textgrad==0.1.8",
+    "numpy>=1.26.4",
+    "python-dotenv>=1.0",
+    "loguru>=0.7.3",
+    # IFEval / MMLU-Pro download (src.common.hf_load_dataset)
+    "datasets>=3.4",
+    "huggingface-hub>=0.30",
+    # vendored IFEval checker (lfm-evolve/src/benchmarks/ifeval_lib) -- replaces lm-eval, which
+    # dragged in a CUDA build of torch and ~5 GB of NVIDIA libraries for four pure-Python files
+    "langdetect>=1.0.9",
+    "immutabledict>=4.3.1",
+    "nltk>=3.9.1",
+    "packaging",
+    # Everything below is imported at module level by EvoAgentX f542ce4 (agents -> memory -> rag,
+    # workflow -> tools), although it declares them only as extras or, for several, not at all.
+    # None of it is used by this project; it just has to be importable. Found by importing
+    # evoagentx in an empty venv and adding packages until it loaded.
+    "llama-index-core",
+    "llama-index-vector-stores-faiss",
+    "llama-index-graph-stores-neo4j",
+    "llama-index-embeddings-azure-openai",
+    "faiss-cpu>=1.9",                 # 1.8.x (EvoAgentX's own pin) needs numpy<2; pyarrow needs numpy>=2
+    "sentence-transformers",          # the reason torch is here at all
+    "torch",                          # listed so [tool.uv.sources] can pin it to the CPU index (sources only apply to direct deps)
+    "voyageai",
+    "ollama",
+    "docker",
+    "html2text",
+    "googlesearch-python",
+    "ddgs",
+    "wikipedia",
+    "selenium",
+    "fastmcp",
+    "telethon",
+    "PyPDF2",
+    "google-api-python-client",
+    "google-auth-oauthlib",
+    "pymongo",
+    "psycopg2-binary",
+    "feedparser",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+# torch is only needed because EvoAgentX imports sentence-transformers; the CPU wheel (~700 MB)
+# replaces the default CUDA build plus its NVIDIA libraries (~5 GB). Nothing here runs on torch.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+evoagentx = { git = "https://github.com/EvoAgentX/EvoAgentX.git", rev = "f542ce4e0151166549975b4e15d7c7e4ca312af3" }
+torch = { index = "pytorch-cpu" }
