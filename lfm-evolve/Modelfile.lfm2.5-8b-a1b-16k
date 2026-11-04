@@ -1,0 +1,3 @@
+# LFM2.5-8B-A1B: LFM2 MoE hybrid, 8B total / 1B active (non-transformer); ~8.5 GB at Q8_0
+FROM lfm2.5:8b-a1b-q8_0
+PARAMETER num_ctx 16384

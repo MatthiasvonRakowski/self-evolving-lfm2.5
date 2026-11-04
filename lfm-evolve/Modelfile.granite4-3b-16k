@@ -1,0 +1,3 @@
+# IBM Granite 4.0 Micro 3B: decoder-only transformer twin of granite4-3b-h-16k, Q8_0 (2.1 GB)
+FROM granite4:3b
+PARAMETER num_ctx 16384

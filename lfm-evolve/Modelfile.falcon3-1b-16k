@@ -1,0 +1,3 @@
+# TII Falcon3 1B Instruct: decoder-only transformer, same vendor as Falcon-H1 (transformer control), Q8_0
+FROM falcon3:1b-instruct-q8_0
+PARAMETER num_ctx 16384

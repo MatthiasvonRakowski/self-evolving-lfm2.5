@@ -1,0 +1,5 @@
+# Recommended optimiser on a card with >= 40 GB: Qwen3-Coder 30B-A3B (MoE, 3B active, no thinking mode), 19 GB at Q4_K_M.
+# KV cache ~3 GB per 32k slot: with OLLAMA_NUM_PARALLEL=8 that is ~24 GB, so serve it from its own Ollama
+# instance with fewer slots (LFM_OPTIMISER_API_BASE, see vm_use.txt) or lower the slots.
+FROM qwen3-coder:30b
+PARAMETER num_ctx 32768

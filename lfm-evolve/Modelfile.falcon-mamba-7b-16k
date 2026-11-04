@@ -1,0 +1,3 @@
+# TII Falcon-Mamba 7B Instruct: pure Mamba SSM, no attention (non-transformer); community GGUF, q4_0
+FROM Hudson/falcon-mamba-instruct:7b-q4_0
+PARAMETER num_ctx 16384

@@ -1,3 +1,4 @@
+from src.summary_io import read_json as read_summary, set_cell
 from src.common import (
     executor_config,
     fill_prompt_template,
@@ -282,13 +283,13 @@ def write_summary_md(summary: dict, path: str):
 
 async def evaluate_all(args):
     summary_path = os.path.join(args.output_dir, "eval_summary.json")
-    summary = {}
-    if os.path.exists(summary_path):
-        try:
-            with open(summary_path) as f:
-                summary = json.load(f)
-        except Exception:
-            summary = {}
+    # Shared with any other evaluate.py working on the same seed (one per executor model under
+    # run_experiment.py --per-model): every write patches only this process's cell.
+    summary = read_summary(summary_path)
+
+    def record(benchmark_name, label, artifact, cell):
+        summary.setdefault(benchmark_name, {}).setdefault(label, {})[artifact] = cell
+        set_cell(summary_path, [benchmark_name, label, artifact], cell)
 
     for benchmark_name in args.benchmarks:
         summary.setdefault(benchmark_name, {})
@@ -309,22 +310,20 @@ async def evaluate_all(args):
                     result = await run_cell(benchmark_name, model, artifact, args)
                 except Exception as e:
                     print(f"!!! FAILED: {e}")
-                    summary[benchmark_name][label][artifact] = {
+                    record(benchmark_name, label, artifact, {
                         "status": "failed", "error": str(e),
                         "traceback": traceback.format_exc(),
                         "started_at": started_at,
                         "elapsed_sec": round(time.time() - t0, 1),
-                    }
-                    save_json_atomic(summary_path, summary)
+                    })
                     continue
 
                 if result is None:
-                    summary[benchmark_name][label][artifact] = {
+                    record(benchmark_name, label, artifact, {
                         "status": "unavailable",
                         "started_at": started_at,
                         "elapsed_sec": round(time.time() - t0, 1),
-                    }
-                    save_json_atomic(summary_path, summary)
+                    })
                     continue
 
                 save_json_atomic(cell_path, result)
@@ -350,8 +349,7 @@ async def evaluate_all(args):
                         f"({result['error_rate']:.1%}) failed to execute; "
                         f"threshold is {args.max_error_rate:.1%}"
                     )
-                summary[benchmark_name][label][artifact] = cell
-                save_json_atomic(summary_path, summary)
+                record(benchmark_name, label, artifact, cell)
                 if invalid:
                     print(f"  !! INVALID: {cell['invalid_reason']} "
                           f"(raw mean {result['mean_score']:.4f} is not a usable score)")
@@ -359,7 +357,8 @@ async def evaluate_all(args):
                     print(f"  -> mean {result['main_metric']}: {result['mean_score']:.4f}  "
                           f"(n={result['n']}, errors {result['error_rate']:.1%})")
 
-    write_summary_md(summary, os.path.join(args.output_dir, "summary.md"))
+    # Re-read so the table also shows cells another process wrote meanwhile.
+    write_summary_md(read_summary(summary_path) or summary, os.path.join(args.output_dir, "summary.md"))
     print(f"\nDone. Summary: {summary_path}")
     print(f"Table: {os.path.join(args.output_dir, 'summary.md')}")
 

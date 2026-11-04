@@ -1,0 +1,3 @@
+# IBM Granite 4.0 H-350M: Mamba-2 + attention hybrid (non-transformer), Q8_0; twin of granite4-350m-16k
+FROM granite4:350m-h-q8_0
+PARAMETER num_ctx 16384

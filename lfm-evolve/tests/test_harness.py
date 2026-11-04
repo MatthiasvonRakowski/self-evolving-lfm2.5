@@ -232,3 +232,27 @@ def test_litellm_async_logging_handler_is_dropped_not_scheduled():
     GLOBAL_LOGGING_WORKER.ensure_initialized_and_enqueue(async_coroutine=coro)  # stock: needs a running loop
     assert coro.cr_frame is None                                                 # closed, nothing left pending
     assert GLOBAL_LOGGING_WORKER._worker_task is None
+
+# ---------------------------------------------------------------------------------------------
+# run_experiment.py --per-model runs one main.py / evaluate.py per executor model on the same seed, so
+# run_summary.json and eval_summary.json have several writers. src/summary_io.py patches one cell
+# under an inter-process lock instead of dumping a whole in-memory copy (which lost the other
+# processes' cells).
+
+def _summary_writer(args):
+    path, label, n = args
+    from src.summary_io import set_cell
+    for i in range(n):
+        set_cell(path, ["gsm8k", label, f"method{i}"], {"status": "success", "i": i})
+
+def test_summary_cells_survive_concurrent_writers(tmp_path):
+    import json
+    import multiprocessing
+    path = str(tmp_path / "run_summary.json")
+    labels = [f"model{k}" for k in range(4)]
+    with multiprocessing.get_context("fork").Pool(4) as pool:
+        pool.map(_summary_writer, [(path, label, 25) for label in labels])
+    data = json.load(open(path))
+    assert sorted(data["gsm8k"]) == labels
+    assert all(len(data["gsm8k"][label]) == 25 for label in labels)
+    assert not [name for name in tmp_path.iterdir() if ".tmp." in name.name]

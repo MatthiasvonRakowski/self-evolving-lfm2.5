@@ -1,0 +1,3 @@
+# IBM Granite 4.0 H-Tiny: Mamba-2 + attention hybrid MoE, 7B total / 1B active (non-transformer), 4.2 GB
+FROM granite4:7b-a1b-h
+PARAMETER num_ctx 16384

@@ -1,0 +1,3 @@
+# LFM2.5-350M: gated short-conv + attention hybrid (non-transformer), smallest LFM; Q8_0
+FROM sam860/lfm2.5:350m
+PARAMETER num_ctx 16384

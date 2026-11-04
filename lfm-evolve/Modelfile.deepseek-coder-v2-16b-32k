@@ -1,0 +1,5 @@
+# Fallback optimiser for a 24 GB card: DeepSeek-Coder-V2 16B (MoE, 2.4B active), 8.9 GB at Q4; MLA keeps
+# its KV cache small (~1 GB per 32k slot). Proven in this harness on AFlow, MIPRO and bilevel (runs_smoke_v2/v3).
+# Same model as the laptop Modelfile.deepseek-coder-v2-16b-8k, without the num_gpu limit and with 32k context.
+FROM deepseek-coder-v2:16b
+PARAMETER num_ctx 32768

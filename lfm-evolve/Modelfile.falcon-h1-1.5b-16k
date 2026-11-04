@@ -1,0 +1,3 @@
+# TII Falcon-H1 1.5B Instruct: Mamba-2 + attention hybrid (non-transformer); community GGUF, Q8_0
+FROM sam860/falcon-h1:1.5b-Q8_0
+PARAMETER num_ctx 16384

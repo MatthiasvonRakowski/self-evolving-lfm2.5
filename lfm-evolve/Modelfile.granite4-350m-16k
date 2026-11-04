@@ -1,0 +1,3 @@
+# IBM Granite 4.0 350M: decoder-only transformer twin of granite4-350m-h-16k, BF16 (Ollama has no q8_0 tag for it)
+FROM granite4:350m-bf16
+PARAMETER num_ctx 16384

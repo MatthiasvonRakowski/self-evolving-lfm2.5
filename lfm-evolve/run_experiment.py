@@ -15,10 +15,12 @@ import subprocess
 import sys
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from evaluate import ARTIFACT_NAMES
 
 BENCHMARKS = ["gsm8k", "mmlu_pro", "ifeval"]
+MIN_EXECUTOR_CONTEXT = 16384
 
 def load_json(path, default):
     if os.path.exists(path):
@@ -35,6 +37,21 @@ def save_json_atomic(path, payload):
     with open(tmp, "w") as f:
         json.dump(payload, f, indent=2, default=str)
     os.replace(tmp, path)
+
+# With --parallel-seeds the seeds' train/eval stages run in threads, each as a subprocess. The
+# driver state is one dict shared by those threads; every mutation and save goes through this lock.
+_state_lock = threading.RLock()
+_children = set()          # live Popen objects, so a stop (SIGTERM / Ctrl-C) reaches every stage
+_stop_requested = threading.Event()
+
+def ollama_context_window(name):
+    """num_ctx from `ollama show`, or None when the model runs at Ollama's default."""
+    try:
+        out = subprocess.run(["ollama", "show", name], capture_output=True, text=True, timeout=30).stdout
+    except Exception:
+        return None
+    match = re.search(r"^\s*num_ctx\s+(\d+)", out, re.MULTILINE)
+    return int(match.group(1)) if match else None
 
 def ollama_placement(names):
     """{name: PROCESSOR column of `ollama ps`} for the loaded models in `names`, e.g. '100% GPU'."""
@@ -70,6 +87,15 @@ def preflight(models, base_dir, optimiser_model, benchmarks):
             reply = LiteLLM(config=executor_config(model)).generate(
                 prompt="Reply with the single word: ready", parse_mode="str").content
             print(f"  [ok] executor {bare} answers (reply: {reply.strip()[:40]!r})")
+            # Multi-step transcripts overflow Ollama's default context silently (truncated, not
+            # failed), which is why every executor is rebuilt from a Modelfile with num_ctx 16384.
+            num_ctx = ollama_context_window(bare)
+            if num_ctx is None or num_ctx < MIN_EXECUTOR_CONTEXT:
+                print(f"  [WARN] executor {bare} has num_ctx {num_ctx or 'default'} (< {MIN_EXECUTOR_CONTEXT}): "
+                      f"long workflow transcripts will be truncated silently. Rebuild it from a Modelfile "
+                      f"with 'PARAMETER num_ctx {MIN_EXECUTOR_CONTEXT}' (see Modelfile).")
+            else:
+                print(f"  [ok] executor {bare} context window {num_ctx}")
         except Exception as e:
             print(f"  [FAIL] executor {bare} does not answer: {e}")
             ok = False
@@ -77,7 +103,8 @@ def preflight(models, base_dir, optimiser_model, benchmarks):
     try:
         reply = LiteLLM(config=optimiser_config(optimiser_model)).generate(
             prompt="Reply with the single word: ready", parse_mode="str").content
-        where = "Anthropic API" if is_anthropic_model(optimiser_model) else "local Ollama"
+        from src.common import OPTIMISER_API_BASE
+        where = "Anthropic API" if is_anthropic_model(optimiser_model) else f"Ollama at {OPTIMISER_API_BASE}"
         print(f"  [ok] optimiser {optimiser_model} answers via {where} (reply: {reply.strip()[:40]!r})")
     except Exception as e:
         hint = ("" if is_anthropic_model(optimiser_model) else
@@ -124,56 +151,92 @@ def run_subprocess(cmd, log_path):
         print(header, end="")
         logf.write(header)
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-        for line in proc.stdout:
-            sys.stdout.write(line)
-            logf.write(line)
-        proc.wait()
+        with _state_lock:
+            _children.add(proc)
+        try:
+            for line in proc.stdout:
+                sys.stdout.write(line)
+                logf.write(line)
+            proc.wait()
+        finally:
+            with _state_lock:
+                _children.discard(proc)
         return proc.returncode
 
-def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progress_cb):
+def terminate_children():
+    with _state_lock:
+        procs = list(_children)
+    for proc in procs:
+        if proc.poll() is None:
+            try:
+                proc.terminate()
+            except OSError:
+                pass
+
+def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progress_cb, model=None):
+    """Run one train or eval subprocess. `model` is set for --per-model jobs (one per executor)."""
     seed_key = str(seed)
-    driver_state.setdefault("seeds", {}).setdefault(seed_key, {})
-    driver_state["current"] = {"seed": seed, "stage": stage}
+    stage_key = stage if model is None else f"{stage}:{model}"
+    log_name = f"{stage}_driver.log" if model is None else f"{stage}_{model}_driver.log"
+    log_path = os.path.join(base_dir, f"seed{seed}", log_name)
+    live = {"seed": seed, "stage": stage, "model": model, "log": log_path}
     started_at = datetime.datetime.now().isoformat(timespec="seconds")
     t0 = time.time()
-    driver_state["seeds"][seed_key][stage] = {"status": "running", "started_at": started_at}
-    save_json_atomic(driver_state_path, driver_state)
+    with _state_lock:
+        driver_state.setdefault("seeds", {}).setdefault(seed_key, {})
+        # `current` is the stage started last (what tui.py shows); `running` lists every live stage,
+        # which is more than one with --parallel.
+        driver_state["current"] = live
+        running = [r for r in driver_state.get("running", []) if r.get("log") != log_path]
+        driver_state["running"] = running + [live]
+        driver_state["seeds"][seed_key][stage_key] = {"status": "running", "started_at": started_at}
+        save_json_atomic(driver_state_path, driver_state)
     progress_cb()
 
-    log_path = os.path.join(base_dir, f"seed{seed}", f"{stage}_driver.log")
     returncode = run_subprocess(cmd, log_path)
     elapsed = round(time.time() - t0, 1)
 
-    driver_state["seeds"][seed_key][stage] = {
-        "status": "success" if returncode == 0 else "failed",
-        "started_at": started_at,
-        "ended_at": datetime.datetime.now().isoformat(timespec="seconds"),
-        "elapsed_sec": elapsed,
-        "returncode": returncode,
-        "log": log_path,
-    }
-    save_json_atomic(driver_state_path, driver_state)
+    with _state_lock:
+        driver_state["seeds"][seed_key][stage_key] = {
+            "status": "success" if returncode == 0 else "failed",
+            "started_at": started_at,
+            "ended_at": datetime.datetime.now().isoformat(timespec="seconds"),
+            "elapsed_sec": elapsed,
+            "returncode": returncode,
+            "log": log_path,
+        }
+        driver_state["running"] = [r for r in driver_state.get("running", []) if r.get("log") != log_path]
+        if driver_state["running"]:
+            driver_state["current"] = driver_state["running"][-1]
+        save_json_atomic(driver_state_path, driver_state)
     progress_cb()
 
+    what = f"seed {seed} / {stage}" + (f" / {model}" if model else "")
     if returncode != 0:
-        print(f"\n!!! seed {seed} / {stage} FAILED (returncode={returncode}) after {elapsed}s -- see {log_path}")
+        print(f"\n!!! {what} FAILED (returncode={returncode}) after {elapsed}s -- see {log_path}")
     else:
-        print(f"--- seed {seed} / {stage} OK in {elapsed}s ---")
+        print(f"--- {what} OK in {elapsed}s ---")
     return returncode == 0
 
 def generate_progress_md(base_dir, seeds, models, methods, driver_started_at, benchmarks=None):
     benchmarks = benchmarks or BENCHMARKS
     driver_state = load_json(os.path.join(base_dir, "driver_state.json"), {})
-    current = driver_state.get("current", {})
+    current = driver_state.get("current") or {}
+    running = driver_state.get("running") or ([current] if current.get("stage") else [])
     labels = [model_label(m) for m in models]
 
     lines = ["# Experiment Progress", ""]
     lines.append(f"- Driver started: {driver_started_at}")
     lines.append(f"- Last updated: {datetime.datetime.now().isoformat(timespec='seconds')}")
-    lines.append(f"- Current: seed={current.get('seed')} stage={current.get('stage')}")
-    if current.get("seed") is not None and current.get("stage"):
-        log_path = os.path.join(base_dir, f"seed{current['seed']}", f"{current['stage']}_driver.log")
-        lines.append(f"- Live log: `tail -f {log_path}`")
+    def describe(r):
+        text = f"seed={r.get('seed')} stage={r.get('stage')}"
+        return text + (f" model={r['model']}" if r.get("model") else "")
+    lines.append("- Current: " + (", ".join(describe(r) for r in running) or "seed=None stage=None"))
+    for r in running:
+        log_path = r.get("log") or (os.path.join(base_dir, f"seed{r['seed']}", f"{r['stage']}_driver.log")
+                                    if r.get("seed") is not None and r.get("stage") else None)
+        if log_path:
+            lines.append(f"- Live log: `tail -f {log_path}`")
     lines.append("")
 
     lines.append("## Training (status / elapsed / API cost; $0 with a local optimiser)")
@@ -282,6 +345,17 @@ def main():
     parser.add_argument("--smoke", action="store_true",
                          help="Tiny end-to-end sanity run: seed 42 only, --rounds 2, --n-test 20, "
                               "base-dir runs_smoke, cheap bilevel inner budget.")
+    parser.add_argument("--parallel", type=int, default=1,
+                         help="Run up to N jobs at the same time. A job is one seed (train, then eval), or "
+                              "one seed x executor model with --per-model; each is its own subprocess. Worth "
+                              "it when the executor leaves the GPU idle: raise OLLAMA_NUM_PARALLEL to match.")
+    parser.add_argument("--per-model", action="store_true", dest="per_model",
+                         help="Split every seed into one job per executor model (main.py and evaluate.py merge "
+                              "their cells into the seed's summaries). Jobs are ordered model by model, so with "
+                              "--parallel <= number of seeds one executor is active at a time; a larger "
+                              "--parallel runs several executors side by side and needs them all loaded.")
+    parser.add_argument("--eval-concurrency", type=int, default=None, dest="eval_concurrency",
+                         help="Concurrent executor calls in evaluate.py (its default is 6).")
     parser.add_argument("--skip-preflight", action="store_true", dest="skip_preflight")
     parser.add_argument("--stop-on-error", action="store_true", dest="stop_on_error")
     parser.add_argument("--optimiser-model", default=DEFAULT_OPTIMISER_MODEL, dest="optimiser_model",
@@ -357,61 +431,98 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
     progress_cb = lambda: generate_progress_md(
         base_dir, args.seeds, args.models, args.methods, driver_started_at, args.train_benchmarks)
 
+    def run_job(seed, models, model=None):
+        """Train then evaluate `models` for one seed; `model` is the label when the job is one model."""
+        if _stop_requested.is_set():
+            return
+        seed_dir = os.path.join(base_dir, f"seed{seed}")
+        train_dir = os.path.join(seed_dir, "train")
+        eval_dir = os.path.join(seed_dir, "eval")
+
+        train_cmd = [
+            # -u: the child writes into a pipe, which Python block-buffers; logs would lag behind the run.
+            sys.executable, "-u", "main.py",
+            "--seed", str(seed),
+            "--rounds", str(args.rounds),
+            "--benchmarks", *args.train_benchmarks,
+            "--validation_rounds", str(args.validation_rounds),
+            "--models", *models,
+            "--method", *args.methods,
+            "--output_dir", train_dir,
+            "--optimiser_model", args.optimiser_model,
+            "--resume",
+        ]
+        inner_budget = {}
+        if args.smoke:
+            inner_budget = {"mipro_candidates": 1, "mipro_steps": 1, "tg_steps": 1,
+                            "tune_k": 6, "select_k": 3}
+        for key in ("mipro_candidates", "mipro_steps", "tg_steps", "tune_k", "select_k"):
+            if getattr(args, "inner_" + key) is not None:
+                inner_budget[key] = getattr(args, "inner_" + key)
+        for key, value in inner_budget.items():
+            train_cmd += [f"--inner_{key}", str(value)]
+        if args.inner:
+            train_cmd += ["--inner", args.inner]
+        if args.fixed_rounds:
+            train_cmd.append("--fixed_rounds")
+        if args.skip_internal_test:
+            train_cmd.append("--skip_internal_test")
+        train_ok = run_stage(base_dir, seed, "train", train_cmd, driver_state, driver_state_path, progress_cb,
+                             model=model)
+        if not train_ok and args.stop_on_error:
+            print("--- --stop-on-error set: aborting after train failure ---")
+            _stop_requested.set()
+            return
+
+        eval_cmd = [
+            sys.executable, "-u", "evaluate.py",
+            "--seed", str(seed),
+            "--n-test", str(args.n_test),
+            "--benchmarks", *args.train_benchmarks,
+            "--models", *models,
+            "--artifacts", *[a for a in ARTIFACT_NAMES if a == "baseline" or a in args.methods],
+            "--max-error-rate", str(args.max_error_rate),
+            "--optimizer_output_dir", train_dir,
+            "--output_dir", eval_dir,
+            "--resume",
+        ]
+        if args.eval_concurrency:
+            eval_cmd += ["--concurrency", str(args.eval_concurrency)]
+        eval_ok = run_stage(base_dir, seed, "eval", eval_cmd, driver_state, driver_state_path, progress_cb,
+                            model=model)
+        if not eval_ok and args.stop_on_error:
+            print("--- --stop-on-error set: aborting after eval failure ---")
+            _stop_requested.set()
+
+    # Per-model jobs are ordered model-major (every seed of model 1, then model 2, ...): with
+    # --parallel at or below the number of seeds, only one or two executors are active at a time, so
+    # Ollama never has to swap models in and out of VRAM, and OLLAMA_MAX_LOADED_MODELS can stay small.
+    jobs = []
+    if args.per_model and len(args.models) > 1:
+        for m in args.models:
+            jobs += [(seed, [m], model_label(m)) for seed in args.seeds]
+    else:
+        jobs = [(seed, list(args.models), None) for seed in args.seeds]
+    workers = max(1, min(args.parallel, len(jobs)))
     try:
-        for seed in args.seeds:
-            seed_dir = os.path.join(base_dir, f"seed{seed}")
-            train_dir = os.path.join(seed_dir, "train")
-            eval_dir = os.path.join(seed_dir, "eval")
-
-            train_cmd = [
-                # -u: the child writes into a pipe, which Python block-buffers; logs would lag behind the run.
-                sys.executable, "-u", "main.py",
-                "--seed", str(seed),
-                "--rounds", str(args.rounds),
-                "--benchmarks", *args.train_benchmarks,
-                "--validation_rounds", str(args.validation_rounds),
-                "--models", *args.models,
-                "--method", *args.methods,
-                "--output_dir", train_dir,
-                "--optimiser_model", args.optimiser_model,
-                "--resume",
-            ]
-            inner_budget = {}
-            if args.smoke:
-                inner_budget = {"mipro_candidates": 1, "mipro_steps": 1, "tg_steps": 1,
-                                "tune_k": 6, "select_k": 3}
-            for key in ("mipro_candidates", "mipro_steps", "tg_steps", "tune_k", "select_k"):
-                if getattr(args, "inner_" + key) is not None:
-                    inner_budget[key] = getattr(args, "inner_" + key)
-            for key, value in inner_budget.items():
-                train_cmd += [f"--inner_{key}", str(value)]
-            if args.inner:
-                train_cmd += ["--inner", args.inner]
-            if args.fixed_rounds:
-                train_cmd.append("--fixed_rounds")
-            if args.skip_internal_test:
-                train_cmd.append("--skip_internal_test")
-            train_ok = run_stage(base_dir, seed, "train", train_cmd, driver_state, driver_state_path, progress_cb)
-            if not train_ok and args.stop_on_error:
-                print("--- --stop-on-error set: aborting after train failure ---")
-                break
-
-            eval_cmd = [
-                sys.executable, "-u", "evaluate.py",
-                "--seed", str(seed),
-                "--n-test", str(args.n_test),
-                "--benchmarks", *args.train_benchmarks,
-                "--models", *args.models,
-                "--artifacts", *[a for a in ARTIFACT_NAMES if a == "baseline" or a in args.methods],
-                "--max-error-rate", str(args.max_error_rate),
-                "--optimizer_output_dir", train_dir,
-                "--output_dir", eval_dir,
-                "--resume",
-            ]
-            eval_ok = run_stage(base_dir, seed, "eval", eval_cmd, driver_state, driver_state_path, progress_cb)
-            if not eval_ok and args.stop_on_error:
-                print("--- --stop-on-error set: aborting after eval failure ---")
-                break
+        if workers == 1:
+            for job in jobs:
+                if _stop_requested.is_set():
+                    break
+                run_job(*job)
+        else:
+            print(f"=== Running {len(jobs)} jobs ({len(args.seeds)} seeds"
+                  f"{' x ' + str(len(args.models)) + ' models' if args.per_model else ''}), {workers} at a time ===")
+            with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="job") as pool:
+                futures = [pool.submit(run_job, *job) for job in jobs]
+                try:
+                    for future in futures:
+                        future.result()
+                except BaseException:
+                    # Ctrl-C / SIGTERM: stop every live stage, then let the pool drain.
+                    _stop_requested.set()
+                    terminate_children()
+                    raise
     finally:
         stop_event.set()
         progress_cb()

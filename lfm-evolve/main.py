@@ -12,6 +12,7 @@ from src.TextGradOptimiser import TextGradOptimiser
 from src.MiproOptimiser import MiproOptimiser
 from src.BilevelOptimiser import BilevelOptimiser
 from src.bilevel.inner_base import InnerBudget
+from src.summary_io import read_json, set_cell, update_json
 import os
 import json
 import time
@@ -79,33 +80,24 @@ def build_method(method, args, model, out_dir, benchmark):
         )
     raise ValueError(f"Unknown method: {method}")
 
-def load_summary(path):
-    if os.path.exists(path):
-        try:
-            with open(path) as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return {}
+def mark_interrupted(summary, labels=None):
+    """A cell still 'running' when main.py starts belonged to a process that died; record that.
 
-def mark_interrupted(summary):
-    """A cell still 'running' when main.py starts belonged to a process that died; record that."""
+    Only the cells of `labels` (this process's executor models) are touched: with
+    run_experiment.py --per-model another live process owns the other models' cells.
+    """
     for benchmark, by_label in summary.items():
         if benchmark == "_meta" or not isinstance(by_label, dict):
             continue
-        for cells in by_label.values():
-            if not isinstance(cells, dict):
+        for label, cells in by_label.items():
+            if not isinstance(cells, dict) or (labels is not None and label not in labels):
                 continue
             for cell in cells.values():
                 if isinstance(cell, dict) and cell.get("status") == "running":
                     cell["status"] = "interrupted"
 
-def save_summary(path, summary):
-    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    tmp = path + ".tmp"
-    with open(tmp, "w") as f:
-        json.dump(summary, f, indent=2)
-    os.replace(tmp, path)
+def union(existing, new):
+    return list(dict.fromkeys(list(existing or []) + list(new)))
 
 def main():
     argparser = argparse.ArgumentParser(description="Run optimisers on benchmarks.")
@@ -189,19 +181,28 @@ def main():
 
     os.makedirs(args.output_dir, exist_ok=True)
     summary_path = os.path.join(args.output_dir, "run_summary.json")
-    summary = load_summary(summary_path)
-    mark_interrupted(summary)
-    summary["_meta"] = {
-        "models": [resolve_model_id(m) for m in args.models],
-        "methods": args.method,
-        "benchmarks": args.benchmarks,
-        "seed": args.seed,
-        "rounds": args.rounds,
-        "validation_rounds": args.validation_rounds,
-        "optimiser_model": args.optimiser_model,
-        "last_launch": datetime.datetime.now().isoformat(timespec="seconds"),
-    }
-    save_summary(summary_path, summary)
+    own_labels = {model_label(m) for m in args.models}
+
+    # The summary file is shared with any other main.py working on the same seed (one per executor
+    # model under run_experiment.py --per-model), so every write patches only this process's cells.
+    def init(data):
+        mark_interrupted(data, own_labels)
+        meta = data.setdefault("_meta", {})
+        meta.update({
+            "models": union(meta.get("models"), [resolve_model_id(m) for m in args.models]),
+            "methods": union(meta.get("methods"), args.method),
+            "benchmarks": union(meta.get("benchmarks"), args.benchmarks),
+            "seed": args.seed,
+            "rounds": args.rounds,
+            "validation_rounds": args.validation_rounds,
+            "optimiser_model": args.optimiser_model,
+            "last_launch": datetime.datetime.now().isoformat(timespec="seconds"),
+        })
+    summary = update_json(summary_path, init)
+
+    def record(benchmark, label, method, cell):
+        summary.setdefault(benchmark, {}).setdefault(label, {})[method] = cell
+        set_cell(summary_path, [benchmark, label, method], cell)
 
     print(f"\n=== Batch run ===")
     print(f"Models     : {[resolve_model_id(m) for m in args.models]}")
@@ -233,13 +234,12 @@ def main():
                 started_at = datetime.datetime.now().isoformat(timespec="seconds")
                 t0 = time.time()
 
-                summary[benchmark][label][method] = {
+                record(benchmark, label, method, {
                     "status": "running",
                     "started_at": started_at,
                     "executor_model": resolved,
                     "benchmark": benchmark,
-                }
-                save_summary(summary_path, summary)
+                })
 
                 log_path = os.path.join(model_out, "logs", f"{method}.log")
                 usage_log_path = os.path.join(model_out, "usage", f"{method}.jsonl")
@@ -249,7 +249,7 @@ def main():
                         opt = build_method(method, args, model, model_out, benchmark)
                         opt.run()
                     elapsed = round(time.time() - t0, 1)
-                    summary[benchmark][label][method] = {
+                    record(benchmark, label, method, {
                         "status": "success",
                         "started_at": started_at,
                         "elapsed_sec": elapsed,
@@ -257,8 +257,7 @@ def main():
                         "benchmark": benchmark,
                         "log": log_path,
                         "usage": summarize_usage(usage_log_path),
-                    }
-                    save_summary(summary_path, summary)
+                    })
                     print(f"--- {benchmark}/{label}/{method} finished OK in {elapsed}s (log: {log_path}) ---")
 
                 except Exception as e:
@@ -269,7 +268,7 @@ def main():
                             lf.write("\n=== FAILED ===\n" + tb + "\n")
                     except Exception:
                         pass
-                    summary[benchmark][label][method] = {
+                    record(benchmark, label, method, {
                         "status": "failed",
                         "started_at": started_at,
                         "elapsed_sec": elapsed,
@@ -279,8 +278,7 @@ def main():
                         "traceback": tb,
                         "log": log_path,
                         "usage": summarize_usage(usage_log_path),
-                    }
-                    save_summary(summary_path, summary)
+                    })
                     print(f"\n!!! {benchmark}/{label}/{method} FAILED after {elapsed}s: {e}")
                     print("--- continuing (see run_summary.json for the traceback) ---")
                     if args.stop_on_error:

@@ -1,0 +1,3 @@
+# Meta Llama 3.2 1B Instruct: decoder-only transformer (the dissertation's dropped third model), Q8_0
+FROM llama3.2:1b-instruct-q8_0
+PARAMETER num_ctx 16384

@@ -305,6 +305,9 @@ def tee_to_file(log_path):
 # Model configurations.
 
 OLLAMA_API_BASE = "http://localhost:11434"
+# The optimiser can be served by a second Ollama instance (its own OLLAMA_NUM_PARALLEL and context budget,
+# or a second GPU via CUDA_VISIBLE_DEVICES): point LFM_OPTIMISER_API_BASE at it. Default: the same server.
+OPTIMISER_API_BASE = os.environ.get("LFM_OPTIMISER_API_BASE", OLLAMA_API_BASE)
 
 # A 1-2B executor answers in seconds. These bounds only catch runaway generations (small models do
 # loop until the context is full) and a server that has been pushed onto the CPU, so that such calls
@@ -338,7 +341,7 @@ def optimiser_config(model=None):
     return LiteLLMConfig(
         model=resolve_model_id(model),
         is_local=True,
-        api_base=OLLAMA_API_BASE,
+        api_base=OPTIMISER_API_BASE,
         # A local 16B writing a whole workflow can take minutes; litellm's default is 600 s.
         timeout=1800,
         # Qwen3 thinks by default, which made each call ~15x slower in testing. LiteLLM maps
