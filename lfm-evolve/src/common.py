@@ -10,6 +10,14 @@ import time
 # pull it in. Progress bars redraw many times a second by default, which floods the log files.
 os.environ.setdefault("TQDM_MININTERVAL", "10")
 
+# evoagentx/optimizers/textgrad_optimizer.py notes whether ./logs exists, imports textgrad (which creates
+# it for its file logger) and then deletes it again if it was absent. Two main.py processes starting
+# together (run_experiment.py --parallel) both see it absent and the second rmtree dies with
+# FileNotFoundError before any training starts. Create the folder first: every process then sees it
+# as pre-existing and nothing is deleted. The harness itself never writes there.
+TEXTGRAD_LOGS_DIR = "logs"
+os.makedirs(TEXTGRAD_LOGS_DIR, exist_ok=True)
+
 import dotenv
 import litellm
 from litellm.litellm_core_utils.logging_worker import GLOBAL_LOGGING_WORKER, LoggingWorker

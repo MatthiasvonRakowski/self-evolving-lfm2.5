@@ -221,3 +221,6 @@ __marimo__/
 
 # aborted runs parked for manual deletion
 todelete/
+
+# created at import by lfm-evolve/src/common.py (EvoAgentX/textgrad); never holds harness output
+lfm-evolve/logs/

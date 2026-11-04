@@ -256,3 +256,13 @@ def test_summary_cells_survive_concurrent_writers(tmp_path):
     assert sorted(data["gsm8k"]) == labels
     assert all(len(data["gsm8k"][label]) == 25 for label in labels)
     assert not [name for name in tmp_path.iterdir() if ".tmp." in name.name]
+
+
+def test_logs_folder_precreated_before_textgrad_import():
+    """EvoAgentX deletes ./logs at import unless it already existed; two parallel main.py processes then race
+    on the rmtree (smoke run on the H100 box, 2026-11-04). src/common.py creates it up front."""
+    import os
+    assert os.path.isdir(common.TEXTGRAD_LOGS_DIR)
+    # the import that performs the deletion must still succeed with the folder in place
+    from evoagentx.optimizers import TextGradOptimizer  # noqa: F401
+    assert os.path.isdir(common.TEXTGRAD_LOGS_DIR)

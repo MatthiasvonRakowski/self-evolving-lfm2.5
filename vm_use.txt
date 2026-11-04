@@ -20,7 +20,10 @@ cd self-evolving-lfm2.5
 # Result: ~2 GB instead of 6.6 GB. Needs network (PyPI, GitHub, download.pytorch.org).
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source ~/.local/bin/env
-UV_PROJECT_ENVIRONMENT=lfm-evolve/.venv uv sync      # keeps the venv where the scripts expect it
+UV_PROJECT_ENVIRONMENT=lfm-evolve/.venv uv sync --managed-python   # venv where the scripts expect it, on uv's own
+# 3.12 build. A distro python3.12 usually lacks tkinter, which EvoAgentX imports at load time (pytest then
+# fails to collect with ModuleNotFoundError: tkinter); the uv-managed build ships it. Without the flag:
+#   sudo apt install -y python3-tk      (python3.12-tk for the deadsnakes PPA build)
 source lfm-evolve/.venv/bin/activate
 cd lfm-evolve
 python -m pytest -q tests                            # offline checks of the patches and the harness
@@ -85,6 +88,11 @@ python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
 # and the 2% error gate then marks the cell invalid. Each job keeps up to 20 executor calls in flight
 # (AFlow/bilevel validation), so keep --parallel x 20 below the queue.
 #   sudo systemctl daemon-reload && sudo systemctl restart ollama
+# No systemd (container: `systemctl: command not found`): the installer only drops the binary (needs zstd:
+# sudo apt-get install -y zstd). Start the server by hand from inside tmux, same variables; nothing restarts
+# it after a container restart, so repeat these two lines before resuming a campaign:
+#   export OLLAMA_NUM_PARALLEL=8 OLLAMA_MAX_LOADED_MODELS=4 OLLAMA_KEEP_ALIVE=-1 OLLAMA_MAX_QUEUE=2048
+#   nohup ollama serve > ~/ollama.log 2>&1 &     # first log lines must list the GPU (CUDA), not "no compatible GPUs"
 # Each slot reserves one context per model: cheap for LFM2.5 (mostly conv layers), about 1.5 GB per slot
 # for qwen3-1.7b at 16k, and the optimiser's own slots x its context on top. Budget VRAM as
 #   sum(model weights) + sum(OLLAMA_NUM_PARALLEL x per-slot context cache) ; `ollama ps` shows the split.
