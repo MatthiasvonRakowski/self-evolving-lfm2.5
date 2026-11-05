@@ -83,7 +83,7 @@ python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
 # flight, evaluate.py: --concurrency, 6 by default), but Ollama answers at most OLLAMA_NUM_PARALLEL
 # requests per model at a time, and the default is 1 or 4. A 1-2B executor leaves most of a big card
 # idle, so give Ollama more slots and enough loaded models (every executor + the optimiser):
-#   printf '[Service]\nEnvironment="OLLAMA_NUM_PARALLEL=8"\nEnvironment="OLLAMA_MAX_LOADED_MODELS=12"\nEnvironment="OLLAMA_KEEP_ALIVE=-1"\nEnvironment="OLLAMA_MAX_QUEUE=2048"\n' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+#   printf '[Service]\nEnvironment="OLLAMA_NUM_PARALLEL=8"\nEnvironment="OLLAMA_MAX_LOADED_MODELS=4"\nEnvironment="OLLAMA_KEEP_ALIVE=-1"\nEnvironment="OLLAMA_MAX_QUEUE=2048"\n' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
 # OLLAMA_MAX_QUEUE: requests beyond the queue get HTTP 503, which the harness records as execution errors
 # and the 2% error gate then marks the cell invalid. Each job keeps up to 20 executor calls in flight
 # (AFlow/bilevel validation), so keep --parallel x 20 below the queue.
@@ -91,7 +91,7 @@ python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
 # No systemd (container: `systemctl: command not found`): the installer only drops the binary (needs zstd:
 # sudo apt-get install -y zstd). Start the server by hand from inside tmux, same variables; nothing restarts
 # it after a container restart, so repeat these two lines before resuming a campaign:
-#   export OLLAMA_NUM_PARALLEL=8 OLLAMA_MAX_LOADED_MODELS=12 OLLAMA_KEEP_ALIVE=-1 OLLAMA_MAX_QUEUE=2048
+#   export OLLAMA_NUM_PARALLEL=8 OLLAMA_MAX_LOADED_MODELS=4 OLLAMA_KEEP_ALIVE=-1 OLLAMA_MAX_QUEUE=2048
 #   nohup ollama serve > ~/ollama.log 2>&1 &     # first log lines must list the GPU (CUDA), not "no compatible GPUs"
 # Each slot reserves one context per model: cheap for LFM2.5 (mostly conv layers), about 1.5 GB per slot
 # for qwen3-1.7b at 16k, and the optimiser's own slots x its context on top. Budget VRAM as
@@ -118,32 +118,39 @@ python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
 # Per-model jobs run model by model, every seed of one executor at once; --parallel = number of seeds
 # keeps one executor active (two during the hand-over), so OLLAMA_MAX_LOADED_MODELS=4 is enough for
 # any number of models. Each job is a ~1 GB Python process on top of the models.
-# Two things found on the H100 box (2026-11-05), both handled by the Modelfiles and the driver:
+# Three things found on the H100 box (2026-11-05). Only the first has a fix:
 # 1. CPU quota. Containers advertise every host core (nproc 104) but cap CPU time (cat /sys/fs/cgroup/cpu.max:
 #    26 cores; cpu.stat nr_throttled). llama.cpp spins one thread per advertised core, so every runner stalled
 #    on the quota: 2.5x slower per call and no gain at all from parallel slots. Every Modelfile now carries
 #    PARAMETER num_thread 4 (qwen3 1.7B at 8 concurrent calls: 383 -> 840 tok/s; 1181 at 20). Rebuild the
 #    models after pulling that change (build_executors.sh / ollama create again; the blobs are cached).
 # 2. Ollama answers some architectures one request at a time whatever OLLAMA_NUM_PARALLEL says (its log:
-#    "model architecture does not currently support parallel requests"; lfm2 is one, granitehybrid is not;
-#    the preflight probes each executor and warns). Ten parallel seeds on such a model all queue on one
-#    runner. --replicas spreads them over copies of the model, one runner (and one VRAM copy, ~2 GB for a
-#    1B model) each; results keep the base name:
-#      ./build_executors.sh --replicas 5 lfm2.5-16k        # lfm2.5-16k plus lfm2.5-16k-r1 .. -r4
-#      ... --replicas lfm2.5-16k=5                         # seed i -> copy i % 5
-#    Add every model the preflight flags. OLLAMA_MAX_LOADED_MODELS must cover the optimiser + the copies of
-#    the current model + those of the next one during the hand-over (12 above for 5 copies).
+#    "model architecture does not currently support parallel requests"; lfm2 is one, granitehybrid, falcon_h1
+#    and rwkv7 are not; the preflight probes each executor and warns). Every parallel seed on such a model
+#    queues on its one runner: LFM2.5 gives about 700 tok/s in total on the H100, however many seeds run.
+#    Neither workaround tried on the box helped:
+#    - copies under other names (ollama create lfm2.5-16k-r1 from "FROM lfm2.5-16k"; run_experiment.py
+#      --replicas routes seeds to them): Ollama answered every name from the base model's runner. Nine model
+#      loads in 12 h of a ten-seed run, and the copies never appeared in `ollama ps`. Do not use --replicas.
+#    - a second `ollama serve` on another port does start a second runner, but it ran at 320 tok/s against
+#      703 on an idle card while the first server's completed calls fell by about as much (three minutes of
+#      measurement): the two share one budget, card or CPU quota, rather than adding up.
+# 3. The preflight makes every executor answer once, which loads all of them, and OLLAMA_KEEP_ALIVE=-1 keeps
+#    them. With OLLAMA_MAX_LOADED_MODELS=12 (raised for the copies above) the card filled to 80 of 81.5 GB
+#    with three executors no job would reach for days; Ollama then reloaded the optimiser into 37 GB instead
+#    of 44, 1% of it on the CPU. Keep the limit at 4, pass --skip-preflight when relaunching a run that
+#    already passed it, and `ollama stop NAME` frees a model that is loaded but not needed yet.
 # Ten seeds, keeping the dissertation's 42/44/45 inside the set. Phase 1: the cheap arms on every model;
 # phase 2: bilevel (5x AFlow's cost, section 4.4) on the main pair only. Same base-dir, resume merges them.
 python run_experiment.py --seeds 42 43 44 45 46 47 48 49 50 51 --parallel 10 --per-model \
     --models lfm2.5-16k granite4-1b-h-16k falcon-h1-1.5b-16k rwkv7-1.5b-16k \
              qwen3-1.7b-16k granite4-1b-16k falcon3-1b-16k \
     --methods aflow mipro --train-benchmarks gsm8k --rounds 20 --skip-internal-test \
-    --replicas lfm2.5-16k=5 --eval-concurrency 12 --optimiser-model qwen3-coder-30b-32k --base-dir runs
+    --eval-concurrency 12 --optimiser-model qwen3-coder-30b-32k --base-dir runs
 python run_experiment.py --seeds 42 43 44 45 46 47 48 49 50 51 --parallel 10 --per-model \
     --models lfm2.5-16k qwen3-1.7b-16k \
     --methods bilevel --train-benchmarks gsm8k --rounds 20 --skip-internal-test \
-    --replicas lfm2.5-16k=5 --eval-concurrency 12 --optimiser-model qwen3-coder-30b-32k --base-dir runs
+    --eval-concurrency 12 --optimiser-model qwen3-coder-30b-32k --base-dir runs
 # More executors (see ./build_executors.sh --list): add them to --models and raise OLLAMA_MAX_LOADED_MODELS.
 # Executors on a second backend (vLLM / llama-server) are not wired in: the harness talks to Ollama only
 # (src/common.py, compare_models.py, the preflight).

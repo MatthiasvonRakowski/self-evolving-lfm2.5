@@ -8,8 +8,8 @@
 #   ./build_executors.sh granite4-1b-h-16k granite4-1b-16k
 #   ./build_executors.sh --list             # names, backbones and sources, nothing pulled
 #   ./build_executors.sh --replicas 5 lfm2.5-16k   # plus copies lfm2.5-16k-r1 .. -r4 (FROM lfm2.5-16k, same
-#                                           # parameters): one Ollama runner each, for run_experiment.py
-#                                           # --replicas lfm2.5-16k=5 on architectures Ollama does not batch
+#                                           # parameters) for run_experiment.py --replicas. Of no use with
+#                                           # Ollama: it answers the copies from the base model's runner
 #
 # The optimiser (Modelfile.deepseek-coder-v2-16b-8k) is built separately, see vm_use.txt: its Modelfile
 # pins num_gpu for the 8 GB laptop card and is not needed when Claude is the optimiser.
@@ -64,5 +64,5 @@ done
 echo
 echo "Built ${#names[@]} executor(s); failed: ${#failed[@]}${failed[*]:+ (${failed[*]})}"
 echo "Use them with:  python run_experiment.py --models ${names[*]} ..."
-[ "$replicas" -gt 1 ] && echo "   and spread parallel jobs over the copies with:  --replicas $replicas   (or MODEL=$replicas per model)"
+[ "$replicas" -gt 1 ] && echo "   note: Ollama answers these copies from the base model's runner, so --replicas spreads nothing (vm_use.txt)"
 [ ${#failed[@]} -eq 0 ]

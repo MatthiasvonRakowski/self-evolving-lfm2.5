@@ -326,9 +326,10 @@ EXECUTOR_MAX_TOKENS = int(os.environ.get("LFM_EXECUTOR_MAX_TOKENS", 4096))
 
 # Ollama serves some architectures one request at a time (its log: "model architecture does not currently
 # support parallel requests"; lfm2 is one, 2026-11-05 on the H100 box). run_experiment.py --replicas
-# spreads the seeds over copies of such a model (lfm2.5-16k-r1, -r2, ...; build_executors.sh --replicas
-# builds them). The copy only changes which Ollama name answers the calls: labels, directories and
-# summaries keep the base name. The driver passes the mapping per job as LFM_EXECUTOR_SERVE="base=copy,...".
+# routes the seeds to copies of such a model (lfm2.5-16k-r1, -r2, ...; build_executors.sh --replicas builds
+# them) through LFM_EXECUTOR_SERVE="base=copy,...", set per job. The routing works and changes only the
+# Ollama name that is called (labels, directories and summaries keep the base name), but it did not help:
+# Ollama answered every copy from the base model's runner, so the seeds queued on the same single slot.
 def served_names():
     spec = os.environ.get("LFM_EXECUTOR_SERVE", "")
     pairs = (item.split("=", 1) for item in spec.split(",") if "=" in item)

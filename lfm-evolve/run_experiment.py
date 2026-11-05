@@ -1,7 +1,7 @@
 
 from src.common import (
     DEFAULT_OPTIMISER_MODEL, OPTIMISER_MODELFILE, executor_config, is_anthropic_model, model_label, ollama_name,
-    optimiser_config,
+    optimiser_config, tee_to_file,
 )
 
 import argparse
@@ -95,8 +95,8 @@ def replica_name(base, k):
 
 def plan_jobs(seeds, models, per_model, replicas):
     """The driver's job list: (seed, models, label, serve). `serve` maps an executor's Ollama name to the
-    copy that answers it for this job: seed number i of a model with R copies goes to copy i % R, so the
-    seeds spread evenly over the copies and each copy's queue stays short."""
+    copy that answers it for this job: seed number i of a model with R copies goes to copy i % R.
+    With Ollama this buys nothing (see the --replicas help): the copies share the base model's runner."""
     def serve_for(index, model_names):
         serve = {}
         for m in model_names:
@@ -177,7 +177,7 @@ def preflight(models, base_dir, optimiser_model, benchmarks, replicas=None, para
             continue
         copies = replicas.get(bare, 1)
         if copies > 1:
-            # The copies only need to exist; they load on first use (one runner each, own VRAM).
+            # The names must exist or the calls fail. They do not get a runner of their own with Ollama.
             missing = [replica_name(bare, k) for k in range(1, copies)
                        if subprocess.run(["ollama", "show", replica_name(bare, k)], capture_output=True).returncode]
             if missing:
@@ -185,15 +185,16 @@ def preflight(models, base_dir, optimiser_model, benchmarks, replicas=None, para
                       f"-- build them with: ./build_executors.sh --replicas {copies} {bare}")
                 ok = False
             else:
-                print(f"  [ok] executor {bare} has {copies} copies ({bare}, "
-                      f"{', '.join(replica_name(bare, k) for k in range(1, copies))})")
+                print(f"  [WARN] --replicas {bare}={copies}: the copies exist, but Ollama answers names that "
+                      f"share a weights file from one runner (H100 box, 2026-11-05: the copies never loaded), "
+                      f"so this spreads nothing. Results are unaffected.")
         elif parallel > 1:
             single = ollama_single_slot(bare)
             if single:
                 print(f"  [WARN] executor {bare} answers one request at a time (no parallel slots: either "
                       f"OLLAMA_NUM_PARALLEL=1 or an architecture Ollama does not batch, lfm2 for one), so the "
-                      f"{parallel} parallel jobs queue on it. Spread them over copies: "
-                      f"./build_executors.sh --replicas {parallel} {bare}  and  --replicas {bare}={parallel}")
+                      f"{parallel} parallel jobs queue on it and its cells take about {parallel} times longer. "
+                      f"Copies of the model (--replicas) do not help with Ollama; see vm_use.txt.")
             elif single is False:
                 print(f"  [ok] executor {bare} serves requests in parallel")
 
@@ -460,12 +461,11 @@ def main():
                               "--parallel <= number of seeds one executor is active at a time; a larger "
                               "--parallel runs several executors side by side and needs them all loaded.")
     parser.add_argument("--replicas", nargs="+", default=[], metavar="N|MODEL=N",
-                         help="Copies of an executor to spread the parallel jobs over, e.g. 'lfm2.5-16k=5' "
-                              "(or a bare N for every model). For architectures Ollama answers one request "
-                              "at a time (lfm2 for one; the preflight warns), every job queues on the single "
-                              "runner; copies lfm2.5-16k-r1.. each get their own. Build them with "
-                              "./build_executors.sh --replicas N MODEL. Seed i of a model goes to copy "
-                              "i %% N; results keep the base model name.")
+                         help="NO EFFECT WITH OLLAMA; kept as routing plumbing only. Sends seed i of a model "
+                              "to its copy i %% N (lfm2.5-16k-r1.., built by ./build_executors.sh --replicas), "
+                              "meant for architectures Ollama answers one request at a time (lfm2). On the "
+                              "H100 box (2026-11-05) Ollama answered every copy from the base model's runner, "
+                              "so all seeds still queued on one slot. Results keep the base model name.")
     parser.add_argument("--eval-concurrency", type=int, default=None, dest="eval_concurrency",
                          help="Concurrent executor calls in evaluate.py (its default is 6).")
     parser.add_argument("--skip-preflight", action="store_true", dest="skip_preflight")
@@ -509,7 +509,10 @@ def main():
     signal.signal(signal.SIGTERM, stop_on_sigterm)
 
     try:
-        state = run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at)
+        # The stages log themselves (seedN/<stage>_<model>_driver.log); this keeps the driver's own
+        # output too -- preflight verdicts, job starts, failures -- which otherwise only lives in tmux.
+        with tee_to_file(os.path.join(base_dir, "driver_console.log")):
+            state = run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at)
     except KeyboardInterrupt:
         state = "stopped"
     except BaseException:
