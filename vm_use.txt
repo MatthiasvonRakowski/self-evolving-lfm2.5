@@ -76,7 +76,11 @@ python run_experiment.py --seeds 42 43 44 --models lfm2.5-16k qwen3-1.7b-16k \
     --methods aflow mipro bilevel --train-benchmarks gsm8k --rounds 16 \
     --skip-internal-test --base-dir runs
 # follow it from another tmux window:  python tui.py --base-dir runs   (or: cat runs/PROGRESS.md)
-# results: runs/FINAL_RESULTS.md ; re-running the same command resumes finished cells
+# results: runs/FINAL_RESULTS.md ; re-running the same command resumes: cells marked success are skipped,
+# every other cell is run again from its first round. main.py first parks what the unfinished attempt left
+# (<model>/_interrupted/<method>_<time>/), because AFlow and bilevel reload the results.json and round_N
+# folders they find and would otherwise mix the two runs. AFlow also stops before --rounds when its
+# validation score has converged (--fixed_rounds turns that off), so cells differ in length.
 
 ######## Bigger GPU (>= 24 GB), local optimiser: run seeds and models in parallel
 # One campaign already runs its validation passes concurrently (AFlow/bilevel: up to 20 executor calls in

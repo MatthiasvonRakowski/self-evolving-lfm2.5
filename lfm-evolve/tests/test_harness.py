@@ -300,3 +300,30 @@ def test_served_copy_changes_only_the_ollama_name(monkeypatch):
     assert common.model_label("lfm2.5-16k") == "lfm2_5_16k"
     monkeypatch.delenv("LFM_EXECUTOR_SERVE")
     assert common.executor_config("lfm2.5-16k").model == "ollama_chat/lfm2.5-16k"
+
+
+def test_rerun_of_an_unfinished_cell_starts_from_a_clean_folder(tmp_path):
+    """AFlow reloads the results.json and round_N folders it finds in its output folder, so a cell that is
+    run again after an interruption would mix two runs. main.py parks the leftovers first."""
+    import os
+    import main
+    model_out = tmp_path / "gsm8k" / "lfm2_5_16k"
+    (model_out / "aflow" / "round_3").mkdir(parents=True)
+    (model_out / "aflow" / "results.json").write_text("[{\"round\": 3, \"score\": 0.9}]")
+    (model_out / "usage").mkdir()
+    (model_out / "usage" / "aflow.jsonl").write_text("{}\n")
+    (model_out / "usage" / "mipro.jsonl").write_text("{}\n")
+    (model_out / "logs").mkdir()
+    (model_out / "logs" / "aflow.log").write_text("history\n")
+
+    parked = main.park_previous_attempt(str(model_out), "aflow")
+    assert parked and os.path.dirname(parked) == str(model_out / "_interrupted")
+    assert sorted(os.listdir(parked)) == ["aflow", "aflow.jsonl"]
+    assert os.path.exists(os.path.join(parked, "aflow", "round_3"))
+    assert not (model_out / "aflow").exists() and not (model_out / "usage" / "aflow.jsonl").exists()
+    # another method's files and the log history are left alone
+    assert (model_out / "usage" / "mipro.jsonl").exists() and (model_out / "logs" / "aflow.log").exists()
+    # nothing left to park: a first run, or an empty folder, is a no-op
+    assert main.park_previous_attempt(str(model_out), "aflow") is None
+    (model_out / "bilevel").mkdir()
+    assert main.park_previous_attempt(str(model_out), "bilevel") is None

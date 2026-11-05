@@ -15,6 +15,7 @@ from src.bilevel.inner_base import InnerBudget
 from src.summary_io import read_json, set_cell, update_json
 import os
 import json
+import shutil
 import time
 import traceback
 import argparse
@@ -95,6 +96,29 @@ def mark_interrupted(summary, labels=None):
             for cell in cells.values():
                 if isinstance(cell, dict) and cell.get("status") == "running":
                     cell["status"] = "interrupted"
+
+def park_previous_attempt(model_out, method):
+    """Move what an unfinished attempt of `method` left behind into <model_out>/_interrupted/, and return
+    that folder (None when there was nothing).
+
+    A cell that is not "success" is run again from its first round, in the same output folder. AFlow, and
+    bilevel on top of it, start at round 0 but reload the results.json, experience files and round_N
+    folders they find there (EvoAgentX: initial_round defaults to 0, every round begins with load_results,
+    nothing is cleared). Leftovers of an interrupted attempt would therefore be mixed into the new one:
+    parents sampled from the old rounds, convergence judged on both runs, a best round whose folder has
+    since been overwritten. Parked, not deleted. The usage log goes too, so the cell's token counts are
+    those of the run that produced it; logs/<method>.log is appended to and keeps the history."""
+    leftovers = [os.path.join(model_out, method), os.path.join(model_out, "usage", f"{method}.jsonl")]
+    leftovers = [path for path in leftovers
+                 if os.path.exists(path) and (not os.path.isdir(path) or os.listdir(path))]
+    if not leftovers:
+        return None
+    stamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
+    parked = os.path.join(model_out, "_interrupted", f"{method}_{stamp}")
+    os.makedirs(parked)
+    for path in leftovers:
+        shutil.move(path, os.path.join(parked, os.path.basename(path)))
+    return parked
 
 def union(existing, new):
     return list(dict.fromkeys(list(existing or []) + list(new)))
@@ -233,6 +257,10 @@ def main():
                     continue
 
                 print(f"\n=== Running {benchmark} / {label} / {method} ===")
+                parked = park_previous_attempt(model_out, method)
+                if parked:
+                    print(f"--- An earlier, unfinished attempt left files for this cell; parked in {parked} "
+                          f"so this run starts clean ---")
                 started_at = datetime.datetime.now().isoformat(timespec="seconds")
                 t0 = time.time()
 
