@@ -206,6 +206,8 @@ def main():
 
     print(f"\n=== Batch run ===")
     print(f"Models     : {[resolve_model_id(m) for m in args.models]}")
+    if os.environ.get("LFM_EXECUTOR_SERVE"):
+        print(f"Served by  : {os.environ['LFM_EXECUTOR_SERVE']}  (copies of the executors; see --replicas)")
     print(f"Methods    : {args.method}")
     print(f"Optimiser  : {args.optimiser_model}")
     print(f"Benchmarks : {args.benchmarks}")

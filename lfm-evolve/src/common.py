@@ -324,9 +324,24 @@ OPTIMISER_API_BASE = os.environ.get("LFM_OPTIMISER_API_BASE", OLLAMA_API_BASE)
 EXECUTOR_TIMEOUT_S = int(os.environ.get("LFM_EXECUTOR_TIMEOUT", 1800))
 EXECUTOR_MAX_TOKENS = int(os.environ.get("LFM_EXECUTOR_MAX_TOKENS", 4096))
 
+# Ollama serves some architectures one request at a time (its log: "model architecture does not currently
+# support parallel requests"; lfm2 is one, 2026-11-05 on the H100 box). run_experiment.py --replicas
+# spreads the seeds over copies of such a model (lfm2.5-16k-r1, -r2, ...; build_executors.sh --replicas
+# builds them). The copy only changes which Ollama name answers the calls: labels, directories and
+# summaries keep the base name. The driver passes the mapping per job as LFM_EXECUTOR_SERVE="base=copy,...".
+def served_names():
+    spec = os.environ.get("LFM_EXECUTOR_SERVE", "")
+    pairs = (item.split("=", 1) for item in spec.split(",") if "=" in item)
+    return {base.strip(): copy.strip() for base, copy in pairs}
+
+def served_model_id(model=None):
+    model_id = resolve_model_id(model)
+    copy = served_names().get(ollama_name(model_id))
+    return model_id if copy is None else f"ollama_chat/{copy}"
+
 def executor_config(model=None):
     return LiteLLMConfig(
-        model=resolve_model_id(model),
+        model=served_model_id(model),
         is_local=True,
         api_base=OLLAMA_API_BASE,
         timeout=EXECUTOR_TIMEOUT_S,

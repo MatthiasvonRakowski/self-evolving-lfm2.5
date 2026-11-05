@@ -15,6 +15,7 @@ import subprocess
 import sys
 import threading
 import time
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 from evaluate import ARTIFACT_NAMES
@@ -67,7 +68,81 @@ def ollama_placement(names):
             placement[fields[0].split(":")[0]] = where.group(0)
     return placement
 
-def preflight(models, base_dir, optimiser_model, benchmarks):
+def parse_replicas(items, models):
+    """--replicas spec -> {ollama name: copies} for the models that get more than one copy.
+    Items are 'N' (every model in --models) or 'name=N'."""
+    counts, default = {}, None
+    for item in items or []:
+        if "=" in item:
+            name, n = item.split("=", 1)
+            counts[ollama_name(name)] = int(n)
+        else:
+            default = int(item)
+    if default is not None:
+        for m in models:
+            counts.setdefault(ollama_name(m), default)
+    bad = [name for name, n in counts.items() if n < 1]
+    if bad:
+        raise SystemExit(f"--replicas: copies must be >= 1 ({', '.join(bad)})")
+    unknown = [name for name in counts if name not in {ollama_name(m) for m in models}]
+    if unknown:
+        raise SystemExit(f"--replicas names a model that is not in --models: {', '.join(unknown)}")
+    return {name: n for name, n in counts.items() if n > 1}
+
+def replica_name(base, k):
+    """Ollama name of copy k of an executor: the base model itself for k=0, then base-r1, base-r2, ..."""
+    return base if k == 0 else f"{base}-r{k}"
+
+def plan_jobs(seeds, models, per_model, replicas):
+    """The driver's job list: (seed, models, label, serve). `serve` maps an executor's Ollama name to the
+    copy that answers it for this job: seed number i of a model with R copies goes to copy i % R, so the
+    seeds spread evenly over the copies and each copy's queue stays short."""
+    def serve_for(index, model_names):
+        serve = {}
+        for m in model_names:
+            base = ollama_name(m)
+            copy = replica_name(base, index % replicas.get(base, 1))
+            if copy != base:
+                serve[base] = copy
+        return serve
+    jobs = []
+    if per_model and len(models) > 1:
+        for m in models:
+            for i, seed in enumerate(seeds):
+                jobs.append((seed, [m], model_label(m), serve_for(i, [m])))
+    else:
+        for i, seed in enumerate(seeds):
+            jobs.append((seed, list(models), None, serve_for(i, models)))
+    return jobs
+
+def ollama_single_slot(name, api_base=None):
+    """True when Ollama answers `name` one request at a time: either OLLAMA_NUM_PARALLEL is 1, or the
+    architecture is one Ollama does not batch (its log: "model architecture does not currently support
+    parallel requests"; lfm2 is one). Two concurrent short generations: on a single slot the second
+    waits for the whole first one, so its queue wait is about one generation long; with parallel slots
+    both run together and the wait is near zero. None when the probe could not run."""
+    from src.common import OLLAMA_API_BASE
+    api_base = api_base or OLLAMA_API_BASE
+    body = json.dumps({"model": name, "prompt": "Count from one to thirty in words.", "stream": False,
+                       "options": {"num_predict": 48, "temperature": 0}}).encode()
+    def call():
+        req = urllib.request.Request(f"{api_base}/api/generate", body, {"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            return json.load(resp)
+    try:
+        call()  # warm-up: loads the model, so load time does not pass for queueing below
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            a, b = [f.result() for f in [pool.submit(call), pool.submit(call)]]
+    except Exception:
+        return None
+    def wait(r):
+        return (r["total_duration"] - r.get("load_duration", 0) - r.get("prompt_eval_duration", 0)
+                - r.get("eval_duration", 0))
+    generation = max(a.get("eval_duration", 0), b.get("eval_duration", 0))
+    return generation > 0 and max(wait(a), wait(b)) > 0.5 * generation
+
+def preflight(models, base_dir, optimiser_model, benchmarks, replicas=None, parallel=1):
+    replicas = replicas or {}
     print("\n=== Preflight checks ===")
     ok = True
     from evoagentx.models import LiteLLM
@@ -99,6 +174,28 @@ def preflight(models, base_dir, optimiser_model, benchmarks):
         except Exception as e:
             print(f"  [FAIL] executor {bare} does not answer: {e}")
             ok = False
+            continue
+        copies = replicas.get(bare, 1)
+        if copies > 1:
+            # The copies only need to exist; they load on first use (one runner each, own VRAM).
+            missing = [replica_name(bare, k) for k in range(1, copies)
+                       if subprocess.run(["ollama", "show", replica_name(bare, k)], capture_output=True).returncode]
+            if missing:
+                print(f"  [FAIL] --replicas {bare}={copies} but these copies are not built: {', '.join(missing)} "
+                      f"-- build them with: ./build_executors.sh --replicas {copies} {bare}")
+                ok = False
+            else:
+                print(f"  [ok] executor {bare} has {copies} copies ({bare}, "
+                      f"{', '.join(replica_name(bare, k) for k in range(1, copies))})")
+        elif parallel > 1:
+            single = ollama_single_slot(bare)
+            if single:
+                print(f"  [WARN] executor {bare} answers one request at a time (no parallel slots: either "
+                      f"OLLAMA_NUM_PARALLEL=1 or an architecture Ollama does not batch, lfm2 for one), so the "
+                      f"{parallel} parallel jobs queue on it. Spread them over copies: "
+                      f"./build_executors.sh --replicas {parallel} {bare}  and  --replicas {bare}={parallel}")
+            elif single is False:
+                print(f"  [ok] executor {bare} serves requests in parallel")
 
     try:
         reply = LiteLLM(config=optimiser_config(optimiser_model)).generate(
@@ -144,13 +241,16 @@ def preflight(models, base_dir, optimiser_model, benchmarks):
     print(f"=== Preflight {'PASSED' if ok else 'FAILED'} ===\n")
     return ok
 
-def run_subprocess(cmd, log_path):
+def run_subprocess(cmd, log_path, env=None):
     os.makedirs(os.path.dirname(log_path) or ".", exist_ok=True)
     with open(log_path, "a", buffering=1) as logf:
-        header = f"\n=== {datetime.datetime.now().isoformat(timespec='seconds')} : {' '.join(cmd)} ===\n"
+        served = (env or {}).get("LFM_EXECUTOR_SERVE")
+        header = (f"\n=== {datetime.datetime.now().isoformat(timespec='seconds')} : {' '.join(cmd)}"
+                  f"{'  [LFM_EXECUTOR_SERVE=' + served + ']' if served else ''} ===\n")
         print(header, end="")
         logf.write(header)
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+                                env=env)
         with _state_lock:
             _children.add(proc)
         try:
@@ -173,13 +273,17 @@ def terminate_children():
             except OSError:
                 pass
 
-def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progress_cb, model=None):
-    """Run one train or eval subprocess. `model` is set for --per-model jobs (one per executor)."""
+def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progress_cb, model=None, serve=None):
+    """Run one train or eval subprocess. `model` is set for --per-model jobs (one per executor); `serve`
+    maps executor names to the copies answering this job (--replicas), passed down as LFM_EXECUTOR_SERVE."""
     seed_key = str(seed)
     stage_key = stage if model is None else f"{stage}:{model}"
     log_name = f"{stage}_driver.log" if model is None else f"{stage}_{model}_driver.log"
     log_path = os.path.join(base_dir, f"seed{seed}", log_name)
-    live = {"seed": seed, "stage": stage, "model": model, "log": log_path}
+    live = {"seed": seed, "stage": stage, "model": model, "log": log_path, "serve": serve or None}
+    env = None
+    if serve:
+        env = {**os.environ, "LFM_EXECUTOR_SERVE": ",".join(f"{base}={copy}" for base, copy in serve.items())}
     started_at = datetime.datetime.now().isoformat(timespec="seconds")
     t0 = time.time()
     with _state_lock:
@@ -193,7 +297,7 @@ def run_stage(base_dir, seed, stage, cmd, driver_state, driver_state_path, progr
         save_json_atomic(driver_state_path, driver_state)
     progress_cb()
 
-    returncode = run_subprocess(cmd, log_path)
+    returncode = run_subprocess(cmd, log_path, env=env)
     elapsed = round(time.time() - t0, 1)
 
     with _state_lock:
@@ -230,7 +334,8 @@ def generate_progress_md(base_dir, seeds, models, methods, driver_started_at, be
     lines.append(f"- Last updated: {datetime.datetime.now().isoformat(timespec='seconds')}")
     def describe(r):
         text = f"seed={r.get('seed')} stage={r.get('stage')}"
-        return text + (f" model={r['model']}" if r.get("model") else "")
+        text += f" model={r['model']}" if r.get("model") else ""
+        return text + (f" via={','.join(r['serve'].values())}" if r.get("serve") else "")
     lines.append("- Current: " + (", ".join(describe(r) for r in running) or "seed=None stage=None"))
     for r in running:
         log_path = r.get("log") or (os.path.join(base_dir, f"seed{r['seed']}", f"{r['stage']}_driver.log")
@@ -354,6 +459,13 @@ def main():
                               "their cells into the seed's summaries). Jobs are ordered model by model, so with "
                               "--parallel <= number of seeds one executor is active at a time; a larger "
                               "--parallel runs several executors side by side and needs them all loaded.")
+    parser.add_argument("--replicas", nargs="+", default=[], metavar="N|MODEL=N",
+                         help="Copies of an executor to spread the parallel jobs over, e.g. 'lfm2.5-16k=5' "
+                              "(or a bare N for every model). For architectures Ollama answers one request "
+                              "at a time (lfm2 for one; the preflight warns), every job queues on the single "
+                              "runner; copies lfm2.5-16k-r1.. each get their own. Build them with "
+                              "./build_executors.sh --replicas N MODEL. Seed i of a model goes to copy "
+                              "i %% N; results keep the base model name.")
     parser.add_argument("--eval-concurrency", type=int, default=None, dest="eval_concurrency",
                          help="Concurrent executor calls in evaluate.py (its default is 6).")
     parser.add_argument("--skip-preflight", action="store_true", dest="skip_preflight")
@@ -417,8 +529,10 @@ def stop_on_sigterm(signum, frame):
     raise KeyboardInterrupt
 
 def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at):
+    replicas = parse_replicas(args.replicas, args.models)
     if not args.skip_preflight:
-        if not preflight(args.models, base_dir, args.optimiser_model, args.train_benchmarks):
+        if not preflight(args.models, base_dir, args.optimiser_model, args.train_benchmarks,
+                         replicas=replicas, parallel=args.parallel):
             print("Preflight failed -- aborting (pass --skip-preflight to override).")
             return "preflight_failed"
     driver_state["state"] = "running"
@@ -431,8 +545,9 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
     progress_cb = lambda: generate_progress_md(
         base_dir, args.seeds, args.models, args.methods, driver_started_at, args.train_benchmarks)
 
-    def run_job(seed, models, model=None):
-        """Train then evaluate `models` for one seed; `model` is the label when the job is one model."""
+    def run_job(seed, models, model=None, serve=None):
+        """Train then evaluate `models` for one seed; `model` is the label when the job is one model,
+        `serve` the executor copies answering it (--replicas)."""
         if _stop_requested.is_set():
             return
         seed_dir = os.path.join(base_dir, f"seed{seed}")
@@ -468,7 +583,7 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
         if args.skip_internal_test:
             train_cmd.append("--skip_internal_test")
         train_ok = run_stage(base_dir, seed, "train", train_cmd, driver_state, driver_state_path, progress_cb,
-                             model=model)
+                             model=model, serve=serve)
         if not train_ok and args.stop_on_error:
             print("--- --stop-on-error set: aborting after train failure ---")
             _stop_requested.set()
@@ -489,7 +604,7 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
         if args.eval_concurrency:
             eval_cmd += ["--concurrency", str(args.eval_concurrency)]
         eval_ok = run_stage(base_dir, seed, "eval", eval_cmd, driver_state, driver_state_path, progress_cb,
-                            model=model)
+                            model=model, serve=serve)
         if not eval_ok and args.stop_on_error:
             print("--- --stop-on-error set: aborting after eval failure ---")
             _stop_requested.set()
@@ -497,12 +612,9 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
     # Per-model jobs are ordered model-major (every seed of model 1, then model 2, ...): with
     # --parallel at or below the number of seeds, only one or two executors are active at a time, so
     # Ollama never has to swap models in and out of VRAM, and OLLAMA_MAX_LOADED_MODELS can stay small.
-    jobs = []
-    if args.per_model and len(args.models) > 1:
-        for m in args.models:
-            jobs += [(seed, [m], model_label(m)) for seed in args.seeds]
-    else:
-        jobs = [(seed, list(args.models), None) for seed in args.seeds]
+    jobs = plan_jobs(args.seeds, args.models, args.per_model, replicas)
+    if replicas:
+        print("=== Executor copies: " + ", ".join(f"{name} x{n}" for name, n in replicas.items()) + " ===")
     workers = max(1, min(args.parallel, len(jobs)))
     try:
         if workers == 1:

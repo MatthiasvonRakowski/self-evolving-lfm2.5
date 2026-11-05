@@ -1,3 +1,7 @@
 # TII Falcon3 1B Instruct: decoder-only transformer, same vendor as Falcon-H1 (transformer control), Q8_0
 FROM falcon3:1b-instruct-q8_0
 PARAMETER num_ctx 16384
+# num_thread 4: llama.cpp otherwise spins one CPU thread per core the machine advertises, and under a
+# container CPU quota that spinning stalls every step (H100 box, 2026-11-05: 2.5x slower per call,
+# no gain from parallel slots). The GPU does the work; 4 threads are plenty for the CPU side.
+PARAMETER num_thread 4

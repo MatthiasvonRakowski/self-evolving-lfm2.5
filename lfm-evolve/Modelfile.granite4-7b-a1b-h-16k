@@ -1,3 +1,7 @@
 # IBM Granite 4.0 H-Tiny: Mamba-2 + attention hybrid MoE, 7B total / 1B active (non-transformer), 4.2 GB
 FROM granite4:7b-a1b-h
 PARAMETER num_ctx 16384
+# num_thread 4: llama.cpp otherwise spins one CPU thread per core the machine advertises, and under a
+# container CPU quota that spinning stalls every step (H100 box, 2026-11-05: 2.5x slower per call,
+# no gain from parallel slots). The GPU does the work; 4 threads are plenty for the CPU side.
+PARAMETER num_thread 4

@@ -1,3 +1,7 @@
 # TII Falcon-Mamba 7B Instruct: pure Mamba SSM, no attention (non-transformer); community GGUF, q4_0
 FROM Hudson/falcon-mamba-instruct:7b-q4_0
 PARAMETER num_ctx 16384
+# num_thread 4: llama.cpp otherwise spins one CPU thread per core the machine advertises, and under a
+# container CPU quota that spinning stalls every step (H100 box, 2026-11-05: 2.5x slower per call,
+# no gain from parallel slots). The GPU does the work; 4 threads are plenty for the CPU side.
+PARAMETER num_thread 4

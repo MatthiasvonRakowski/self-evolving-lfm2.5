@@ -266,3 +266,37 @@ def test_logs_folder_precreated_before_textgrad_import():
     # the import that performs the deletion must still succeed with the folder in place
     from evoagentx.optimizers import TextGradOptimizer  # noqa: F401
     assert os.path.isdir(common.TEXTGRAD_LOGS_DIR)
+
+
+def test_replicas_spread_seeds_over_copies():
+    """--replicas: seed i of a model with R copies is served by copy i % R (base model = copy 0); other
+    models are untouched; a bare N applies to every model; unknown names are rejected."""
+    import run_experiment as rx
+    replicas = rx.parse_replicas(["lfm2.5-16k=3"], ["lfm2.5-16k", "qwen3-1.7b-16k"])
+    assert replicas == {"lfm2.5-16k": 3}
+    jobs = rx.plan_jobs([42, 43, 44, 45], ["lfm2.5-16k", "qwen3-1.7b-16k"], True, replicas)
+    assert [j[:3] for j in jobs][:4] == [(s, ["lfm2.5-16k"], "lfm2_5_16k") for s in (42, 43, 44, 45)]
+    assert [j[3] for j in jobs if j[1] == ["lfm2.5-16k"]] == [
+        {}, {"lfm2.5-16k": "lfm2.5-16k-r1"}, {"lfm2.5-16k": "lfm2.5-16k-r2"}, {}]
+    assert all(j[3] == {} for j in jobs if j[1] == ["qwen3-1.7b-16k"])
+    # without --per-model the seed's job carries every model, copies assigned per model
+    joint = rx.plan_jobs([42, 43], ["lfm2.5-16k", "qwen3-1.7b-16k"], False, replicas)
+    assert joint == [(42, ["lfm2.5-16k", "qwen3-1.7b-16k"], None, {}),
+                     (43, ["lfm2.5-16k", "qwen3-1.7b-16k"], None, {"lfm2.5-16k": "lfm2.5-16k-r1"})]
+    assert rx.parse_replicas(["2"], ["a", "b"]) == {"a": 2, "b": 2}
+    assert rx.parse_replicas(["1"], ["a"]) == {}
+    with pytest.raises(SystemExit):
+        rx.parse_replicas(["zzz=2"], ["a"])
+
+
+def test_served_copy_changes_only_the_ollama_name(monkeypatch):
+    """LFM_EXECUTOR_SERVE (set per job by the driver) redirects the executor calls to a copy; labels,
+    directories and summaries keep the base model name."""
+    monkeypatch.setenv("LFM_EXECUTOR_SERVE", "lfm2.5-16k=lfm2.5-16k-r2")
+    assert common.served_model_id("lfm2.5-16k") == "ollama_chat/lfm2.5-16k-r2"
+    assert common.served_model_id("ollama_chat/lfm2.5-16k") == "ollama_chat/lfm2.5-16k-r2"
+    assert common.executor_config("lfm2.5-16k").model == "ollama_chat/lfm2.5-16k-r2"
+    assert common.served_model_id("qwen3-1.7b-16k") == "ollama_chat/qwen3-1.7b-16k"
+    assert common.model_label("lfm2.5-16k") == "lfm2_5_16k"
+    monkeypatch.delenv("LFM_EXECUTOR_SERVE")
+    assert common.executor_config("lfm2.5-16k").model == "ollama_chat/lfm2.5-16k"
