@@ -87,11 +87,19 @@ def write_best_round(output_dir, optimizer) -> int:
 
 
 def last_complete_round(root: str):
-    """Highest N such that rounds 0..N of an AFlow folder are all complete, or None when round 0 is not
-    scored. Round 0 is complete once results.json holds a score for it; a later round once its
-    experience.json exists, which EvoAgentX writes only after the round's validation passes."""
+    """Round an interrupted AFlow folder can continue from, or None when round 0 is not scored.
+
+    EvoAgentX numbers rounds by its own counter, so the folders are consecutive and only the highest one
+    can be the attempt that was cut off: it is complete when results.json scores it and (from round 1) its
+    experience.json exists, which is written after the round's validation. A complete last round means
+    the run stopped between rounds; otherwise the run continues from the round before it. Earlier rounds
+    are kept as they are, including ones the optimiser gave up on (no score, no experience): they are
+    regular rounds of the run, not leftovers."""
     results_path = os.path.join(root, "results.json")
-    if not os.path.isdir(os.path.join(root, "round_0")) or not os.path.exists(results_path):
+    if not os.path.isdir(root) or not os.path.exists(results_path):
+        return None
+    rounds = {int(d[6:]) for d in os.listdir(root) if d.startswith("round_") and d[6:].isdigit()}
+    if 0 not in rounds:
         return None
     try:
         with open(results_path) as f:
@@ -101,10 +109,10 @@ def last_complete_round(root: str):
     scored = {r.get("round") for r in results if isinstance(r, dict) and r.get("score") is not None}
     if 0 not in scored:
         return None
-    n = 0
-    while (n + 1) in scored and os.path.exists(os.path.join(root, f"round_{n + 1}", "experience.json")):
-        n += 1
-    return n
+    last = max(rounds)
+    if last == 0 or (last in scored and os.path.exists(os.path.join(root, f"round_{last}", "experience.json"))):
+        return last
+    return last - 1 if (last - 1) in rounds else None
 
 
 def prepare_resume(root: str):

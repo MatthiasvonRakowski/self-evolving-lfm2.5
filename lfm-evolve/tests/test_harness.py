@@ -354,6 +354,28 @@ def test_interrupted_aflow_cell_continues_from_its_last_complete_round(tmp_path)
     assert prepare_resume(str(root)) == 2 and os.listdir(root / "_partial") == parked
 
 
+def test_a_round_the_optimiser_gave_up_on_is_not_mistaken_for_the_cut_off_one(tmp_path):
+    """EvoAgentX leaves a folder with no score and no experience.json when all retries of a round fail,
+    then carries on. Only the last folder can be the interrupted attempt."""
+    import json
+    import os
+    from src.aflow_base import last_complete_round, prepare_resume
+    root = tmp_path / "aflow"
+    for r in range(6):
+        (root / f"round_{r}").mkdir(parents=True)
+    for r in (1, 2, 4):
+        (root / f"round_{r}" / "experience.json").write_text("{}")
+    results = [{"round": r, "score": 0.5} for r in (0, 1, 2, 4, 5)]  # round 3 gave up; 5 cut off
+    (root / "results.json").write_text(json.dumps(results))
+    assert last_complete_round(str(root)) == 4
+    assert prepare_resume(str(root)) == 4
+    assert sorted(d for d in os.listdir(root) if d.startswith("round_")) == [f"round_{r}" for r in range(5)]
+    assert {r["round"] for r in json.loads((root / "results.json").read_text())} == {0, 1, 2, 4}
+    # a run interrupted between rounds, or after its last round, keeps everything and continues after it
+    (root / "round_4" / "experience.json").write_text("{}")
+    assert prepare_resume(str(root)) == 4 and (root / "round_4").exists()
+
+
 def test_aflow_folder_without_a_scored_round_zero_is_not_resumable(tmp_path):
     from src.aflow_base import prepare_resume
     root = tmp_path / "aflow"
