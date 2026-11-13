@@ -1,7 +1,9 @@
 
+import datetime
 import importlib
 import json
 import os
+import shutil
 import sys
 from typing import List
 
@@ -82,3 +84,52 @@ def write_best_round(output_dir, optimizer) -> int:
         json.dump(payload, f, indent=2)
     os.replace(tmp, path)
     return best_round
+
+
+def last_complete_round(root: str):
+    """Highest N such that rounds 0..N of an AFlow folder are all complete, or None when round 0 is not
+    scored. Round 0 is complete once results.json holds a score for it; a later round once its
+    experience.json exists, which EvoAgentX writes only after the round's validation passes."""
+    results_path = os.path.join(root, "results.json")
+    if not os.path.isdir(os.path.join(root, "round_0")) or not os.path.exists(results_path):
+        return None
+    try:
+        with open(results_path) as f:
+            results = json.load(f)
+    except (OSError, ValueError):
+        return None
+    scored = {r.get("round") for r in results if isinstance(r, dict) and r.get("score") is not None}
+    if 0 not in scored:
+        return None
+    n = 0
+    while (n + 1) in scored and os.path.exists(os.path.join(root, f"round_{n + 1}", "experience.json")):
+        n += 1
+    return n
+
+
+def prepare_resume(root: str):
+    """Make an interrupted AFlow folder continuable in place. Folders of rounds after the last complete
+    one (an attempt cut off mid-validation) go to <root>/_partial/<stamp>/ and their results.json
+    entries are dropped, so the resumed run sees exactly the rounds it can trust. load_experience only
+    reads folders named round_N, so the parked ones are invisible to it. Returns the round to continue
+    from (EvoAgentX's initial_round), or None when nothing is reusable."""
+    n = last_complete_round(root)
+    if n is None:
+        return None
+    stale = sorted(d for d in os.listdir(root)
+                   if d.startswith("round_") and d[6:].isdigit() and int(d[6:]) > n)
+    if stale:
+        parked = os.path.join(root, "_partial", datetime.datetime.now().strftime("%Y%m%dT%H%M%S"))
+        os.makedirs(parked)
+        for d in stale:
+            shutil.move(os.path.join(root, d), os.path.join(parked, d))
+    results_path = os.path.join(root, "results.json")
+    with open(results_path) as f:
+        results = json.load(f)
+    kept = [r for r in results if isinstance(r, dict) and r.get("round") is not None and r["round"] <= n]
+    if len(kept) != len(results):
+        tmp = results_path + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump(kept, f, indent=2, default=str)
+        os.replace(tmp, results_path)
+    return n

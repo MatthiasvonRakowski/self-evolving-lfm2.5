@@ -327,3 +327,47 @@ def test_rerun_of_an_unfinished_cell_starts_from_a_clean_folder(tmp_path):
     assert main.park_previous_attempt(str(model_out), "aflow") is None
     (model_out / "bilevel").mkdir()
     assert main.park_previous_attempt(str(model_out), "bilevel") is None
+
+
+def test_interrupted_aflow_cell_continues_from_its_last_complete_round(tmp_path):
+    """Rounds 0..N with a score in results.json and (from round 1) an experience.json are complete; the round
+    cut off mid-validation is parked and its scores dropped, and EvoAgentX continues from N."""
+    import json
+    import os
+    from src.aflow_base import last_complete_round, prepare_resume
+    root = tmp_path / "aflow"
+    for r in range(4):
+        (root / f"round_{r}").mkdir(parents=True)
+    for r in (1, 2):
+        (root / f"round_{r}" / "experience.json").write_text("{}")
+    (root / "round_3" / "graph.py").write_text("")  # written before validation; no experience.json yet
+    results = [{"round": r, "score": 0.5} for r in (0, 0, 0, 1, 1, 1, 2, 2, 2, 3)]
+    (root / "results.json").write_text(json.dumps(results))
+
+    assert last_complete_round(str(root)) == 2
+    assert prepare_resume(str(root)) == 2
+    assert not (root / "round_3").exists()
+    parked = os.listdir(root / "_partial")
+    assert len(parked) == 1 and (root / "_partial" / parked[0] / "round_3" / "graph.py").exists()
+    assert {r["round"] for r in json.loads((root / "results.json").read_text())} == {0, 1, 2}
+    # a second call changes nothing
+    assert prepare_resume(str(root)) == 2 and os.listdir(root / "_partial") == parked
+
+
+def test_aflow_folder_without_a_scored_round_zero_is_not_resumable(tmp_path):
+    from src.aflow_base import prepare_resume
+    root = tmp_path / "aflow"
+    (root / "round_0").mkdir(parents=True)
+    assert prepare_resume(str(root)) is None
+    (root / "results.json").write_text("[]")
+    assert prepare_resume(str(root)) is None
+    assert prepare_resume(str(tmp_path / "missing")) is None
+
+
+def test_build_method_hands_the_resume_round_to_aflow():
+    import types
+    import main
+    args = types.SimpleNamespace(seed=42, rounds=20, graph_path=None, validation_rounds=3, fixed_rounds=False,
+                                 skip_internal_test=True, optimiser_model=None)
+    assert main.build_method("aflow", args, "lfm2.5-16k", "out", "gsm8k", resume_from=7).initial_round == 7
+    assert main.build_method("aflow", args, "lfm2.5-16k", "out", "gsm8k").initial_round == 0

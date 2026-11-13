@@ -9,7 +9,7 @@ class AFlowOptimiser(Optimiser):
                  executor_config: LiteLLMConfig, optimiser_config: LiteLLMConfig,
                  graph_path: str = None, benchmark: str = "gsm8k",
                  validation_rounds: int = 3, check_convergence: bool = True,
-                 internal_test: bool = True):
+                 internal_test: bool = True, initial_round: int = 0):
         super().__init__(seed, rounds, output_dir, executor_config, optimiser_config)
         self.benchmark_name = benchmark
         self.graph_path = graph_path or f"src/aflow_workflow/{benchmark}"
@@ -19,6 +19,9 @@ class AFlowOptimiser(Optimiser):
         # AFlow's own test pass scores the selected round on the test split (eval_rounds x 300 calls).
         # evaluate.py does the same on the same split, so it is optional.
         self.internal_test = internal_test
+        # Round to continue from when output_dir already holds rounds 0..initial_round of an interrupted
+        # run (see src.aflow_base.prepare_resume). 0 starts a fresh run.
+        self.initial_round = initial_round
 
     def run(self):
         print(f"Running AFlow Optimiser on {self.benchmark_name} ...")
@@ -36,10 +39,17 @@ class AFlowOptimiser(Optimiser):
             validation_rounds=self.validation_rounds,
             max_rounds=self.rounds,
             check_convergence=self.check_convergence,
+            initial_round=self.initial_round,
             question_type=QUESTION_TYPE[self.benchmark_name],
             operators=["Custom"],
         )
-        optimizer.optimize(benchmark)
+        if self.initial_round >= self.rounds:
+            print(f"Rounds 0-{self.initial_round} are already there; nothing left to optimise.")
+        else:
+            if self.initial_round:
+                print(f"Continuing the interrupted run from round {self.initial_round} "
+                      f"(rounds 0-{self.initial_round} kept).")
+            optimizer.optimize(benchmark)
 
         best_round = write_best_round(self.output_dir, optimizer)
         print(f"Best round (validation only): {best_round}")

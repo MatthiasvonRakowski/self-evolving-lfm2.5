@@ -8,6 +8,7 @@ from src.common import (
     summarize_usage,
 )
 from src.AFlowOptimiser import AFlowOptimiser
+from src.aflow_base import prepare_resume
 from src.TextGradOptimiser import TextGradOptimiser
 from src.MiproOptimiser import MiproOptimiser
 from src.BilevelOptimiser import BilevelOptimiser
@@ -21,7 +22,7 @@ import traceback
 import argparse
 import datetime
 
-def build_method(method, args, model, out_dir, benchmark):
+def build_method(method, args, model, out_dir, benchmark, resume_from=None):
 
     exec_cfg = executor_config(model)
     if method == "aflow":
@@ -36,6 +37,7 @@ def build_method(method, args, model, out_dir, benchmark):
             validation_rounds=args.validation_rounds,
             check_convergence=not args.fixed_rounds,
             internal_test=not args.skip_internal_test,
+            initial_round=resume_from or 0,
         )
     if method == "textgrad":
         return TextGradOptimiser(
@@ -195,7 +197,8 @@ def main():
                            help="[bilevel] Dev examples used to accept or reject inner candidates.")
     argparser.add_argument(
         "--resume", action="store_true",
-        help="Skip model+method combinations already marked 'success' in run_summary.json.",
+        help="Skip model+method combinations already marked 'success' in run_summary.json, and continue an "
+             "interrupted AFlow cell from its last complete round instead of starting it again.",
     )
     argparser.add_argument(
         "--stop_on_error", action="store_true",
@@ -257,10 +260,20 @@ def main():
                     continue
 
                 print(f"\n=== Running {benchmark} / {label} / {method} ===")
-                parked = park_previous_attempt(model_out, method)
-                if parked:
-                    print(f"--- An earlier, unfinished attempt left files for this cell; parked in {parked} "
-                          f"so this run starts clean ---")
+                # An interrupted AFlow cell is continued from its last complete round (rounds are on disk and
+                # EvoAgentX takes an initial_round); any other method starts again from a clean folder.
+                resume_from = None
+                if method == "aflow" and args.resume:
+                    resume_from = prepare_resume(os.path.join(model_out, "aflow"))
+                if resume_from is not None:
+                    print(f"--- An earlier, unfinished attempt left rounds 0-{resume_from} for this cell; "
+                          f"continuing from there (cut-off rounds parked in aflow/_partial/) ---")
+                else:
+                    parked = park_previous_attempt(model_out, method)
+                    if parked:
+                        print(f"--- An earlier, unfinished attempt left files for this cell; parked in {parked} "
+                              f"so this run starts clean ---")
+                resumed = {"resumed_from_round": resume_from} if resume_from is not None else {}
                 started_at = datetime.datetime.now().isoformat(timespec="seconds")
                 t0 = time.time()
 
@@ -276,7 +289,7 @@ def main():
                 os.environ["LLM_USAGE_LOG"] = usage_log_path
                 try:
                     with tee_to_file(log_path):
-                        opt = build_method(method, args, model, model_out, benchmark)
+                        opt = build_method(method, args, model, model_out, benchmark, resume_from)
                         opt.run()
                     elapsed = round(time.time() - t0, 1)
                     record(benchmark, label, method, {
@@ -287,6 +300,7 @@ def main():
                         "benchmark": benchmark,
                         "log": log_path,
                         "usage": summarize_usage(usage_log_path),
+                        **resumed,
                     })
                     print(f"--- {benchmark}/{label}/{method} finished OK in {elapsed}s (log: {log_path}) ---")
 
