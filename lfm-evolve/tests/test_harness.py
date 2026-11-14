@@ -393,3 +393,18 @@ def test_build_method_hands_the_resume_round_to_aflow():
                                  skip_internal_test=True, optimiser_model=None)
     assert main.build_method("aflow", args, "lfm2.5-16k", "out", "gsm8k", resume_from=7).initial_round == 7
     assert main.build_method("aflow", args, "lfm2.5-16k", "out", "gsm8k").initial_round == 0
+
+def test_aggregator_keeps_to_the_requested_seeds(tmp_path):
+    """runs/ held seed47-51 from an abandoned ten-seed attempt next to the five-seed campaign, and the
+    aggregator folded them in (one model showed n=7). --seeds restricts it to the campaign's own folders."""
+    import json
+    from aggregate_results import collect
+    for seed in (42, 47):
+        d = tmp_path / f"seed{seed}" / "eval"
+        d.mkdir(parents=True)
+        cell = {"status": "success", "mean_score": 0.5, "n": 3, "error_rate": 0.0}
+        (d / "eval_summary.json").write_text(json.dumps({"gsm8k": {"m": {"baseline": cell}}}))
+    assert collect(str(tmp_path))[0] == [42, 47]
+    seeds, rows, _, _ = collect(str(tmp_path), seeds=[42])
+    assert seeds == [42]
+    assert [r["seed"] for r in rows] == [42]

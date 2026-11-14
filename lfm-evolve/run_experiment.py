@@ -643,7 +643,9 @@ def run_seeds(args, base_dir, driver_state, driver_state_path, driver_started_at
         progress_cb()
 
     print("\n=== All seeds finished; running aggregator ===")
-    agg_cmd = [sys.executable, "aggregate_results.py", "--base-dir", base_dir]
+    # Only this run's seeds: the folder may hold seed* leftovers of an earlier campaign.
+    agg_cmd = [sys.executable, "aggregate_results.py", "--base-dir", base_dir,
+               "--seeds", *[str(s) for s in args.seeds]]
     subprocess.run(agg_cmd)
     return "done"
 

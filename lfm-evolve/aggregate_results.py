@@ -136,8 +136,11 @@ def paired_statistics(base_dir, eval_rows):
         comparisons.extend(family)
     return cell_cis, comparisons
 
-def collect(base_dir):
-    seeds = discover_seeds(base_dir)
+def collect(base_dir, seeds=None):
+    """Rows of every seed in `seeds`, or of every seed* folder under base_dir when None. A campaign
+    rarely owns its folder alone (an earlier ten-seed attempt left seed47-51 next to seeds 42-46),
+    so the driver passes its own seeds."""
+    seeds = sorted(seeds) if seeds else discover_seeds(base_dir)
     eval_rows = []
     train_rows = []
     invalid_rows = []
@@ -219,7 +222,7 @@ def write_final_results_md(path, seeds, eval_rows, train_rows, invalid_rows=(),
     for row in eval_rows:
         score_groups[(row["benchmark"], row["model"], row["artifact"])].append((row["seed"], row["score"]))
 
-    lines = ["# Final Results", "", f"Seeds discovered: {seeds}", ""]
+    lines = ["# Final Results", "", f"Seeds: {seeds}", ""]
     if invalid_rows:
         lines.append(f"{len(invalid_rows)} cell(s) were excluded as invalid "
                      f"(too many execution errors to be a usable score):")
@@ -382,9 +385,12 @@ def write_json_csv(base_dir, seeds, eval_rows, train_rows, invalid_rows=(), comp
 def main():
     parser = argparse.ArgumentParser(description="Aggregate multi-seed train+eval results into mean+/-std tables.")
     parser.add_argument("--base-dir", type=str, default="runs", dest="base_dir")
+    parser.add_argument("--seeds", nargs="+", type=int, default=None,
+                        help="Seeds to aggregate (default: every seed* folder under --base-dir). Give the "
+                             "campaign's seeds when the folder also holds leftovers of another run.")
     args = parser.parse_args()
 
-    seeds, eval_rows, train_rows, invalid_rows = collect(args.base_dir)
+    seeds, eval_rows, train_rows, invalid_rows = collect(args.base_dir, args.seeds)
     if not seeds:
         print(f"No seed* directories found under {args.base_dir}; nothing to aggregate.")
         return
